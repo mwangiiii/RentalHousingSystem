@@ -14,7 +14,7 @@ class LockScreenController extends Controller
 {
     public function lockscreen(){
         if(!session('lock-screen')){
-            return redirect()->route('home');
+            return redirect()->route('dashboard');
         }
         return view ('lock-screen');
     }
@@ -29,7 +29,7 @@ class LockScreenController extends Controller
 
         if(Hash::check($request->password, $user->password)){
             Session::forget('lock-screen');
-            return redirect()->intended(session('previous-url','home'));
+            return redirect()->intended(session('previous-url'));
         }
         return back()->withErrors(['password' => 'The provided password is incorrect']);
     }
