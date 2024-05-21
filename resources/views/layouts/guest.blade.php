@@ -32,13 +32,26 @@
 
 
         @livewireScripts
-        <script>
-            const phoneInputField = document.querySelector('#phone_number');
-            const phoneInput = window.intlTelInput(phoneInputField,{
-                utilsScript:
-                "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-            })
-        </script>
+        <script src="{{ asset('node_modules/intl-tel-input/build/js/intlTelInput.js') }}"></script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    var input = document.querySelector("#phone_number");
+                    window.intlTelInput(input, {
+                        initialCountry: "auto",
+                        geoIpLookup: function(callback) {
+                            fetch('https://ipinfo.io/json', { cache: 'reload' })
+                                .then(response => response.json())
+                                .then(data => {
+                                    callback(data.country);
+                                })
+                                .catch(() => {
+                                    callback('us');
+                                });
+                        },
+                        utilsScript: "{{ asset('node_modules/intl-tel-input/build/js/utils.js') }}"
+                    });
+                });
+            </script>
 
         <script>
             // Flag to indicate if the screen is locked
