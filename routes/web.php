@@ -21,6 +21,7 @@ Route::middleware([
 
 
 // Route::get('/dashboard', [HomeController::class,'dashboard'])->name('dashboard');
+
 // Routes for the lock screen
 Route::get('/lock_screen',[LockScreenController::class,'lockscreen'])->name('lock-screen');
 Route::post('/unlock_screen',[LockScreenController::class,'unlock'])->name('unlock');
