@@ -149,7 +149,7 @@ The project is licensed under Licenses.
 -    Apache: [Apache License 2.0](https://www.apache.org/licenses/](https://apache.org/licenses/LICENSE-2.0).
 
 ## Contact
-You can contact us at [Admin 1](mailto:dennis.wanjiku@strathmore.edu?subject=Github:Makazi-hub-Support) or [Admin 2](mailto:elvis.makara@strathmore.edu?subject=Github:Makazi-hub-Support).
+You can contact us at [Admin](mailto:dennis.wanjiku@strathmore.edu,elvis.makara@strathmore.edu?subject=Github:Makazi-hub-Support) 
 
 ## Credits
 Special credits to [Pahom21](https://github.com/Pahom21) for the meticoulous job done in this project.
