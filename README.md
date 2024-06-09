@@ -122,3 +122,36 @@ Caretakers and landlords can view and manage maintenance requests in the admin p
 
 ### 5. Notifications
 Receive notifications for new messages, maintenance requests, and other important updates directly through the platform
+
+## Contributing
+We welcome contributions from the community to improve this project! If you'd like to contribute, please follow these guidelines:
+1. fork the repository on the top right of the page.
+2. Clone the forked repository to your local machine using Git.
+   ````bash
+   git clone https://github.com/your-username/your-forked-repo.git
+3. Create a new branch for your contribution.
+   ````bash
+   git checkout -b feature/your-feature-name
+4. Make the changes and test them
+5. Add the new feature.
+   ````bash
+   git commit -am 'Add new feature: your feature description'
+6. Push your changes to your forked repository.
+7. Submit a pull request to the original repository. Include a detailed description of your changes and any relevant information.
+8. Your pull request will be reviewed by the maintainers. Be prepared to address any feedback or changes requested during the review process.
+
+## License. 
+The project is licensed under Licenses. 
+-    Laravel: [MIT License](https://github.com/git/git-scm.com/blob/main/MIT-LICENSE.txt).
+-    PHP: [PHP License](https://www.php.net/license/3_01.txt)
+-    MySQL: [OEM](https://www.mysql.com/about/legal/licensing/oem/)
+-    Node.js: [MIT License](https://github.com/nodejs/node/blob/main/LICENSE).
+-    Apache: [Apache License 2.0](https://www.apache.org/licenses/](https://apache.org/licenses/LICENSE-2.0).
+
+## Contact
+You can contact us at [Admin 1](mailto:dennis.wanjiku@strathmore.edu?subject=Github:Makazi-hub-Support) or [Admin 2](mailto:elvis.makara@strathmore.edu?subject=Github:Makazi-hub-Support).
+
+## Credits
+Special credits to [Pahom21](https://github.com/Pahom21) for the meticoulous job done in this project.
+
+
