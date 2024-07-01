@@ -22,16 +22,22 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'phone_number' => ['required','string','max:10','unique:users'],
+            'phone_number' => ['required','string','max:14','min:10','unique:users'],
             'id_number' => ['required','string','max:10','unique:users'],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
+        // Sanitize phone number
+        $phoneNumber = preg_replace('/\D/', '', $input['phone_number']); // Remove all non-numeric characters
+        if (substr($phoneNumber, 0, 1) === '0') {
+            $phoneNumber = '254' . substr($phoneNumber, 1);
+        }
+
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
-            'phone_number' => $input['phone_number'],
+            'phone_number' => $phoneNumber,
             'id_number' => $input['id_number'],
             'role_id' => 4,
             'password' => Hash::make($input['password']),
