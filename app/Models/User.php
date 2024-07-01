@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -30,7 +28,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'phone_number',
-        'id_number'
+        'id_number',
+        'role_id'
     ];
 
     /**
@@ -64,11 +63,44 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role_id' => 'integer',
         ];
+    }
+
+    //Routing for the vonage phone numbers
+    public function routeNotificationForVonage($notification)
+    {
+        return $this->phone_number; // Assuming the phone number is stored in the phone_number column
     }
 
     //User Role Relationship
     public function role(){
         return $this->belongsTo(Role::class);
     }
+
+    public function hasRole($roleName)
+    {
+        return $this->role && $this->role->role_name === $roleName;
+    }
+
+    public function properties()
+    {
+        return $this->hasMany(Property::class);
+    }
+
+    public function tenant()
+    {
+        return $this->hasMany(Tenant::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
+    
 }

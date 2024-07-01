@@ -13,30 +13,6 @@ class RolesSeeder extends Seeder
      */
     public function run(): void
     {
-        // DB::table('roles')->create([
-        //     'role_name' => 'Admin',
-        // ]);
-
-        // DB::table('roles')->create([
-        //     'role_name' => 'Landlord',
-        // ]);
-
-        // DB::table('roles')->create([
-        //     'role_name' => 'Property Manager',
-        // ]);
-
-        // DB::table('roles')->create([
-        //     'role_name' => 'Tenant',
-        // ]);
-
-        // DB::table('roles')->create([
-        //     'role_name' => 'Accountant',
-        // ]);
-
-        // DB::table('roles')->create([
-        //     'role_name' => 'Maintenance Worker',
-        // ]);
-
         Role::create([
             'role_name' => 'Admin',
         ]);
