@@ -80,7 +80,25 @@ To install the Makazi hub project, we would recommend you to do the following:.
    After configuring the .env file, we have to run our migrations. Open the terminal of the IDE (making sure that you are in your project's directory) and run the command below to create the tables in your database.
    ```bash
    php artisan migrate
-8. Server initialization.
+   
+8. Nglock Integration
+Nglock is a security feature in our application that provides screen locking functionality to enhance privacy and security for users. This feature allows users to lock their screens and requires authentication to unlock.
+
+   #### Key Features:
+- **Screen Lock:** Users can lock their screens to prevent unauthorized access.
+- **Authentication:** Requires user authentication to unlock the screen.
+- **User Experience:** Enhances privacy and security without compromising user experience.
+
+  -  ##### Getting Started:
+To enable Nglock in your application, follow these steps:
+
+1. **Installation:** Include the Nglock package in your project dependencies.
+   
+   ```bash
+   npm install nglock --save
+
+
+9. Server initialization.
    we have to start the server by running the following command on the terminal (making sure that you are in the project's directory).this starts the server. the 
    ```bash
    php artisan serve
