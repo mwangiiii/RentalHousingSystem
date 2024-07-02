@@ -30,7 +30,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone_number',
         'id_number',
         'role_id'
-        // 'roles_id', // Assuming a direct role_id relationship
     ];
 
     /**

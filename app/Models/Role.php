@@ -27,4 +27,9 @@ class Role extends Model
     {
         return $this->belongsTo(Property::class);
     }
+    
+    public function listers()
+    {
+        return $this->hasMany(Lister::class);
+    }
 }

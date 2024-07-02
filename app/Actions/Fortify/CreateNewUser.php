@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
 use App\Models\Lister;
+use App\Models\Hunter;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -34,35 +35,40 @@ class CreateNewUser implements CreatesNewUsers
             $phoneNumber = '254' . substr($phoneNumber, 1);
         }
 
-        dd($input['role']);
+        // dd($input['role']);
 
-        // If else loop for different roles
-        if($input['role'] === 'lister'){
-            return User::create([
-                'name' => $input['name'],
-                'email' => $input['email'],
-                'phone_number' => $input['phone_number'],
-                'id_number' => $input['id_number'],
-                'role_id' => 7, 
+        
+        // Create the user
+        $user = User::create([
+            'name' => $input['name'],
+            'email' => $input['email'],
+            'phone_number' => $phoneNumber,
+            'id_number' => $input['id_number'],
+            'role_id' => $input['role'] === 'lister' ? 9 : 10, // Conditional role assignment
+            'password' => Hash::make($input['password']),
+        ]);
+
+        // Create a Lister if the role is 'lister'
+        if ($input['role'] === 'lister') {
+            
+            Lister::create([
+                'user_id' => $user->id,
+                'name' => $user->name,
+                'contact' => $user->phone_number,
+                'email' => $user->email,
+                'identification_number' => $user->id_number,
                 'password' => Hash::make($input['password']),
             ]);
-            // return Lister::create([
-            //     'user_id' => $user->id,
-            //     'name' => $user->name,
-            //     'contact' => $user->phone_number,
-            //     'email' => $user->email,
-            //     'identification_number' => $user->id_number,
-            //     'password' => Hash::make($request->password),
-            // ]);
         }else{
-            return User::create([
-                'name' => $input['name'],
-                'email' => $input['email'],
-                'phone_number' => $input['phone_number'],
-                'id_number' => $input['id_number'],
-                'role_id' => 8, 
+            Hunter::create([
+                'user_id' => $user->id,
+                'name' => $user->name,
+                'contact' => $user->phone_number,
+                'email' => $user->email,
+                'identification_number' => $user->id_number,
                 'password' => Hash::make($input['password']),
             ]);
         }
+        return $user;
     }
 }
