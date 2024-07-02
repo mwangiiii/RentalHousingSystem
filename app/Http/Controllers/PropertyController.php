@@ -200,4 +200,4 @@ class PropertyController extends Controller
         $houses = House::where('category', $category)->get();
         return view('property.category', compact('houses'))->with('category', $category);
     }
-
+}

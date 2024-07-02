@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
+use App\Models\Lister;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -33,13 +34,35 @@ class CreateNewUser implements CreatesNewUsers
             $phoneNumber = '254' . substr($phoneNumber, 1);
         }
 
-        return User::create([
-            'name' => $input['name'],
-            'email' => $input['email'],
-            'phone_number' => $input['phone_number'],
-            'id_number' => $input['id_number'],
-            'roles_id' => $roleId, // Set the role ID
-            'password' => Hash::make($input['password']),
-        ]);
+        dd($input['role']);
+
+        // If else loop for different roles
+        if($input['role'] === 'lister'){
+            return User::create([
+                'name' => $input['name'],
+                'email' => $input['email'],
+                'phone_number' => $input['phone_number'],
+                'id_number' => $input['id_number'],
+                'role_id' => 7, 
+                'password' => Hash::make($input['password']),
+            ]);
+            // return Lister::create([
+            //     'user_id' => $user->id,
+            //     'name' => $user->name,
+            //     'contact' => $user->phone_number,
+            //     'email' => $user->email,
+            //     'identification_number' => $user->id_number,
+            //     'password' => Hash::make($request->password),
+            // ]);
+        }else{
+            return User::create([
+                'name' => $input['name'],
+                'email' => $input['email'],
+                'phone_number' => $input['phone_number'],
+                'id_number' => $input['id_number'],
+                'role_id' => 8, 
+                'password' => Hash::make($input['password']),
+            ]);
+        }
     }
 }
