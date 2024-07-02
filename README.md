@@ -108,16 +108,8 @@ To get the access token, you need to make a request to the token URL using your 
 
 Example request using curl:
 
-```bash
-curl -X GET \
-  -H "Authorization: Basic <base64_encoded(consumer_key:consumer_secret)>" \
-  "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
 
-
-
-
-  
-8. Ngrok Setup
+Ngrok Setup
 
 Ngrok is a tool that allows us to securely expose a local web server to the internet. Follow these steps to set up Ngrok for our Laravel application:
 
