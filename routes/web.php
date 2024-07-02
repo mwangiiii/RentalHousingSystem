@@ -124,11 +124,11 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
     
 
     // Hunter specific routes
-    Route::get('/hunter/dashboard', function () {
-        return view('hunter.dashboard'); // Replace with your hunter dashboard view
-    })->name('hunter.dashboard');
+    // Route::get('/hunter/dashboard', function () {
+    //     return view('hunter.dashboard'); // Replace with your hunter dashboard view
+    // })->name('hunter.dashboard');
     
-    Route::get('/hunter/dashboard', [AddHousesController::class, 'hunter'])->name('houses.hunter');
+    Route::get('/hunter/dashboard', [AddHousesController::class, 'hunter'])->name('hunter.dashboard');
 
     // Routes for booking houses
     Route::get('/booking/{houseId}', [BookingController::class, 'showBookingForm'])->name('booking');
