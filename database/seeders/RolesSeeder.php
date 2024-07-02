@@ -2,7 +2,10 @@
 
 namespace Database\Seeders;
 
+<<<<<<< HEAD
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+=======
+>>>>>>> master
 use Illuminate\Database\Seeder;
 use App\Models\Role;
 
@@ -13,6 +16,7 @@ class RolesSeeder extends Seeder
      */
     public function run(): void
     {
+<<<<<<< HEAD
         Role::create([
             'role_name' => 'Admin',
         ]);
@@ -37,4 +41,24 @@ class RolesSeeder extends Seeder
             'role_name' => 'Maintenance Worker',
         ]);
     }
+=======
+        $roles = [
+            ['name' => 'Admin'],
+            ['name' => 'Landlord'],
+            ['name' => 'Property Manager'],
+            ['name' => 'Tenant'],
+            ['name' => 'Accountant'],
+            ['name' => 'Maintenance Worker'],
+            ['name' => 'Lister'],
+            ['name' => 'house hunter']
+        ];
+
+        foreach ($roles as $role) {
+            Role::firstOrCreate(['name' => $role['name']]);
+        }
+      
+    }
+
+    
+>>>>>>> master
 }

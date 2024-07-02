@@ -7,6 +7,52 @@
     "content-hash": "b958a7238d08f8bde1036cd1d99461d9",
     "packages": [
         {
+    "content-hash": "2e4387c357d95fe279a6bc4f8f3f60b4",
+    "packages": [
+        {
+            "name": "almasaeed2010/adminlte",
+            "version": "v3.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ColorlibHQ/AdminLTE.git",
+                "reference": "bd4d9c72931f1dd28601b6bfb387554a381ad540"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ColorlibHQ/AdminLTE/zipball/bd4d9c72931f1dd28601b6bfb387554a381ad540",
+                "reference": "bd4d9c72931f1dd28601b6bfb387554a381ad540",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Colorlib"
+                }
+            ],
+            "description": "AdminLTE - admin control panel and dashboard that's based on Bootstrap 4",
+            "homepage": "https://adminlte.io/",
+            "keywords": [
+                "JS",
+                "admin",
+                "back-end",
+                "css",
+                "less",
+                "responsive",
+                "template",
+                "theme",
+                "web"
+            ],
+            "support": {
+                "issues": "https://github.com/ColorlibHQ/AdminLTE/issues",
+                "source": "https://github.com/ColorlibHQ/AdminLTE/tree/v3.2.0"
+            },
+            "time": "2022-02-07T20:33:09+00:00"
+        },
+        {
             "name": "bacon/bacon-qr-code",
             "version": "v3.0.0",
             "source": {
@@ -61,6 +107,7 @@
             "time": "2024-04-18T11:16:25+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "barryvdh/laravel-dompdf",
             "version": "v2.2.0",
             "source": {
@@ -138,6 +185,8 @@
             "time": "2024-04-25T13:16:04+00:00"
         },
         {
+=======
+>>>>>>> master
             "name": "brick/math",
             "version": "0.12.1",
             "source": {
@@ -560,6 +609,7 @@
             "time": "2024-02-05T11:56:58+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "dompdf/dompdf",
             "version": "v2.0.8",
             "source": {
@@ -622,6 +672,8 @@
             "time": "2024-04-29T13:06:17+00:00"
         },
         {
+=======
+>>>>>>> master
             "name": "dragonmantank/cron-expression",
             "version": "v3.3.3",
             "source": {
@@ -1294,6 +1346,7 @@
             "time": "2023-12-03T19:50:20+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "laminas/laminas-diactoros",
             "version": "3.3.1",
             "source": {
@@ -1379,6 +1432,8 @@
             "time": "2024-02-16T16:06:16+00:00"
         },
         {
+=======
+>>>>>>> master
             "name": "laravel/fortify",
             "version": "v1.21.2",
             "source": {
@@ -1964,6 +2019,7 @@
             "time": "2024-01-04T16:10:04+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "laravel/vonage-notification-channel",
             "version": "v3.3.0",
             "source": {
@@ -2106,6 +2162,8 @@
             "time": "2024-04-11T23:07:54+00:00"
         },
         {
+=======
+>>>>>>> master
             "name": "league/commonmark",
             "version": "2.4.2",
             "source": {
@@ -2575,6 +2633,7 @@
             "time": "2024-05-02T17:10:37+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "masterminds/html5",
             "version": "2.9.0",
             "source": {
@@ -2642,6 +2701,8 @@
             "time": "2024-03-31T07:05:07+00:00"
         },
         {
+=======
+>>>>>>> master
             "name": "mobiledetect/mobiledetectlib",
             "version": "4.8.06",
             "source": {
@@ -3274,6 +3335,7 @@
             "time": "2024-05-08T12:18:48+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "phenx/php-font-lib",
             "version": "0.5.6",
             "source": {
@@ -3364,6 +3426,8 @@
             "time": "2024-04-08T12:52:34+00:00"
         },
         {
+=======
+>>>>>>> master
             "name": "phpoption/phpoption",
             "version": "1.9.2",
             "source": {
@@ -4207,6 +4271,7 @@
             "time": "2024-04-27T21:32:50+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "sabberworm/php-css-parser",
             "version": "v8.5.1",
             "source": {
@@ -4229,16 +4294,60 @@
             },
             "suggest": {
                 "ext-mbstring": "for parsing UTF-8 CSS"
+=======
+            "name": "spatie/laravel-permission",
+            "version": "6.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-permission.git",
+                "reference": "fe973a58b44380d0e8620107259b7bda22f70408"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/fe973a58b44380d0e8620107259b7bda22f70408",
+                "reference": "fe973a58b44380d0e8620107259b7bda22f70408",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/auth": "^8.12|^9.0|^10.0|^11.0",
+                "illuminate/container": "^8.12|^9.0|^10.0|^11.0",
+                "illuminate/contracts": "^8.12|^9.0|^10.0|^11.0",
+                "illuminate/database": "^8.12|^9.0|^10.0|^11.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "laravel/passport": "^11.0|^12.0",
+                "orchestra/testbench": "^6.23|^7.0|^8.0|^9.0",
+                "phpunit/phpunit": "^9.4|^10.1"
+>>>>>>> master
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
+<<<<<<< HEAD
                     "dev-main": "9.0.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
                     "Sabberworm\\CSS\\": "src/"
+=======
+                    "dev-main": "6.x-dev",
+                    "dev-master": "6.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Spatie\\Permission\\PermissionServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Spatie\\Permission\\": "src"
+>>>>>>> master
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -4247,6 +4356,7 @@
             ],
             "authors": [
                 {
+<<<<<<< HEAD
                     "name": "Raphael Schweikert"
                 },
                 {
@@ -4270,6 +4380,37 @@
                 "source": "https://github.com/MyIntervals/PHP-CSS-Parser/tree/v8.5.1"
             },
             "time": "2024-02-15T16:41:13+00:00"
+=======
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Permission handling for Laravel 8.0 and up",
+            "homepage": "https://github.com/spatie/laravel-permission",
+            "keywords": [
+                "acl",
+                "laravel",
+                "permission",
+                "permissions",
+                "rbac",
+                "roles",
+                "security",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-permission/issues",
+                "source": "https://github.com/spatie/laravel-permission/tree/6.9.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-06-22T23:04:52+00:00"
+>>>>>>> master
         },
         {
             "name": "symfony/clock",
@@ -6624,6 +6765,7 @@
             "time": "2023-12-08T13:03:43+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "twilio/sdk",
             "version": "8.1.1",
             "source": {
@@ -6677,6 +6819,8 @@
             "time": "2024-06-06T11:46:47+00:00"
         },
         {
+=======
+>>>>>>> master
             "name": "vlucas/phpdotenv",
             "version": "v5.6.0",
             "source": {
@@ -6835,6 +6979,7 @@
             "time": "2022-03-08T17:03:00+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "vonage/client",
             "version": "4.0.0",
             "source": {
@@ -7058,6 +7203,8 @@
             "time": "2023-02-14T15:54:06+00:00"
         },
         {
+=======
+>>>>>>> master
             "name": "webmozart/assert",
             "version": "1.11.0",
             "source": {

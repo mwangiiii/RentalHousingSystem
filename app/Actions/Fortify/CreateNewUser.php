@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Actions\Fortify;
 
 use App\Models\User;
@@ -37,9 +36,9 @@ class CreateNewUser implements CreatesNewUsers
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
-            'phone_number' => $phoneNumber,
+            'phone_number' => $input['phone_number'],
             'id_number' => $input['id_number'],
-            'role_id' => 4,
+            'roles_id' => $roleId, // Set the role ID
             'password' => Hash::make($input['password']),
         ]);
     }
