@@ -30,6 +30,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone_number',
         'id_number',
         'role_id'
+        // 'roles_id', // Assuming a direct role_id relationship
     ];
 
     /**
@@ -102,5 +103,26 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Message::class);
     }
-    
+   
+
+    /**
+     * Define the listers relationship.
+     */
+    public function listers()
+    {
+        return $this->hasMany(Lister::class);
+    }
+
+    /**
+     * Define the houses relationship.
+     */
+    public function houses()
+    {
+        return $this->hasMany(House::class, 'lister_id');
+    }
+
+    public function Hunter()
+    {
+        return $this->hasMany(Hunter::class);
+    }
 }

@@ -13,10 +13,14 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\TenantsController;
 use App\Http\Controllers\MessageTenantController;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\AddHousesController;
+use App\Http\Controllers\ListerController;
+use App\Http\Controllers\BookingController;
+use Illuminate\Support\Facades\Auth;
+use App\Models\House;
+use App\Models\User;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [AddHousesController::class, 'homeImages'])->name('homeImages');
 
 Route::middleware([
     'auth:sanctum',
@@ -98,6 +102,45 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
         Route::get('/messages', [TenantsController::class, 'messages'])->name('tenant.messages');
         Route::post('/tenant/maintenance/submit', [TenantsController::class, 'submitMaintenanceRequest'])->name('tenants.maintenance.store');
     });
+
+    Route::get('/lister/list-house', [AddHousesController::class,'listingView'])->name('lister.listingForm');
+    
+    // Add houses related routes
+    Route::post('/saveHouse', [AddHousesController::class, 'store'])->name('addListing.store');
+
+    // Test route to verify mass assignment
+    Route::get('/test-mass-assignment', [AddHousesController::class, 'testMassAssignment'])->name('testMassAssignment');
+
+    // Lister specific routes
+    Route::get('/lister/dashboard', function () {
+        // Fetch houses listed by this user
+        $houses = House::where('user_id', Auth::user()->id)->get();
+        return view('lister.dashboard', compact('houses')); // Replace with your lister dashboard view
+    })->name('lister.dashboard');
+        
+    Route::get('/lister/houses', [AddHousesController::class, 'getListerHouses'])->name('lister.houses');
+    Route::get('/lister/dashboard/house/edit', [AddHousesController::class, 'edit'])->name('houses.edit');
+    Route::put('/lister/dashboard/house/update', [AddHousesController::class, 'update'])->name('houses.update');
+    
+
+    // Hunter specific routes
+    Route::middleware('role:hunter')->group(function () {
+        Route::get('/hunter/dashboard', function () {
+            return view('hunter.dashboard'); // Replace with your hunter dashboard view
+        })->name('hunter.dashboard');
+        
+        Route::get('/hunter/dashboard', [AddHousesController::class, 'hunter'])->name('houses.hunter');
+    });
+    //routes for booking houses
+    Route::get('/booking/{houseId}', [BookingController::class, 'showBookingForm'])->name('booking');
+    Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
+    Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::get('/bookings/{id}', [BookingController::class, 'show'])->name('bookings.show');
+    Route::get('/booking/{id}/edit', [BookingController::class, 'edit'])->name('booking.edit');
+    Route::put('/booking/{id}', [BookingController::class, 'update'])->name('booking.update');
+    Route::delete('/booking/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
+
+
 });
 
 // In web.php
@@ -117,3 +160,34 @@ Route::middleware(['auth'])->group(function () {
 
 Route::post('/auto_screen', [LockScreenController::class, 'autoLock'])->name('auto-lock');
 Route::get('/is-locked', [LockScreenController::class, 'isLocked'])->name('is-locked');
+
+
+// Public routes
+
+Route::get('/houses/{house}', [AddHousesController::class, 'show'])->name('house.show');
+Route::view('/house', 'houses-info')->name('house.view');
+Route::get('/search', [PropertyController::class, 'search'])->name('property.search');
+// Route::get('/property/category/{category}', [PropertyController::class, 'category'])->name('property.category');
+
+// Property routes by location
+Route::get('/property/location/nairobi', [PropertyController::class, 'showNairobi']);
+Route::get('/property/location/nakuru', [PropertyController::class, 'showNakuru']);
+Route::get('/property/location/mombasa', [PropertyController::class, 'showMombasa']);
+Route::get('/property/location/kirinyaga', [PropertyController::class, 'showKirinyaga']);
+Route::get('/property/location/eldoret', [PropertyController::class, 'showEldoret']);
+Route::get('/property/location/embu', [PropertyController::class, 'showEmbu']);
+
+// Property routes by category
+Route::get('/property/category/apartment', [PropertyController::class, 'showApartments']);
+Route::get('/property/category/own-compound', [PropertyController::class, 'showOwnCompound']);
+Route::get('/property/category/gated-community', [PropertyController::class, 'showGatedCommunity']);
+Route::get('/property/category/townhouses', [PropertyController::class, 'showTownhouses']);
+Route::get('/property/category/commercial-properties', [PropertyController::class, 'showCommercialProperties']);
+Route::get('/property/category/short-term-rentals', [PropertyController::class, 'showShortTermRentals']);
+Route::get('/property/category/luxury-villas', [PropertyController::class, 'showLuxuryVillas']);
+Route::get('/property/category/property-management-services', [PropertyController::class, 'showPropertyManagementServices']);
+// Route::get('/hunter-dashboard', [HomeController::class, 'hunter'])->name('hunter.dashboard');
+// routes/web.php
+
+
+

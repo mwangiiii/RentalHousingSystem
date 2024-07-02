@@ -11,17 +11,29 @@
 
             <div>
                 <x-label for="name" value="{{ __('Name') }}" />
+<<<<<<< HEAD
                 <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="John Doe" />
+=======
+                <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="John Doe"/>
+>>>>>>> master
             </div>
 
             <div class="mt-4">
                 <x-label for="email" value="{{ __('Email') }}" />
+<<<<<<< HEAD
                 <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" placeholder="xyz@gmail.com" />
+=======
+                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" placeholder="xyz@gmail.com"/>
+>>>>>>> master
             </div>
 
             <div class="mt-4">
                 <x-label for="phone_number" value="{{ __('Phone Number') }}" />
+<<<<<<< HEAD
                 <x-input id="phone_number" class="block mt-1 w-full" type="tel" name="phone_number" :value="old('phone_number')" required autofocus autocomplete="phone_number" />
+=======
+                <x-input id="phone_number" class="block mt-1 w-full" type="tel" name="phone_number" :value="old('phone_number')" required autofocus autocomplete="phone_number" placeholder="+254xxxxxxxxx" />
+>>>>>>> master
             </div>
 
             <div class="mt-4">
@@ -29,6 +41,7 @@
                 <x-input id="id_number" class="block mt-1 w-full" type="text" name="id_number" :value="old('id_number')" required autofocus autocomplete="id_number" placeholder="12345678" />
             </div>
 
+<<<<<<< HEAD
             <div class="mt-4 relative">
                 <x-label for="password" value="{{ __('Password') }}" />
                 <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
@@ -42,10 +55,33 @@
                 <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
                 <div class="absolute top-full left-0 w-full mt-1 bg-white border border-gray-300 shadow-lg rounded-lg p-2 z-10 opacity-0 pointer-events-none transition-opacity duration-300">
                     <p class="text-sm text-gray-700">Your password should match the one above.</p>
+=======
+            <div class="mt-4">
+                <x-label for="password" value="{{ __('Password') }}" />
+                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
+            </div>
+
+            <div class="mt-4">
+                <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
+                <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
+            </div>
+
+            <div class="mt-4">
+                <x-label value="{{ __('Register as') }}" />
+                <div class="mt-2">
+                    <input id="lister_role" type="radio" name="role" value="lister" class="mr-2" required>
+                    <label for="lister_role">{{ __('Lister') }}</label>
+                </div>
+
+                <div class="mt-2">
+                    <input id="hunter_role" type="radio" name="role" value="hunter" class="mr-2" required>
+                    <label for="hunter_role">{{ __('House Hunter') }}</label>
+>>>>>>> master
                 </div>
             </div>
 
             @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
+<<<<<<< HEAD
             <div class="mt-4">
                 <x-label for="terms">
                     <div class="flex items-center">
@@ -60,6 +96,22 @@
                     </div>
                 </x-label>
             </div>
+=======
+                <div class="mt-4">
+                    <x-label for="terms">
+                        <div class="flex items-center">
+                            <x-checkbox name="terms" id="terms" required />
+
+                            <div class="ms-2">
+                                {!! __('I agree to the :terms_of_service and :privacy_policy', [
+                                        'terms_of_service' => '<a target="_blank" href="'.route('terms.show').'" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">'.__('Terms of Service').'</a>',
+                                        'privacy_policy' => '<a target="_blank" href="'.route('policy.show').'" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">'.__('Privacy Policy').'</a>',
+                                ]) !!}
+                            </div>
+                        </div>
+                    </x-label>
+                </div>
+>>>>>>> master
             @endif
 
             <div class="flex items-center justify-end mt-4">
@@ -73,4 +125,8 @@
             </div>
         </form>
     </x-authentication-card>
+<<<<<<< HEAD
 </x-guest-layout>
+=======
+</x-guest-layout>
+>>>>>>> master
