@@ -80,28 +80,32 @@ To install the Makazi hub project, we would recommend you to do the following:.
    After configuring the .env file, we have to run our migrations. Open the terminal of the IDE (making sure that you are in your project's directory) and run the command below to create the tables in your database.
    ```bash
    php artisan migrate
+   php artisan db:seed
    
-8. Nglock Integration
-Nglock is a security feature in our application that provides screen locking functionality to enhance privacy and security for users. This feature allows users to lock their screens and requires authentication to unlock.
+8. Ngrok Setup
 
-   #### Key Features:
-- **Screen Lock:** Users can lock their screens to prevent unauthorized access.
-- **Authentication:** Requires user authentication to unlock the screen.
-- **User Experience:** Enhances privacy and security without compromising user experience.
+Ngrok is a tool that allows us to securely expose a local web server to the internet. Follow these steps to set up Ngrok for our Laravel application:
 
-  -  ##### Getting Started:
-To enable Nglock in your application, follow these steps:
+### Step 1: Download Ngrok
 
-1. **Installation:** Include the Nglock package in your project dependencies.
-   
-   ```bash
-   npm install nglock --save
+Download Ngrok from [Ngrok's official website](https://ngrok.com/download).
 
+### Step 2: Extract and Install
 
-9. Server initialization.
-   we have to start the server by running the following command on the terminal (making sure that you are in the project's directory).this starts the server. the 
-   ```bash
-   php artisan serve
+Extract the downloaded Ngrok executable to a directory of your choice (e.g., `/path/to/ngrok`).
+
+### Step 3: Configure Ngrok
+
+#### 3.1 Authentication (Optional)
+
+If you have an Ngrok account and want to use authentication, authenticate your Ngrok client:
+
+    ```bash
+    ./ngrok authtoken your_auth_token
+we have to start the server by running the following command on the terminal (making sure that you are in the project's directory).this starts the server. the 
+
+    ```bash
+    php artisan serve
   The application should now be running on 'http://localhost:8000'.
   
 ## Usage
@@ -111,6 +115,16 @@ After successful installation and running of the application, we'll take you thr
 ### Accessing the website application.
 Go to your application and run `http://localhost:8000` on the url part of the browser that should take you to the home page of Makazi hub.
 Here, we allowed those seeking for house hunting service from the application to reach their goal. 
+### Step 3: Replacing Localhost URL with Ngrok URL
+
+For external access, you need to replace the `localhost` URL with the Ngrok URL. You can do this by updating the `.env` file in your Laravel project:
+
+1. Open the `.env` file in your project directory.
+2. Update the `APP_URL` value to the Ngrok forwarding URL provided:
+
+   ```env
+   APP_URL=https://abcd1234.ngrok.io
+
 
 ### 1. House Hunting.
 They can search for a house depending on criteria such as:
