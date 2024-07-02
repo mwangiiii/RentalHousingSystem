@@ -1,0 +1,1 @@
+<img class="h-25 w-25 mx-auto rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
