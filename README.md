@@ -81,7 +81,42 @@ To install the Makazi hub project, we would recommend you to do the following:.
    ```bash
    php artisan migrate
    php artisan db:seed
-   
+
+
+## M-Pesa Sandbox Integration
+
+M-Pesa provides a sandbox environment for developers to test their applications. Here are the steps to integrate M-Pesa in your application:
+
+### 1. Setting Up M-Pesa Sandbox
+
+To use M-Pesa Sandbox, you need to set up a few credentials and URLs.
+
+#### 1.1. Consumer Key and Consumer Secret
+
+These are provided by Safaricom when you register your app on the M-Pesa developer portal.
+
+- **Consumer Key**: A unique key provided by M-Pesa to authenticate your application.
+- **Consumer Secret**: A secret key provided by M-Pesa to authenticate your application.
+
+You will use these credentials to obtain an access token.
+
+#### 1.2. Getting the Access Token
+
+To get the access token, you need to make a request to the token URL using your Consumer Key and Consumer Secret.
+
+- **Token URL**: `https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials`
+
+Example request using curl:
+
+```bash
+curl -X GET \
+  -H "Authorization: Basic <base64_encoded(consumer_key:consumer_secret)>" \
+  "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
+
+
+
+
+  
 8. Ngrok Setup
 
 Ngrok is a tool that allows us to securely expose a local web server to the internet. Follow these steps to set up Ngrok for our Laravel application:
