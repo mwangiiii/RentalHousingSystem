@@ -1,16 +1,10 @@
 <?php
-<<<<<<< HEAD
 
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\Role;
-=======
-namespace App\Http\Controllers;
-
-use Illuminate\Support\Facades\Auth;
 use App\Models\House;
->>>>>>> master
 
 class HomeController extends Controller
 {
@@ -37,47 +31,21 @@ class HomeController extends Controller
             }
             elseif ($role && $role->role_name === 'Maintenance Worker') {
                 return view('maintenance.dashboard'); // Redirect to dashboard if user is property manager
-            } else {
+            } 
+            elseif($role && $role->role_name === 'Lister'){
+                return redirect()->route('lister.dashboard'); // House Lister dashboard
+            }
+            elseif($role && $role->role_name === 'House Hunter'){
+                return redirect()->route('hunter.dashboard'); // House Hunter dashboard
+            }
+            else {
                 return redirect()->route('tenant.dashboard'); // Redirect to tenant dashboard for other users
             }
-            
         } else {
             // User is not authenticated, redirect to login page
             return view('auth.login');
         }
     }
-            // Get the authenticated user and their role ID
-            $user = Auth::user();
-            $roleId = $user->roles_id;
-
-            // Determine which dashboard view to return based on the user's role ID
-            switch ($roleId) {
-                case 1:
-                    return view('admin.dashboard'); // Admin dashboard
-                case 2:
-                    return view('landlord.dashboard'); // Landlord dashboard
-                case 3:
-                    return view('manager.dashboard'); // Property Manager dashboard
-                case 4:
-                    return view('tenant.dashboard'); // Tenant dashboard
-                case 5:
-                    return view('accountant.dashboard'); // Accountant dashboard
-                case 6:
-                    return view('maintenance.dashboard'); // Maintenance Worker dashboard
-                case 7:
-                    return redirect()->route('lister.dashboard'); // House Lister dashboard
-                case 8:
-                    return redirect()->route('hunter.dashboard'); // House Hunter dashboard
-                default:
-                    return view('tenant.dashboard'); // Default to tenant dashboard for other users
-            }
-
-        } else {
-            // User is not authenticated, redirect to login page
-            return redirect()->route('login');
-        }
-    }
-
     public function locations()
     {
         // Your logic for handling locations

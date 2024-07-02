@@ -8,10 +8,10 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('makazi-hub-favicon-black.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('makazi-hub-favicon-black.png',true) }}">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="{{ asset('style.css') }}">
+    <link rel="stylesheet" href="{{ asset('style.css',true) }}">
     <title>{{ config('app.name', 'Makazi Hub') }}</title>
 </head>
 <body>
