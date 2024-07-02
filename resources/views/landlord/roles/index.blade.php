@@ -33,7 +33,13 @@
                             @foreach ($roles as $role)
                             <tr>
                                 <td class="border px-4 py-2">{{ $role->role_name }}</td>
-                                <td class="border px-4 py-2">{{ $role->property->name }}</td>
+                                <td class="border px-4 py-2">
+                                    @if ($role->property)
+                                        {{ $role->property->name }}
+                                    @else
+                                        No Property
+                                    @endif
+                                </td>
                                 <td class="border px-4 py-2">
                                     <form action="{{ route('landlord.roles.edit', $role) }}" method="GET" class="inline">
                                         <x-button type="submit" class="btn btn-sm btn-warning">Edit</x-button>

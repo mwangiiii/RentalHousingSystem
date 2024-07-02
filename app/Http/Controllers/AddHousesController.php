@@ -113,13 +113,6 @@ class AddHousesController extends Controller
             return back()->withErrors(['error' => 'Failed to add house. Please try again later.']);
         }
     }
-    
-
-
-
-
-
-
 
     /**
      * Count the number of houses.
@@ -239,4 +232,21 @@ class AddHousesController extends Controller
         return view('lister.listingForm', compact('categories'));  
     }
 
+    /**
+     * Display the hunter dashboard.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function hunter()
+    {
+        // Example: Fetching houses data
+        $houses = House::all(); // Adjust this query according to your needs
+
+        return view('hunter.dashboard', 
+        [
+            'houses' => $houses,
+        ]);
+    }
+
+    // Other methods for handling specific actions like viewing notifications, communication, feedback, etc.
 }
