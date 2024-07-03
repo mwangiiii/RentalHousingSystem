@@ -81,10 +81,59 @@ To install the Makazi hub project, we would recommend you to do the following:.
    After configuring the .env file, we have to run our migrations. Open the terminal of the IDE (making sure that you are in your project's directory) and run the command below to create the tables in your database.
    ```bash
    php artisan migrate
-8. Server initialization.
-   we have to start the server by running the following command on the terminal (making sure that you are in the project's directory).this starts the server. the 
-   ```bash
-   php artisan serve
+   php artisan db:seed
+
+
+## M-Pesa Sandbox Integration
+
+M-Pesa provides a sandbox environment for developers to test their applications. Here are the steps to integrate M-Pesa in your application:
+
+### 1. Setting Up M-Pesa Sandbox
+
+To use M-Pesa Sandbox, you need to set up a few credentials and URLs.
+
+#### 1.1. Consumer Key and Consumer Secret
+
+These are provided by Safaricom when you register your app on the M-Pesa developer portal.
+
+- **Consumer Key**: A unique key provided by M-Pesa to authenticate your application.
+- **Consumer Secret**: A secret key provided by M-Pesa to authenticate your application.
+
+You will use these credentials to obtain an access token.
+
+#### 1.2. Getting the Access Token
+
+To get the access token, you need to make a request to the token URL using your Consumer Key and Consumer Secret.
+
+- **Token URL**: `https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials`
+
+Example request using curl:
+
+
+Ngrok Setup
+
+Ngrok is a tool that allows us to securely expose a local web server to the internet. Follow these steps to set up Ngrok for our Laravel application:
+
+### Step 1: Download Ngrok
+
+Download Ngrok from [Ngrok's official website](https://ngrok.com/download).
+
+### Step 2: Extract and Install
+
+Extract the downloaded Ngrok executable to a directory of your choice (e.g., `/path/to/ngrok`).
+
+### Step 3: Configure Ngrok
+
+#### 3.1 Authentication (Optional)
+
+If you have an Ngrok account and want to use authentication, authenticate your Ngrok client:
+
+    ```bash
+    ./ngrok authtoken your_auth_token
+we have to start the server by running the following command on the terminal (making sure that you are in the project's directory).this starts the server. the 
+
+    ```bash
+    php artisan serve
   The application should now be running on 'http://localhost:8000'.
   
 ## Usage
@@ -94,6 +143,16 @@ After successful installation and running of the application, we'll take you thr
 ### Accessing the website application.
 Go to your application and run `http://localhost:8000` on the url part of the browser that should take you to the home page of Makazi hub.
 Here, we allowed those seeking for house hunting service from the application to reach their goal. 
+### Step 3: Replacing Localhost URL with Ngrok URL
+
+For external access, you need to replace the `localhost` URL with the Ngrok URL. You can do this by updating the `.env` file in your Laravel project:
+
+1. Open the `.env` file in your project directory.
+2. Update the `APP_URL` value to the Ngrok forwarding URL provided:
+
+   ```env
+   APP_URL=https://abcd1234.ngrok.io
+
 
 ### 1. House Hunting.
 They can search for a house depending on criteria such as:
