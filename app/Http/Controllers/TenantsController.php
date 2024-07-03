@@ -216,7 +216,6 @@ class TenantsController extends Controller
             ]);
             Log::error('Transaction failed', ['reason' => $failureReason]);
         }
-
         return response()->json(['status' => 'success']);
     }
 
