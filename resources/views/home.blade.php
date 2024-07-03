@@ -179,7 +179,7 @@
         </div>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const housesData = {!! json_encode($houses) !!};
+                const housesData = <?php echo json_encode($houses) ?>;
                 const housesContainer = document.querySelector('.housesContainer');
 
                 housesData.forEach(house => {
@@ -231,7 +231,7 @@
                 </div>
 
                 <div data-text="Contact Landlord" style="--r:5;font-size:20px;" class="glass">
-                    <img style="width:100%; height:auto; max-width:100%; max-height:100%; margin-top:0;" src="{{ asset('contact-us.png') }}">
+                    <img style="width:100%; height:auto; max-width:100%; max-height:100%; margin-top:0;" src="{{ asset('contact-us.png') }}" alt = "Example photo of landlord">
                 </div>
 
                 <div data-text="View the House" style="--r:5;font-size:20px;" class="glass">
