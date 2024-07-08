@@ -69,7 +69,10 @@ Makazi Hub enhances the rental experience by providing a unified platform that c
 
 ### Steps
 
-1. **Clone the Repository**
+1. ⁠**Fork the Repository**
+   - Click on the ⁠ Fork ⁠ button at the top right corner of this page.
+
+   - *Clone Your Fork*:
    ```bash
    git clone https://github.com/yourusername/makazi-hub.git
    cd makazi-hub
