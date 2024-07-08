@@ -1,0 +1,38 @@
+{
+  "node_modules/intl-tel-input/build/img/flags.png": {
+    "file": "assets/flags-BMGzDaSL.png",
+    "src": "node_modules/intl-tel-input/build/img/flags.png"
+  },
+  "node_modules/intl-tel-input/build/img/flags@2x.png": {
+    "file": "assets/flags@2x-DTOyOn_-.png",
+    "src": "node_modules/intl-tel-input/build/img/flags@2x.png"
+  },
+  "node_modules/intl-tel-input/build/img/globe.png": {
+    "file": "assets/globe-CmGWYked.png",
+    "src": "node_modules/intl-tel-input/build/img/globe.png"
+  },
+  "node_modules/intl-tel-input/build/img/globe@2x.png": {
+    "file": "assets/globe@2x-B5ubmlvR.png",
+    "src": "node_modules/intl-tel-input/build/img/globe@2x.png"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-CxePN_Fj.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-DZiRChPH.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "css": [
+      "assets/app-iu4gJl5z.css"
+    ],
+    "assets": [
+      "assets/flags-BMGzDaSL.png",
+      "assets/flags@2x-DTOyOn_-.png",
+      "assets/globe-CmGWYked.png",
+      "assets/globe@2x-B5ubmlvR.png"
+    ]
+  }
+}
