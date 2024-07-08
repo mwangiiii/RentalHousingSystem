@@ -138,8 +138,6 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
     Route::get('/booking/{id}/edit', [BookingController::class, 'edit'])->name('booking.edit');
     Route::put('/booking/{id}', [BookingController::class, 'update'])->name('booking.update');
     Route::delete('/booking/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
-
-
 });
 
 // In web.php
