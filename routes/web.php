@@ -14,7 +14,7 @@ use App\Http\Controllers\TenantsController;
 use App\Http\Controllers\MessageTenantController;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\AddHousesController;
-use App\Http\Controllers\ListerController;
+// use App\Http\Controllers\ListerController;
 use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\House;
@@ -109,7 +109,7 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
     Route::post('/saveHouse', [AddHousesController::class, 'store'])->name('addListing.store');
 
     // Test route to verify mass assignment
-    Route::get('/test-mass-assignment', [AddHousesController::class, 'testMassAssignment'])->name('testMassAssignment');
+    // Route::get('/test-mass-assignment', [AddHousesController::class, 'testMassAssignment'])->name('testMassAssignment');
 
     // Lister specific routes
     Route::get('/lister/dashboard', function () {
@@ -186,7 +186,5 @@ Route::get('/property/category/short-term-rentals', [PropertyController::class, 
 Route::get('/property/category/luxury-villas', [PropertyController::class, 'showLuxuryVillas']);
 Route::get('/property/category/property-management-services', [PropertyController::class, 'showPropertyManagementServices']);
 // Route::get('/hunter-dashboard', [HomeController::class, 'hunter'])->name('hunter.dashboard');
-// routes/web.php
-
 
 

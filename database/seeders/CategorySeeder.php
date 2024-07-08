@@ -3,7 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+// use Illuminate\Support\Facades\DB;
+use App\Models\Category;
 
 class CategorySeeder extends Seeder
 {
@@ -12,17 +13,40 @@ class CategorySeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run() :void
     {
-        DB::table('categories')->insert([
-            ['name' => 'Apartment'],
-            ['name' => 'Own Compound'],
-            ['name' => 'Gated Community Spaces'],
-            ['name' => 'Townhouses'],
-            ['name' => 'Commercial Properties'],
-            ['name' => 'Short-Term Rentals'],
-            ['name' => 'Luxury Villas'],
-            ['name' => 'Property Management Services'],
-        ]);
+        {
+            Category::create([
+                'name' => 'Apartment',
+            ]);
+    
+            Category::create([
+                'name' => 'Own Compound',
+            ]);
+    
+            Category::create([
+                'name' => 'Gated Community Spaces',
+            ]);
+    
+            Category::create([
+                'name' => 'Townhouses',
+            ]);
+    
+            Category::create([
+                'name' => 'Commercial Properties',
+            ]);
+    
+            Category::create([
+                'name' => 'Short-Term Rentals',
+            ]);
+
+            Category::create([
+                'name' => 'Luxury Villas'
+            ]);
+
+            Category::create([
+                'name' => 'Property Management Services'
+            ]);
+        }
     }
 }

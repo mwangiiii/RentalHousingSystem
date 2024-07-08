@@ -9,7 +9,7 @@ class Hunter extends Model
 {
     use HasFactory;
 
-    protected $table = 'hunter'; // Explicitly specifying the table name
+    // protected $table = 'hunter'; // Explicitly specifying the table name
     
     protected $fillable = [
         'user_id',

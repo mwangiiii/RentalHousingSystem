@@ -13,7 +13,7 @@
             <div class="p-6 bg-white border-b border-gray-200">
                 <h3 class="text-2xl font-bold mb-4">Dashboard Overview</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-blue-100 p-4 rounded-lg">
+                    <div class="bg-blue-400 p-4 rounded-lg">
                         <h4 class="text-xl font-semibold">Properties</h4>
                         <p class="text-lg">{{ $properties->count() }}</p>
                     </div>
@@ -27,7 +27,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Occupancy Rate Chart -->
                     <div class="bg-red-100 p-3 mt-4 rounded-lg">
                         <h4 class="text-xl font-semibold">Occupancy Rate</h4>

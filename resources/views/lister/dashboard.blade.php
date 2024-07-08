@@ -2,14 +2,6 @@
 
 @section('header')
 <div class="flex justify-between items-center mb-6">
-    <!-- <nav class="flex space-x-4">
-        <a href="{{ route('lister.listingForm')}}" class="text-gray-500 hover:text-gray-700">Add House</a>
-        <a href="{{ route('lister.houses')}}" id="fetchHouses" class="text-gray-500 hover:text-gray-700">Houses</a>
-        <a href="#" class="text-gray-500 hover:text-gray-700">Notifications</a>
-        <a href="#" class="text-gray-500 hover:text-gray-700">Communication</a>
-        <a href="#" class="text-gray-500 hover:text-gray-700">Feedback</a>
-    </nav> -->
-
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         {{ __('House Lister Dashboard') }}
     </h2>
@@ -26,33 +18,33 @@
                     <tr>
                         <th class="px-6 py-3 bg-gray-50">Location</th>
                         <th class="px-6 py-3 bg-gray-50">Price</th>
-                        <!-- <th class="px-6 py-3 bg-gray-50">Description</th> -->
+                        <th class="px-6 py-3 bg-gray-50">Category</th>
                         <th class="px-6 py-3 bg-gray-50">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="housesTableBody" class="bg-white divide-y divide-gray-200">
                     @if($houses->isNotEmpty())
-                    @foreach($houses as $house)
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ $house->location }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">{{ $house->price }}</td>
-                        <!-- <td class="px-6 py-4 whitespace-nowrap">{{ $house->description }}</td> -->
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <button class="action-button view-details" data-id="{{ $house->id }}">
-                                <span class="button_top">View Details</span>
-                            </button>
-                            <button class="action-button modify-house ml-2">
-                                <span class="button_top">Modify House</span>
-                            </button>
-                            <button class="action-button view-bookings ml-2">
-                                <span class="button_top">View Bookings</span>
-                            </button>
-                            <button class="action-button delete-house ml-2">
-                                <span class="button_top">Delete House</span>
-                            </button>
-                        </td>
-                    </tr>
-                    @endforeach
+                        @foreach($houses as $house)
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $house->location }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $house->price }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $house->category->name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <button class="action-button view-details" data-id="{{ $house->id }}">
+                                    <span class="button_top">View Details</span>
+                                </button>
+                                <button class="action-button modify-house ml-2">
+                                    <span class="button_top">Modify House</span>
+                                </button>
+                                <button class="action-button view-bookings ml-2">
+                                    <span class="button_top">View Bookings</span>
+                                </button>
+                                <button class="action-button delete-house ml-2">
+                                    <span class="button_top">Delete House</span>
+                                </button>
+                            </td>
+                        </tr>
+                        @endforeach
                     @else
                     <tr>
                         <td colspan="4" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">No houses found.</td>
@@ -60,7 +52,7 @@
                     @endif
                 </tbody>
             </table>
-            <p id="noHousesMessage" class="text-center mt-4 text-gray-500 {{ $houses->isEmpty() ? '' : 'hidden' }}">No houses available.</p>
+            <!-- <p id="noHousesMessage" class="text-center mt-4 text-gray-500 {{ $houses->isEmpty() ? '' : 'hidden' }}">No houses available.</p> -->
         </div>
     </div>
 

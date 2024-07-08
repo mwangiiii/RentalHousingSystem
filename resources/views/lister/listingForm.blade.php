@@ -1,180 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends ('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add House</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 20px;
-        }
+@section('header')
+<h2 class="font-semibold text-xl text-gray-800 leading-tight">
+    {{ __('Add a Listing') }}
+</h2>
+@endsection
 
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .input-container {
-            position: relative;
-            margin-bottom: 30px;
-        }
-
-        .input-field,
-        .input-file {
-            font-size: 18px;
-            width: 100%;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            padding: 10px;
-            background-color: #fff;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        .input-field:focus,
-        .input-file:focus {
-            border-color: #007bff;
-        }
-
-        .label {
-            margin-bottom: 5px;
-            display: block;
-            font-weight: bold;
-            color: #495057;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 16px;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #0056b3;
-        }
-
-        .error-messages {
-            color: red;
-            margin-bottom: 20px;
-        }
-
-        /* Additional Styles for Enhancing Appearance */
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-        }
-
-        textarea {
-            min-height: 100px;
-        }
-
-        select {
-            width: 100%;
-            padding: 10px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-control {
-            font-size: 16px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            width: 100%;
-            transition: border-color 0.3s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: #007bff;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="container">
-        @if ($errors->any())
-        <div class="error-messages">
-            <ul>
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
+@section('content')
+<div class="py-12">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="p-6 bg-white border-b border-gray-200">
+                <h3 class="text-2xl font-bold mb-4">Create Listing</h3>
+                @if(session('success'))
+                <div id="success-banner" class="alert alert-success bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+                @elseif(session('errors'))
+                <div id="error-banner" class="alert alert-error bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <span class="block sm:inline">{{ session('errors') }}</span>
+                </div>
+                @endif
+                <form action="{{ route('addListing.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="col-span-6 sm:col-span-4">
+                            <x-label for="location" :value="__('Location')" />
+                            <x-input type="text" id="location" class="block mt-1 w-full" name="location" :value="old('location')" required autofocus />
+                            <x-input-error for="location" class="mt-2" />
+                        </div>
+                        <div class="col-span-6 sm:col-span-4">
+                            <x-label for="price" :value="__('Price')" />
+                            <x-input id="price" class="block mt-1 w-full" type="number" name="price" :value="old('price')" required autofocus />
+                            <x-input-error for="price" class="mt-2" />
+                        </div>
+                        <div class="col-span-6 sm:col-span-4">
+                            <x-label for="availability" :value="__('Availability')" />
+                            <x-radio-button-group name="availability" :options="['available' => 'Available', 'unavailable' => 'Unavailable', 'booked' => 'Booked']" selected="{{ old('availability') ?? $yourModel->availability ?? '' }}" /> 
+                            <x-input-error for="availability" class="mt-2" />
+                        </div>
+                        <div class="col-span-6 sm:col-span-4">
+                            <x-label for="phone_number" :value="__('Phone Number')" />
+                            <x-input id="phone_number" type="tel" class="block mt-1 w-full" name="phone_number" :value="old('phone_number')" required autofocus />
+                            <x-input-error for="phone_number" class="mt-2" />
+                        </div>
+                        <div class="col-span-6 sm:col-span-4">
+                            <x-label for="rules_and_regulations" :value="__('Rules And Regulations')" />
+                            <x-textarea id="rules_and_regulations" class="block mt-1 w-full" name="rules_and_regulations" :value="old('rules_and_regulations')" required autofocus></x-textarea>
+                            <x-input-error for="rules_and_regulations" class="mt-2" />
+                        </div>
+                        <div class="col-span-6 sm:col-span-4">
+                            <x-label for="amenities" :value="__('Amenities')" />
+                            <x-textarea id="amenities" class="block mt-1 w-full" name="amenities" :value="old('amenities')" required autofocus></x-textarea>
+                            <x-input-error for="amenities" class="mt-2" />
+                        </div>
+                        <div class="col-span-6 sm:col-span-4">
+                            <x-label for="category_id" :value="__('Category')" />
+                            <x-select id="category_id" class="block mt-1 w-full" name="category_id" :value="old('category_id')" :options="$categories" fieldName="name" idField="id" required autofocus />
+                            <x-input-error for="category_id" class="mt-2" />
+                        </div>
+                        <div class="col-span-6 sm:col-span-4">
+                            <x-label for="main_image" :value="__('Main Image')" />
+                            <x-input id="main_image" class="block mt-1 w-full" name="main_image" :value="old('main_image')" type="file" required autofocus />
+                            <x-input-error for="main_image" class="mt-2" />
+                        </div>
+                        <div class="col-span-6 sm:col-span-4">
+                            <x-label for="home_image" :value="__('Home Image')" />
+                            <x-input id="home_image" class="block mt-1 w-full" name="home_image" :value="old('home_image')" type="file" required autofocus />
+                            <x-input-error for="home_image" class="mt-2" />
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-end mt-4">
+                        <x-button class="ml-4">
+                            {{ __('Create Listing') }}
+                        </x-button>
+                    </div>
+                </form>
+            </div>
         </div>
-        @endif
-        <div class="container">
-            <form action="{{ route('addListing.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="form-group">
-                    <label for="location">Location</label>
-                    <input type="text" name="location" id="location" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="price">Price</label>
-                    <input type="number" name="price" id="price" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea name="description" id="description" class="form-control" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="availability">Availability</label>
-                    <input type="text" name="availability" id="availability" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="contact">Contact</label>
-                    <input type="text" name="contact" id="contact" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="rules_and_regulations">Rules and Regulations</label>
-                    <textarea name="rules_and_regulations" id="rules_and_regulations" class="form-control"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="amenities">Amenities</label>
-                    <textarea name="amenities" id="amenities" class="form-control" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="category">Category</label>
-                    <select name="category_id" id="category" class="input-field" required>
-                        <option value="">Select Category</option>
-                        @foreach($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="main_image">Main Image</label>
-                    <input type="file" name="main_image" id="main_image" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="home_images">Additional Images</label>
-                    <input type="file" name="home_images[]" id="home_images" class="form-control" multiple>
-                </div>
-                <button type="submit" class="btn btn-primary">Add Listing</button>
-            </form>
-        </div>
-
     </div>
-
-</body>
-
-</html>
+</div>
+@endsection

@@ -45,7 +45,6 @@ class PropertyController extends Controller
     //Function to display the edit blade
     public function edit(Property $property)
     {
-        
         return view('landlord.properties.edit', compact('property'));
     }
 
