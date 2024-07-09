@@ -69,7 +69,7 @@ Makazi Hub enhances the rental experience by providing a unified platform that c
 
 ### Steps
 
-1. ⁠**Fork the Repository**
+1. **Fork the Repository**
    - Click on the ⁠ Fork ⁠ button at the top right corner of this page.
 
    - *Clone Your Fork*:
@@ -91,12 +91,35 @@ Makazi Hub enhances the rental experience by providing a unified platform that c
    ```
 
 4. **Configure Database**
-   - Copy `.env.example` to `.env` and configure your database connection details.
+   - Copy `.env.example` to `.env` and configure your database connection details. Example:
+     ```dotenv
+     DB_CONNECTION=mysql
+     DB_HOST=127.0.0.1
+     DB_PORT=3306
+     DB_DATABASE=your_database
+     DB_USERNAME=your_username
+     DB_PASSWORD=your_password
+     ```
 
-5. **Configure Email**
-   - Set up SMTP details in the `.env` file for sending emails.
+5. **Generate Application Key**
+   ```bash
+   php artisan key:generate
+   ```
 
-6. **Run Migrations and Seed Database**
+6. **Configure Email**
+   - Set up SMTP details in the `.env` file for sending emails. Example:
+     ```dotenv
+     MAIL_MAILER=smtp
+     MAIL_HOST=smtp.gmail.com
+     MAIL_PORT=587
+     MAIL_USERNAME=your_email@gmail.com
+     MAIL_PASSWORD=your_password
+     MAIL_ENCRYPTION=tls
+     MAIL_FROM_ADDRESS=no-reply@makazihub.com
+     MAIL_FROM_NAME="Makazi Hub"
+     ```
+
+7. **Run Migrations and Seed Database**
    ```bash
    php artisan migrate
    php artisan db:seed
