@@ -13,10 +13,13 @@ declare(strict_types=1);
 
 namespace Carbon\Traits;
 
+use BackedEnum;
 use BadMethodCallException;
 use Carbon\CarbonInterface;
 use Carbon\Exceptions\BadComparisonUnitException;
 use Carbon\FactoryImmutable;
+use Carbon\Month;
+use Carbon\WeekDay;
 use DateTimeInterface;
 use InvalidArgumentException;
 
@@ -873,12 +876,23 @@ trait Comparison
      *
      * @param string $tester day name, month name, hour, date, etc. as string
      */
-    public function is(string $tester): bool
+    public function is(WeekDay|Month|string $tester): bool
     {
+        if ($tester instanceof BackedEnum) {
+            $tester = $tester->name;
+        }
+
         $tester = trim($tester);
 
         if (preg_match('/^\d+$/', $tester)) {
             return $this->year === (int) $tester;
+        }
+
+        if (preg_match('/^(?:Jan|January|Feb|February|Mar|March|Apr|April|May|Jun|June|Jul|July|Aug|August|Sep|September|Oct|October|Nov|November|Dec|December)$/i', $tester)) {
+            return $this->isSameMonth(
+                $this->transmitFactory(static fn () => static::parse($tester)),
+                false,
+            );
         }
 
         if (preg_match('/^\d{3,}-\d{1,2}$/', $tester)) {

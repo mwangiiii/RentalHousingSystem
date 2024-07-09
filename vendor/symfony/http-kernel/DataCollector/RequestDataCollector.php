@@ -36,12 +36,11 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
      */
     private \SplObjectStorage $controllers;
     private array $sessionUsages = [];
-    private ?RequestStack $requestStack;
 
-    public function __construct(?RequestStack $requestStack = null)
-    {
+    public function __construct(
+        private ?RequestStack $requestStack = null,
+    ) {
         $this->controllers = new \SplObjectStorage();
-        $this->requestStack = $requestStack;
     }
 
     public function collect(Request $request, Response $response, ?\Throwable $exception = null): void
@@ -63,7 +62,7 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
         $sessionMetadata = [];
         $sessionAttributes = [];
         $flashes = [];
-        if ($request->hasSession()) {
+        if (!$request->attributes->getBoolean('_stateless') && $request->hasSession()) {
             $session = $request->getSession();
             if ($session->isStarted()) {
                 $sessionMetadata['Created'] = date(\DATE_RFC822, $session->getMetadataBag()->getCreated());
@@ -469,7 +468,7 @@ class RequestDataCollector extends DataCollector implements EventSubscriberInter
                 'line' => $r->getStartLine(),
             ];
 
-            if (str_contains($r->name, '{closure')) {
+            if ($r->isAnonymous()) {
                 return $controller;
             }
             $controller['method'] = $r->name;

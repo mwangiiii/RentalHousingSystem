@@ -7,7 +7,7 @@ use Vonage\Verify2\VerifyObjects\VerificationWorkflow;
 
 abstract class BaseVerifyRequest implements RequestInterface
 {
-    private const TIMEOUT_MIN = 60;
+    private const TIMEOUT_MIN = 15;
     private const TIMEOUT_MAX = 900;
     private const LENGTH_MIN = 4;
     private const LENGTH_MAX = 10;
@@ -124,9 +124,7 @@ abstract class BaseVerifyRequest implements RequestInterface
 
     public function getWorkflows(): array
     {
-        return array_map(static function ($workflow) {
-            return $workflow->toArray();
-        }, $this->workflows);
+        return array_map(static fn($workflow) => $workflow->toArray(), $this->workflows);
     }
 
     public function addWorkflow(VerificationWorkflow $verificationWorkflow): static

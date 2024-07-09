@@ -17,7 +17,7 @@ class ClientFactory
             ->setBaseUrl($api->getClient()->getApiUrl() . '/v1/messages')
             ->setIsHAL(false)
             ->setErrorsOn200(false)
-            ->setAuthHandler([new KeypairHandler(), new BasicHandler()])
+            ->setAuthHandlers([new KeypairHandler(), new BasicHandler()])
             ->setExceptionErrorHandler(new ExceptionErrorHandler());
 
         return new Client($api);

@@ -24,6 +24,7 @@ use Vonage\Client\APIResource;
 use Vonage\Client\Credentials\Basic;
 use Vonage\Client\Credentials\Container;
 use Vonage\Client\Credentials\CredentialsInterface;
+use Vonage\Client\Credentials\Gnp;
 use Vonage\Client\Credentials\Handler\BasicHandler;
 use Vonage\Client\Credentials\Handler\SignatureBodyFormHandler;
 use Vonage\Client\Credentials\Handler\SignatureBodyHandler;
@@ -41,8 +42,10 @@ use Vonage\Entity\EntityInterface;
 use Vonage\Insights\ClientFactory as InsightsClientFactory;
 use Vonage\Meetings\ClientFactory as MeetingsClientFactory;
 use Vonage\Numbers\ClientFactory as NumbersClientFactory;
+use Vonage\NumberVerification\ClientFactory as NumberVerificationClientFactory;
 use Vonage\Redact\ClientFactory as RedactClientFactory;
 use Vonage\Secrets\ClientFactory as SecretsClientFactory;
+use Vonage\SimSwap\ClientFactory as SimSwapClientFactory;
 use Vonage\SMS\ClientFactory as SMSClientFactory;
 use Vonage\Subaccount\ClientFactory as SubaccountClientFactory;
 use Vonage\Messages\ClientFactory as MessagesClientFactory;
@@ -74,11 +77,13 @@ use function strpos;
  * @method Messages\Client messages()
  * @method Application\Client applications()
  * @method Conversion\Client conversion()
- * @method Conversation\Client conversations()
+ * @method Conversation\Client conversation()
  * @method Insights\Client insights()
  * @method Numbers\Client numbers()
+ * @method NumberVerification\Client numberVerification()
  * @method Redact\Client redact()
  * @method Secrets\Client secrets()
+ * @method SimSwap\Client simswap()
  * @method SMS\Client sms()
  * @method Subaccount\Client subaccount()
  * @method Users\Client users()
@@ -152,7 +157,7 @@ class Client implements LoggerAwareInterface
         if (is_null($client)) {
             // Since the user did not pass a client, try and make a client
             // using the Guzzle 6 adapter or Guzzle 7 (depending on availability)
-            list($guzzleVersion) = explode('@', InstalledVersions::getVersion('guzzlehttp/guzzle'), 1);
+            [$guzzleVersion] = explode('@', (string) InstalledVersions::getVersion('guzzlehttp/guzzle'), 1);
             $guzzleVersion = (float) $guzzleVersion;
 
             if ($guzzleVersion >= 6.0 && $guzzleVersion < 7) {
@@ -169,12 +174,12 @@ class Client implements LoggerAwareInterface
 
         $this->setHttpClient($client);
 
-        // Make sure we know how to use the credentials
         if (
             !($credentials instanceof Container) &&
             !($credentials instanceof Basic) &&
             !($credentials instanceof SignatureSecret) &&
-            !($credentials instanceof Keypair)
+            !($credentials instanceof Keypair) &&
+            !($credentials instanceof Gnp)
         ) {
             throw new RuntimeException('unknown credentials type: ' . $credentials::class);
         }
@@ -215,10 +220,12 @@ class Client implements LoggerAwareInterface
             'conversation' => ConversationClientFactory::class,
             'insights' => InsightsClientFactory::class,
             'numbers' => NumbersClientFactory::class,
+            'numberVerification' => NumberVerificationClientFactory::class,
             'meetings' => MeetingsClientFactory::class,
             'messages' => MessagesClientFactory::class,
             'redact' => RedactClientFactory::class,
             'secrets' => SecretsClientFactory::class,
+            'simswap' => SimSwapClientFactory::class,
             'sms' => SMSClientFactory::class,
             'subaccount' => SubaccountClientFactory::class,
             'users' => UsersClientFactory::class,
@@ -228,12 +235,13 @@ class Client implements LoggerAwareInterface
 
             // Additional utility classes
             APIResource::class => APIResource::class,
+            Client::class => fn() => $this
         ];
 
         if (class_exists('Vonage\Video\ClientFactory')) {
             $services['video'] = 'Vonage\Video\ClientFactory';
         } else {
-            $services['video'] = function() {
+            $services['video'] = function (): never {
                 throw new \RuntimeException('Please install @vonage/video to use the Video API');
             };
         }
@@ -248,15 +256,7 @@ class Client implements LoggerAwareInterface
         // Disable throwing E_USER_DEPRECATED notices by default, the user can turn it on during development
         if (array_key_exists('show_deprecations', $this->options) && ($this->options['show_deprecations'] == true)) {
             set_error_handler(
-                static function (
-                    int $errno,
-                    string $errstr,
-                    string $errfile = null,
-                    int $errline = null,
-                    array $errorcontext = null
-                ) {
-                    return true;
-                },
+                static fn(int $errno, string $errstr, string $errfile = null, int $errline = null, array $errorcontext = null) => true,
                 E_USER_DEPRECATED
             );
         }
@@ -529,7 +529,7 @@ class Client implements LoggerAwareInterface
             }
 
             foreach ($disallowedCharacters as $char) {
-                if (strpos($app[$key], $char) !== false) {
+                if (str_contains((string) $app[$key], $char)) {
                     throw new InvalidArgumentException('app.' . $key . ' cannot contain the ' . $char . ' character');
                 }
             }
@@ -601,8 +601,8 @@ class Client implements LoggerAwareInterface
     protected static function requiresBasicAuth(RequestInterface $request): bool
     {
         $path = $request->getUri()->getPath();
-        $isSecretManagementEndpoint = strpos($path, '/accounts') === 0 && strpos($path, '/secrets') !== false;
-        $isApplicationV2 = strpos($path, '/v2/applications') === 0;
+        $isSecretManagementEndpoint = str_starts_with($path, '/accounts') && str_contains($path, '/secrets');
+        $isApplicationV2 = str_starts_with($path, '/v2/applications');
 
         return $isSecretManagementEndpoint || $isApplicationV2;
     }
@@ -615,8 +615,8 @@ class Client implements LoggerAwareInterface
     {
         $path = $request->getUri()->getPath();
 
-        $isRedact =  strpos($path, '/v1/redact') === 0;
-        $isMessages =  strpos($path, '/v1/messages') === 0;
+        $isRedact =  str_starts_with($path, '/v1/redact');
+        $isMessages =  str_starts_with($path, '/v1/messages');
 
         return $isRedact || $isMessages;
     }
@@ -628,10 +628,10 @@ class Client implements LoggerAwareInterface
     protected function needsKeypairAuthentication(RequestInterface $request): bool
     {
         $path = $request->getUri()->getPath();
-        $isCallEndpoint = strpos($path, '/v1/calls') === 0;
-        $isRecordingUrl = strpos($path, '/v1/files') === 0;
-        $isStitchEndpoint = strpos($path, '/beta/conversation') === 0;
-        $isUserEndpoint = strpos($path, '/beta/users') === 0;
+        $isCallEndpoint = str_starts_with($path, '/v1/calls');
+        $isRecordingUrl = str_starts_with($path, '/v1/files');
+        $isStitchEndpoint = str_starts_with($path, '/beta/conversation');
+        $isUserEndpoint = str_starts_with($path, '/beta/users');
 
         return $isCallEndpoint || $isRecordingUrl || $isStitchEndpoint || $isUserEndpoint;
     }

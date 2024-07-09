@@ -4,17 +4,12 @@ declare(strict_types=1);
 
 namespace Vonage\Account;
 
-use JsonSerializable;
 use RuntimeException;
 use Vonage\Entity\EntityInterface;
 use Vonage\Entity\Hydrator\ArrayHydrateInterface;
 use Vonage\Entity\JsonResponseTrait;
-use Vonage\Entity\JsonSerializableInterface;
 use Vonage\Entity\JsonSerializableTrait;
-use Vonage\Entity\JsonUnserializableInterface;
 use Vonage\Entity\NoRequestResponseTrait;
-use Vonage\Network;
-
 use function array_key_exists;
 use function ltrim;
 use function preg_replace;
@@ -94,7 +89,7 @@ abstract class Price implements
         $storage = [];
 
         foreach ($data as $k => $v) {
-            $k = strtolower(ltrim(preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '_$0', $k), '_'));
+            $k = strtolower(ltrim((string) preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '_$0', $k), '_'));
 
             // PrefixPrice fixes
             switch ($k) {
