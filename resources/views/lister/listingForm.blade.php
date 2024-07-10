@@ -36,7 +36,7 @@
                         </div>
                         <div class="col-span-6 sm:col-span-4">
                             <x-label for="availability" :value="__('Availability')" />
-                            <x-radio-button-group name="availability" :options="['available' => 'Available', 'unavailable' => 'Unavailable', 'booked' => 'Booked']" selected="{{ old('availability') ?? $yourModel->availability ?? '' }}" /> 
+                            <x-radio-button-group name="availability" :options="['available' => 'Available', 'unavailable' => 'Unavailable', 'booked' => 'Booked']" selected="{{ old('availability') ?? $house->availability ?? '' }}" /> 
                             <x-input-error for="availability" class="mt-2" />
                         </div>
                         <div class="col-span-6 sm:col-span-4">

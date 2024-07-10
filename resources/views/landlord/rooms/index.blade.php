@@ -24,21 +24,21 @@
                     <table class="table-auto w-full">
                         <thead>
                             <tr>
-                                <th class="px-4 py-3 text-left tracking-wider">{{ __('Room No') }}</th>
-                                <th class="px-4 py-3 text-left tracking-wider">{{ __('Rent') }}</th>
-                                <th class="px-4 py-3 text-left tracking-wider">{{ __('Property') }}</th>
-                                <th class="px-4 py-3 text-left tracking-wider">{{ __('Description') }}</th>
-                                <th class="px-4 py-3 text-left tracking-wider">{{ __('Actions') }}</th>
+                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('Room No') }}</th>
+                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('Rent') }}</th>
+                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('Property') }}</th>
+                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('Description') }}</th>
+                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach ($rooms as $room)
                             <tr>
-                                <td class="border px-4 py-2">{{ $room->room_number }}</td>
-                                <td class="border px-4 py-2">{{ $room->rent }}</td>
-                                <td class="border px-4 py-2">{{ $room->property->name }}</td>
-                                <td class="border px-4 py-2">{{ $room->description }}</td>
-                                <td class="border px-4 py-2">
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $room->room_number }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $room->rent }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $room->property->name }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $room->description }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     <form action="{{ route('landlord.rooms.edit', $room) }}" method="GET" class="inline">
                                         <x-button type="submit" class="btn btn-sm btn-warning">Edit</x-button>
                                     </form>

@@ -22,7 +22,7 @@ class TenantWelcomeMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(User $user, $password,$pdfPath)
+    public function __construct(User $user, $password, $pdfPath)
     {
         $this->user = $user;
         $this->password = $password;
@@ -63,8 +63,9 @@ class TenantWelcomeMail extends Mailable
     public function attachments(): array
     {
         return [
-            Attachment::fromStorage($this->pdfPath)
-                        ->as('Rental Agreement.pdf')
+            Attachment::fromPath($this->pdfPath)
+                ->as('Rental Agreement.pdf')
+                ->withMime('application/pdf'),
         ];
     }
 }
