@@ -72,7 +72,7 @@
 </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
     // Script of the occupany rate graph
@@ -371,4 +371,4 @@
         chart.render();
     }
 </script>
-@endsection
+@endpush

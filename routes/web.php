@@ -14,11 +14,10 @@ use App\Http\Controllers\TenantsController;
 use App\Http\Controllers\MessageTenantController;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\AddHousesController;
-// use App\Http\Controllers\ListerController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\House;
-use App\Models\User;
 
 Route::get('/', [AddHousesController::class, 'homeImages'])->name('homeImages');
 
@@ -34,7 +33,7 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
     Route::prefix('landlord')->group(function () {
 
         Route::get('/dashboard', [LandlordController::class, 'dashboard'])->name('admin.dashboard');
-        Route::get('/payments/dashboard', [LandlordController::class, 'payments'])->name('admin.payments');
+        // Route::get('/payments/dashboard', [LandlordController::class, 'payments'])->name('admin.payments');
 
         // Landlord property routes
         Route::get('/properties', [PropertyController::class, 'index'])->name('landlord.properties.index');
@@ -65,6 +64,10 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
             'destroy' => 'landlord.tenants.destroy',
         ]);
         Route::put('/tenants/{tenant}/checkout', [TenantController::class, 'checkout'])->name('landlord.tenants.checkout');
+
+        // Landlord Payment routes
+        Route::get('/payments', [PaymentController::class, 'index'])->name('landlord.payments.index');
+        Route::get('/payments/filter', [PaymentController::class, 'filter'])->name('landlord.payments.filter');
 
 
         // Landlord role routes
@@ -103,8 +106,8 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
         Route::post('/tenant/maintenance/submit', [TenantsController::class, 'submitMaintenanceRequest'])->name('tenants.maintenance.store');
     });
 
-    Route::get('/lister/list-house', [AddHousesController::class,'listingView'])->name('lister.listingForm');
-    
+    Route::get('/lister/list-house', [AddHousesController::class, 'listingView'])->name('lister.listingForm');
+
     // Add houses related routes
     Route::post('/saveHouse', [AddHousesController::class, 'store'])->name('addListing.store');
 
@@ -117,17 +120,17 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
         $houses = House::where('user_id', Auth::user()->id)->get();
         return view('lister.dashboard', compact('houses')); // Replace with your lister dashboard view
     })->name('lister.dashboard');
-        
+
     Route::get('/lister/houses', [AddHousesController::class, 'getListerHouses'])->name('lister.houses');
     Route::get('/lister/dashboard/house/edit', [AddHousesController::class, 'edit'])->name('houses.edit');
     Route::put('/lister/dashboard/house/update', [AddHousesController::class, 'update'])->name('houses.update');
-    
+
 
     // Hunter specific routes
     // Route::get('/hunter/dashboard', function () {
     //     return view('hunter.dashboard'); // Replace with your hunter dashboard view
     // })->name('hunter.dashboard');
-    
+
     Route::get('/hunter/dashboard', [AddHousesController::class, 'hunter'])->name('hunter.dashboard');
 
     // Routes for booking houses
@@ -184,5 +187,3 @@ Route::get('/property/category/short-term-rentals', [PropertyController::class, 
 Route::get('/property/category/luxury-villas', [PropertyController::class, 'showLuxuryVillas']);
 Route::get('/property/category/property-management-services', [PropertyController::class, 'showPropertyManagementServices']);
 // Route::get('/hunter-dashboard', [HomeController::class, 'hunter'])->name('hunter.dashboard');
-
-
