@@ -9,12 +9,14 @@ class House extends Model
 {
     use HasFactory;
 
+    // protected $table = 'houses'; 
+
     protected $fillable = [
         'location',
         'price',
         'description',
         'availability',
-        'contact',
+        'phone_number',
         'rules_and_regulations',
         'amenities',
         'user_id',

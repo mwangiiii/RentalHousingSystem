@@ -53,8 +53,8 @@
                         </div>
                         <div class="col-span-6 sm:col-span-4">
                             <x-label for="room_id" :value="__('Room')" />
-                            <x-select name="room_id" id="room_id" class="block mt-1 w-full" :options="$rooms" fieldName="room_number" idField="id">
-                            </x-select>
+                            <x-select name="room_id" id="room_id" class="block mt-1 w-full" :options="$rooms" fieldName="room_number" idField="id" />
+                            <x-input-error for="room_id" class="mt-2" />
                         </div>
 
                         <div class="col-span-6 sm:col-span-4">

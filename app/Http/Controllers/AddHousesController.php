@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\House;
 use App\Models\Image;
-use App\Models\Lister; // Import Lister model
+use App\Models\Lister;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
@@ -30,8 +30,8 @@ class AddHousesController extends Controller
                 'contact' => 'required|string',
                 'rules_and_regulations' => 'nullable|string',
                 'amenities' => 'required|string',
-                'category_id' => 'required|exists:categories,id', // Validate category_id
-                'home_images.*' => 'image|mimes:jpeg,png,jpg,gif', // Validate each image
+                'category_id' => 'required|exists:categories,id',
+                'home_images.*' => 'image|mimes:jpeg,png,jpg,gif',
                 'main_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
     
@@ -42,16 +42,25 @@ class AddHousesController extends Controller
             $lister = Lister::where('user_id', $user_id)->first();
             
             if ($lister) {
-                dd('hii');
                 $validatedData['lister_id'] = $lister->id;
             } else {
-                Log::error('Lister not found for user ID: ' . auth()->id());
+                // Log::error('Lister not found for user ID: ' . auth()->id());
                 return back()->withErrors(['error' => 'Failed to find lister information. Please try again later.']);
             }
             
             // Create the house entry
-            $house = House::create($validatedData);
-            Log::info('House created successfully', ['house_id' => $house->id]);
+            $house = House::create([
+                'location' => $validatedData['location'],
+                'price' => $validatedData['price'],
+                'description' => $validatedData['description'],
+                'availability' => $validatedData['availability'],
+                'phone_number' => $validatedData['phone_number'],
+                'rules_and_regulations' => $validatedData['rules_and_regulations'],
+                'amenities' => $validatedData['amenities'],
+                'category_id' => $validatedData['category_id'],
+                'main_image' => $validatedData['main_image']
+            ]);
+            // Log::info('House created successfully', ['house_id' => $house->id]);
     
             // Initialize array to hold image data
             $images = [];
@@ -106,11 +115,12 @@ class AddHousesController extends Controller
                 Log::warning('No images to insert into the database.');
             }
     
-            return view('components.add-house-confirmation');
-    
+            return redirect()->route('lister.listingForm')->with('success', 'Listing added successfully.');
+
         } catch (\Exception $e) {
             Log::error('Error creating house: ' . $e->getMessage());
-            return back()->withErrors(['error' => 'Failed to add house. Please try again later.']);
+            // return back()->withErrors(['error' => 'Failed to add house. Please try again later.' $e->getMessage()]);
+            return $e->getMessage();
         }
     }
 

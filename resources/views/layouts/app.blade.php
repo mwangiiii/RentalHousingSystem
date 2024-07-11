@@ -102,6 +102,8 @@
                 @include('layouts.navs.landlord')
             @elseif (auth()->user()->hasRole('Tenant'))
                 @include('layouts.navs.tenant')
+            @elseif (auth()->user()->hasRole('Lister'))
+                @include('layouts.navs.lister')
             @else
                 @include('navigation-menu')
             @endif
