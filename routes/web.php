@@ -121,8 +121,12 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
     })->name('lister.dashboard');
 
     Route::get('/lister/houses', [AddHousesController::class, 'getListerHouses'])->name('lister.houses');
-    Route::get('/lister/dashboard/house/edit', [AddHousesController::class, 'edit'])->name('houses.edit');
-    Route::put('/lister/dashboard/house/update', [AddHousesController::class, 'update'])->name('houses.update');
+  Route::get('/houses/{id}/edit', [AddHousesController::class, 'edit'])->name('houses.edit');
+Route::post('/houses/{id}/update', [AddHousesController::class, 'update'])->name('houses.update');
+
+Route::resource('houses', AddHousesController::class);
+
+Route::get('houses', [AddHousesController::class, 'index'])->name('houses.index');
 
 
     // Hunter specific routes

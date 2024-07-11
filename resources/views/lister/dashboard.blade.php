@@ -33,9 +33,11 @@
                                 <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 ease-in-out view-details" data-id="{{ $house->id }}">
                                     View Details
                                 </button>
+                                <a href="{{ route('houses.edit', $house->id) }}">
                                 <button class="bg-green-500 text-white px-4 py-2 rounded ml-2 hover:bg-green-700 transition duration-300 ease-in-out modify-house">
                                     Modify House
                                 </button>
+</a>
                                 <button class="bg-yellow-500 text-white px-4 py-2 rounded ml-2 hover:bg-yellow-700 transition duration-300 ease-in-out view-bookings">
                                     View Bookings
                                 </button>
