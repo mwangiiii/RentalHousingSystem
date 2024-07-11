@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Vonage Client Library for PHP
- *
- * @copyright Copyright (c) 2016-2022 Vonage, Inc. (http://vonage.com)
- * @license https://github.com/Vonage/vonage-php-sdk-core/blob/master/LICENSE.txt Apache License 2.0
- */
-
 declare(strict_types=1);
 
 namespace Vonage\Messages\Channel;
@@ -22,6 +15,10 @@ interface Message
     public function getChannel(): string;
     public function getSubType(): string;
     public function setClientRef(string $clientRef): void;
+    public function getWebhookUrl(): ?string;
+    public function setWebhookUrl(string $url): void;
+    public function getWebhookVersion(): ?string;
+    public function setWebhookVersion(string $version): void;
 
     /**
      * All message types have shared outputs required by the endpoint.

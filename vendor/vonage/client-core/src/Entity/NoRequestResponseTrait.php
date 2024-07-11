@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Vonage Client Library for PHP
- *
- * @copyright Copyright (c) 2016-2022 Vonage, Inc. (http://vonage.com)
- * @license https://github.com/Vonage/vonage-php-sdk-core/blob/master/LICENSE.txt Apache License 2.0
- */
-
 declare(strict_types=1);
 
 namespace Vonage\Entity;
@@ -29,7 +22,7 @@ trait NoRequestResponseTrait
      */
     public function setResponse(ResponseInterface $response): void
     {
-        throw new RuntimeException(__CLASS__ . ' does not support request / response');
+        throw new RuntimeException(self::class . ' does not support request / response');
     }
 
     /**
@@ -37,7 +30,7 @@ trait NoRequestResponseTrait
      */
     public function setRequest(RequestInterface $request): void
     {
-        throw new RuntimeException(__CLASS__ . ' does not support request / response');
+        throw new RuntimeException(self::class . ' does not support request / response');
     }
 
     public function getRequest(): void

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Vonage Client Library for PHP
- *
- * @copyright Copyright (c) 2016-2022 Vonage, Inc. (http://vonage.com)
- * @license https://github.com/Vonage/vonage-php-sdk-core/blob/master/LICENSE.txt Apache License 2.0
- */
-
 declare(strict_types=1);
 
 namespace Vonage\Verify;
@@ -81,7 +74,7 @@ class Verification implements VerificationInterface, Serializable, ArrayHydrateI
             $this->requestData['request_id'] = $idOrNumber;
         } else {
             trigger_error(
-                'Using ' . $this::class . ' for starting a verification is deprecated, ' .
+                'Using ' . static::class . ' for starting a verification is deprecated, ' .
                 'please use Vonage\Verify\Request instead',
                 E_USER_DEPRECATED
             );

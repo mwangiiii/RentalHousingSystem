@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Vonage Client Library for PHP
- *
- * @copyright Copyright (c) 2016-2022 Vonage, Inc. (http://vonage.com)
- * @license https://github.com/Vonage/vonage-php-sdk-core/blob/master/LICENSE.txt Apache License 2.0
- */
-
 declare(strict_types=1);
 
 namespace Vonage\Client;
@@ -36,7 +29,7 @@ class APIResource implements ClientAwareInterface
     /**
      * @var HandlerInterface[]
      */
-    protected array $authHandler = [];
+    protected array $authHandlers = [];
 
     /**
      * Base URL that we will hit. This can be overridden from the underlying
@@ -76,13 +69,14 @@ class APIResource implements ClientAwareInterface
     {
         $credentials = $this->getClient()->getCredentials();
 
-        if (is_array($this->getAuthHandler())) {
-            foreach ($this->getAuthHandler() as $handler) {
+        if (is_array($this->getAuthHandlers())) {
+            foreach ($this->getAuthHandlers() as $handler) {
                 try {
                     $request = $handler($request, $credentials);
                     break;
-                } catch (\RuntimeException $e) {
+                } catch (\RuntimeException) {
                     continue; // We are OK if multiple are sent but only one match
+                    // This has a really nasty side effect for complex handlers where we never see the error
                 }
                 throw new \RuntimeException(
                     'Unable to set credentials, please check configuration and 
@@ -92,7 +86,7 @@ class APIResource implements ClientAwareInterface
             return $request;
         }
 
-        return $this->getAuthHandler()($request, $credentials);
+        return $this->getAuthHandlers()($request, $credentials);
     }
 
     /**
@@ -114,7 +108,7 @@ class APIResource implements ClientAwareInterface
 
         $request->getBody()->write(json_encode($body));
 
-        if ($this->getAuthHandler()) {
+        if ($this->getAuthHandlers()) {
             $request = $this->addAuth($request);
         }
 
@@ -162,7 +156,7 @@ class APIResource implements ClientAwareInterface
             $headers
         );
 
-        if ($this->getAuthHandler()) {
+        if ($this->getAuthHandlers()) {
             $request = $this->addAuth($request);
         }
 
@@ -215,7 +209,7 @@ class APIResource implements ClientAwareInterface
             $headers
         );
 
-        if ($this->getAuthHandler()) {
+        if ($this->getAuthHandlers()) {
             $request = $this->addAuth($request);
         }
 
@@ -239,10 +233,10 @@ class APIResource implements ClientAwareInterface
         return json_decode($response->getBody()->getContents(), true);
     }
 
-    public function getAuthHandler()
+    public function getAuthHandlers()
     {
         // If we have not set a handler, default to Basic and issue warning.
-        if (!$this->authHandler) {
+        if (!$this->authHandlers) {
             $this->log(
                 LogLevel::WARNING,
                 'Warning: no authorisation handler set for this Client. Defaulting to Basic which might not be
@@ -252,7 +246,7 @@ class APIResource implements ClientAwareInterface
             return new BasicHandler();
         }
 
-        return $this->authHandler;
+        return $this->authHandlers;
     }
 
     public function getBaseUrl(): ?string
@@ -360,12 +354,12 @@ class APIResource implements ClientAwareInterface
      *
      * @return $this
      */
-    public function setAuthHandler($handler): self
+    public function setAuthHandlers($handler): self
     {
         if (!is_array($handler)) {
             $handler = [$handler];
         }
-        $this->authHandler = $handler;
+        $this->authHandlers = $handler;
 
         return $this;
     }
@@ -438,7 +432,7 @@ class APIResource implements ClientAwareInterface
             $headers
         );
 
-        if ($this->getAuthHandler()) {
+        if ($this->getAuthHandlers()) {
             $request = $this->addAuth($request);
         }
 
@@ -481,7 +475,7 @@ class APIResource implements ClientAwareInterface
             $headers
         );
 
-        if ($this->getAuthHandler()) {
+        if ($this->getAuthHandlers()) {
             $request = $this->addAuth($request);
         }
 

@@ -25,10 +25,15 @@ class VerificationWorkflow implements ArrayHydrateInterface
     public function __construct(
         protected string $channel,
         protected string $to,
-        protected string $from = ''
+        protected string $from = '',
+        protected array $customKeys = []
     ) {
         if (! in_array($channel, $this->allowedWorkflows, true)) {
             throw new \InvalidArgumentException($this->channel . ' is not a valid workflow');
+        }
+
+        if ($this->isInvalidFromValue($this->from)) {
+            throw new \InvalidArgumentException($this->from . ' is not a valid from value');
         }
     }
 
@@ -91,6 +96,50 @@ class VerificationWorkflow implements ArrayHydrateInterface
             $returnArray['from'] = $this->getFrom();
         }
 
+        if (!empty($this->customKeys)) {
+            foreach ($this->customKeys as $key => $value) {
+                $returnArray[$key] = $value;
+            }
+        }
+
         return $returnArray;
+    }
+
+    public function getCustomKeys(): array
+    {
+        return $this->customKeys;
+    }
+
+    public function setCustomKeys(array $customKeys): self
+    {
+        $this->customKeys = $customKeys;
+
+        return $this;
+    }
+
+    protected function isInvalidFromValue(string $fromValue): bool
+    {
+        if ($fromValue === '') {
+            // This is a null value and doesn't need to be validated
+            return false;
+        }
+
+        if (($this->channel === self::WORKFLOW_EMAIL) && filter_var($fromValue, FILTER_VALIDATE_EMAIL)) {
+            return false;
+        }
+
+        if (is_numeric($fromValue)) {
+            $length = strlen($fromValue);
+
+            return $length < 11 || $length > 15;
+        }
+
+        if (ctype_alnum($fromValue)) {
+            $length = strlen($fromValue);
+
+            return $length < 3 || $length > 11;
+        }
+
+        return true;
     }
 }

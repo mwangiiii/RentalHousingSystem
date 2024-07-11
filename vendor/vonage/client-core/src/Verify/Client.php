@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Vonage Client Library for PHP
- *
- * @copyright Copyright (c) 2016-2022 Vonage, Inc. (http://vonage.com)
- * @license https://github.com/Vonage/vonage-php-sdk-core/blob/master/LICENSE.txt Apache License 2.0
- */
-
 declare(strict_types=1);
 
 namespace Vonage\Verify;
@@ -22,7 +15,6 @@ use Vonage\Client\ClientAwareInterface;
 use Vonage\Client\ClientAwareTrait;
 use Vonage\Client\Exception as ClientException;
 
-use function get_class;
 use function is_array;
 use function is_null;
 use function is_string;
@@ -232,7 +224,7 @@ class Client implements ClientAwareInterface, APIClient
     public function serialize(Verification $verification): string
     {
         trigger_error(
-            $this::class . '::serialize() is deprecated, serialize the Verification object directly',
+            static::class . '::serialize() is deprecated, serialize the Verification object directly',
             E_USER_DEPRECATED
         );
 
@@ -245,7 +237,7 @@ class Client implements ClientAwareInterface, APIClient
     public function unserialize($verification): Verification
     {
         trigger_error(
-            $this::class . '::unserialize() is deprecated, unserialize the Verification object directly',
+            static::class . '::unserialize() is deprecated, unserialize the Verification object directly',
             E_USER_DEPRECATED
         );
 
