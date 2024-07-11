@@ -27,7 +27,7 @@ class AddHousesController extends Controller
                 'price' => 'required|numeric',
                 'description' => 'required|string',
                 'availability' => 'required|string',
-                'contact' => 'required|string',
+                'phone_number' => 'required|string',
                 'rules_and_regulations' => 'nullable|string',
                 'amenities' => 'required|string',
                 'category_id' => 'required|exists:categories,id',
@@ -50,6 +50,7 @@ class AddHousesController extends Controller
             
             // Create the house entry
             $house = House::create([
+                'user_id' => $user_id,
                 'location' => $validatedData['location'],
                 'price' => $validatedData['price'],
                 'description' => $validatedData['description'],
@@ -58,7 +59,8 @@ class AddHousesController extends Controller
                 'rules_and_regulations' => $validatedData['rules_and_regulations'],
                 'amenities' => $validatedData['amenities'],
                 'category_id' => $validatedData['category_id'],
-                'main_image' => $validatedData['main_image']
+                'main_image' => $validatedData['main_image'],
+                'lister_id'=>$validatedData['lister_id']
             ]);
             // Log::info('House created successfully', ['house_id' => $house->id]);
     
@@ -119,8 +121,8 @@ class AddHousesController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Error creating house: ' . $e->getMessage());
-            // return back()->withErrors(['error' => 'Failed to add house. Please try again later.' $e->getMessage()]);
-            return $e->getMessage();
+            return back()->withErrors(['error' => 'Failed to add house. Please try again later.' . $e->getMessage()]);
+            // return $e->getMessage();
         }
     }
 

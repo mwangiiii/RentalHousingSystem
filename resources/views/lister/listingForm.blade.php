@@ -50,6 +50,11 @@
                             <x-input-error for="rules_and_regulations" class="mt-2" />
                         </div>
                         <div class="col-span-6 sm:col-span-4">
+                            <x-label for="description" :value="__('Light Description')" />
+                            <x-textarea id="description" class="block mt-1 w-full" name="description" :value="old('description')" required autofocus></x-textarea>
+                            <x-input-error for="description" class="mt-2" />
+                        </div>
+                        <div class="col-span-6 sm:col-span-4">
                             <x-label for="amenities" :value="__('Amenities')" />
                             <x-textarea id="amenities" class="block mt-1 w-full" name="amenities" :value="old('amenities')" required autofocus></x-textarea>
                             <x-input-error for="amenities" class="mt-2" />
