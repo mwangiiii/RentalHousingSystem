@@ -33,6 +33,8 @@
                 @include('layouts.navs.tenant')
             @elseif (auth()->user()->hasRole('Lister'))
                 @include('layouts.navs.lister')
+            @elseif (auth()->user()->hasRole('House Hunter'))
+                @include('layouts.navs.hunter')
             @else
                 @include('navigation-menu')
             @endif

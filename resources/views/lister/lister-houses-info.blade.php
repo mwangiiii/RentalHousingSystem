@@ -2,9 +2,9 @@
 
 @section('header')
 <div class="flex justify-between items-center mb-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white p-4 rounded-lg shadow-md">
-    <h2 class="font-semibold text-2xl">
-        {{ __('Lister Houses') }}
-    </h2>
+  <h2 class="font-semibold text-2xl">
+    {{ __('Lister Houses') }}
+  </h2>
 </div>
 @endsection
 
