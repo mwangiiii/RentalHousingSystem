@@ -2,6 +2,13 @@
 
 @section('header')
 <div class="flex justify-between items-center mb-6">
+    <nav class="flex space-x-4">
+        <a href="#" class="text-gray-500 hover:text-gray-700">Search Houses</a>
+        <a href="#" class="text-gray-500 hover:text-gray-700">Saved Houses</a>
+        <a href="#" class="text-gray-500 hover:text-gray-700">Notifications</a>
+        <a href="#" class="text-gray-500 hover:text-gray-700">Messages</a>
+        <a href="#" class="text-gray-500 hover:text-gray-700">Feedback</a>
+    </nav>
     <h2 class="font-semibold text-xl text-gray-800 leading-tight">
         {{ __('House Hunter Dashboard') }}
     </h2>
