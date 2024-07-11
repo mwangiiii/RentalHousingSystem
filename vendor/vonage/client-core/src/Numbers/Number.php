@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Vonage Client Library for PHP
+ *
+ * @copyright Copyright (c) 2016-2022 Vonage, Inc. (http://vonage.com)
+ * @license https://github.com/Vonage/vonage-php-sdk-core/blob/master/LICENSE.txt Apache License 2.0
+ */
+
 declare(strict_types=1);
 
 namespace Vonage\Numbers;
@@ -168,15 +175,15 @@ class Number implements EntityInterface, JsonSerializableInterface, JsonUnserial
             return self::ENDPOINT_APP;
         }
 
-        if (str_contains((string) $endpoint, '@')) {
+        if (false !== strpos($endpoint, '@')) {
             return self::ENDPOINT_SIP;
         }
 
-        if (0 === stripos((string) $endpoint, 'http')) {
+        if (0 === stripos($endpoint, 'http')) {
             return self::ENDPOINT_VXML;
         }
 
-        if (preg_match('#[a-z]+#', (string) $endpoint)) {
+        if (preg_match('#[a-z]+#', $endpoint)) {
             return self::ENDPOINT_APP;
         }
 
@@ -214,7 +221,7 @@ class Number implements EntityInterface, JsonSerializableInterface, JsonUnserial
     public function jsonUnserialize($json): void
     {
         trigger_error(
-            static::class . "::jsonUnserialize is deprecated, please fromArray() instead",
+            $this::class . "::jsonUnserialize is deprecated, please fromArray() instead",
             E_USER_DEPRECATED
         );
 
@@ -289,6 +296,6 @@ class Number implements EntityInterface, JsonSerializableInterface, JsonUnserial
     public function getAppId(): ?string
     {
         // These should never be different, but might not both be set
-        return $this->data['voiceCallbackValue'] ?? $this->data['messagesCallbackValue'] ?? null;
+        return $this->data['voiceCallbackValue'] ?? $this->data['messagesCallbackValue'];
     }
 }

@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Vonage Client Library for PHP
+ *
+ * @copyright Copyright (c) 2016-2022 Vonage, Inc. (http://vonage.com)
+ * @license https://github.com/Vonage/vonage-php-sdk-core/blob/master/LICENSE.txt Apache License 2.0
+ */
+
 declare(strict_types=1);
 
 namespace Vonage;
@@ -24,7 +31,6 @@ use Vonage\Client\APIResource;
 use Vonage\Client\Credentials\Basic;
 use Vonage\Client\Credentials\Container;
 use Vonage\Client\Credentials\CredentialsInterface;
-use Vonage\Client\Credentials\Gnp;
 use Vonage\Client\Credentials\Handler\BasicHandler;
 use Vonage\Client\Credentials\Handler\SignatureBodyFormHandler;
 use Vonage\Client\Credentials\Handler\SignatureBodyHandler;
@@ -42,17 +48,14 @@ use Vonage\Entity\EntityInterface;
 use Vonage\Insights\ClientFactory as InsightsClientFactory;
 use Vonage\Meetings\ClientFactory as MeetingsClientFactory;
 use Vonage\Numbers\ClientFactory as NumbersClientFactory;
-use Vonage\NumberVerification\ClientFactory as NumberVerificationClientFactory;
 use Vonage\Redact\ClientFactory as RedactClientFactory;
 use Vonage\Secrets\ClientFactory as SecretsClientFactory;
-use Vonage\SimSwap\ClientFactory as SimSwapClientFactory;
 use Vonage\SMS\ClientFactory as SMSClientFactory;
 use Vonage\Subaccount\ClientFactory as SubaccountClientFactory;
 use Vonage\Messages\ClientFactory as MessagesClientFactory;
 use Vonage\Users\ClientFactory as UsersClientFactory;
 use Vonage\Verify\ClientFactory as VerifyClientFactory;
 use Vonage\Verify2\ClientFactory as Verify2ClientFactory;
-use Vonage\Conversation\ClientFactory as ConversationClientFactory;
 use Vonage\Verify\Verification;
 use Vonage\Voice\ClientFactory as VoiceClientFactory;
 use Vonage\Logger\{LoggerAwareInterface, LoggerTrait};
@@ -77,20 +80,16 @@ use function strpos;
  * @method Messages\Client messages()
  * @method Application\Client applications()
  * @method Conversion\Client conversion()
- * @method Conversation\Client conversation()
  * @method Insights\Client insights()
  * @method Numbers\Client numbers()
- * @method NumberVerification\Client numberVerification()
  * @method Redact\Client redact()
  * @method Secrets\Client secrets()
- * @method SimSwap\Client simswap()
  * @method SMS\Client sms()
  * @method Subaccount\Client subaccount()
  * @method Users\Client users()
  * @method Verify\Client  verify()
  * @method Verify2\Client  verify2()
  * @method Voice\Client voice()
- * @method Vonage\Video\Client video()
  *
  * @property string restUrl
  * @property string apiUrl
@@ -157,7 +156,7 @@ class Client implements LoggerAwareInterface
         if (is_null($client)) {
             // Since the user did not pass a client, try and make a client
             // using the Guzzle 6 adapter or Guzzle 7 (depending on availability)
-            [$guzzleVersion] = explode('@', (string) InstalledVersions::getVersion('guzzlehttp/guzzle'), 1);
+            list($guzzleVersion) = explode('@', InstalledVersions::getVersion('guzzlehttp/guzzle'), 1);
             $guzzleVersion = (float) $guzzleVersion;
 
             if ($guzzleVersion >= 6.0 && $guzzleVersion < 7) {
@@ -174,12 +173,12 @@ class Client implements LoggerAwareInterface
 
         $this->setHttpClient($client);
 
+        // Make sure we know how to use the credentials
         if (
             !($credentials instanceof Container) &&
             !($credentials instanceof Basic) &&
             !($credentials instanceof SignatureSecret) &&
-            !($credentials instanceof Keypair) &&
-            !($credentials instanceof Gnp)
+            !($credentials instanceof Keypair)
         ) {
             throw new RuntimeException('unknown credentials type: ' . $credentials::class);
         }
@@ -212,43 +211,29 @@ class Client implements LoggerAwareInterface
             $this->debug = $options['debug'];
         }
 
-        $services = [
-            // Registered Services by name
-            'account' => ClientFactory::class,
-            'applications' => ApplicationClientFactory::class,
-            'conversion' => ConversionClientFactory::class,
-            'conversation' => ConversationClientFactory::class,
-            'insights' => InsightsClientFactory::class,
-            'numbers' => NumbersClientFactory::class,
-            'numberVerification' => NumberVerificationClientFactory::class,
-            'meetings' => MeetingsClientFactory::class,
-            'messages' => MessagesClientFactory::class,
-            'redact' => RedactClientFactory::class,
-            'secrets' => SecretsClientFactory::class,
-            'simswap' => SimSwapClientFactory::class,
-            'sms' => SMSClientFactory::class,
-            'subaccount' => SubaccountClientFactory::class,
-            'users' => UsersClientFactory::class,
-            'verify' => VerifyClientFactory::class,
-            'verify2' => Verify2ClientFactory::class,
-            'voice' => VoiceClientFactory::class,
-
-            // Additional utility classes
-            APIResource::class => APIResource::class,
-            Client::class => fn() => $this
-        ];
-
-        if (class_exists('Vonage\Video\ClientFactory')) {
-            $services['video'] = 'Vonage\Video\ClientFactory';
-        } else {
-            $services['video'] = function (): never {
-                throw new \RuntimeException('Please install @vonage/video to use the Video API');
-            };
-        }
-
         $this->setFactory(
             new MapFactory(
-                $services,
+                [
+                    // Registered Services by name
+                    'account' => ClientFactory::class,
+                    'applications' => ApplicationClientFactory::class,
+                    'conversion' => ConversionClientFactory::class,
+                    'insights' => InsightsClientFactory::class,
+                    'numbers' => NumbersClientFactory::class,
+                    'meetings' => MeetingsClientFactory::class,
+                    'messages' => MessagesClientFactory::class,
+                    'redact' => RedactClientFactory::class,
+                    'secrets' => SecretsClientFactory::class,
+                    'sms' => SMSClientFactory::class,
+                    'subaccount' => SubaccountClientFactory::class,
+                    'users' => UsersClientFactory::class,
+                    'verify' => VerifyClientFactory::class,
+                    'verify2' => Verify2ClientFactory::class,
+                    'voice' => VoiceClientFactory::class,
+
+                    // Additional utility classes
+                    APIResource::class => APIResource::class,
+                ],
                 $this
             )
         );
@@ -256,7 +241,15 @@ class Client implements LoggerAwareInterface
         // Disable throwing E_USER_DEPRECATED notices by default, the user can turn it on during development
         if (array_key_exists('show_deprecations', $this->options) && ($this->options['show_deprecations'] == true)) {
             set_error_handler(
-                static fn(int $errno, string $errstr, string $errfile = null, int $errline = null, array $errorcontext = null) => true,
+                static function (
+                    int $errno,
+                    string $errstr,
+                    string $errfile = null,
+                    int $errline = null,
+                    array $errorcontext = null
+                ) {
+                    return true;
+                },
                 E_USER_DEPRECATED
             );
         }
@@ -529,7 +522,7 @@ class Client implements LoggerAwareInterface
             }
 
             foreach ($disallowedCharacters as $char) {
-                if (str_contains((string) $app[$key], $char)) {
+                if (strpos($app[$key], $char) !== false) {
                     throw new InvalidArgumentException('app.' . $key . ' cannot contain the ' . $char . ' character');
                 }
             }
@@ -601,8 +594,8 @@ class Client implements LoggerAwareInterface
     protected static function requiresBasicAuth(RequestInterface $request): bool
     {
         $path = $request->getUri()->getPath();
-        $isSecretManagementEndpoint = str_starts_with($path, '/accounts') && str_contains($path, '/secrets');
-        $isApplicationV2 = str_starts_with($path, '/v2/applications');
+        $isSecretManagementEndpoint = strpos($path, '/accounts') === 0 && strpos($path, '/secrets') !== false;
+        $isApplicationV2 = strpos($path, '/v2/applications') === 0;
 
         return $isSecretManagementEndpoint || $isApplicationV2;
     }
@@ -615,8 +608,8 @@ class Client implements LoggerAwareInterface
     {
         $path = $request->getUri()->getPath();
 
-        $isRedact =  str_starts_with($path, '/v1/redact');
-        $isMessages =  str_starts_with($path, '/v1/messages');
+        $isRedact =  strpos($path, '/v1/redact') === 0;
+        $isMessages =  strpos($path, '/v1/messages') === 0;
 
         return $isRedact || $isMessages;
     }
@@ -628,10 +621,10 @@ class Client implements LoggerAwareInterface
     protected function needsKeypairAuthentication(RequestInterface $request): bool
     {
         $path = $request->getUri()->getPath();
-        $isCallEndpoint = str_starts_with($path, '/v1/calls');
-        $isRecordingUrl = str_starts_with($path, '/v1/files');
-        $isStitchEndpoint = str_starts_with($path, '/beta/conversation');
-        $isUserEndpoint = str_starts_with($path, '/beta/users');
+        $isCallEndpoint = strpos($path, '/v1/calls') === 0;
+        $isRecordingUrl = strpos($path, '/v1/files') === 0;
+        $isStitchEndpoint = strpos($path, '/beta/conversation') === 0;
+        $isUserEndpoint = strpos($path, '/beta/users') === 0;
 
         return $isCallEndpoint || $isRecordingUrl || $isStitchEndpoint || $isUserEndpoint;
     }

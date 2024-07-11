@@ -76,34 +76,12 @@ class AddHousesController extends Controller
                 $images[] = [
                     'house_id' => $house->id,
                     'image_path' => $mainImagePath,
-                    'is_main' => $mainImagePath, // Store the path as string for thumbnail
+                    'is_main' => false, // For additional images, is_main should be false
                 ];
-    
-                Log::info('Main image (thumbnail) uploaded', ['image_path' => $mainImagePath]);
             }
-    
-            // Handle multiple image uploads (Additional Images) if present
-            if ($request->hasFile('home_images')) {
-                foreach ($request->file('home_images') as $image) {
-                    // Store each image in the public/images directory (for additional images)
-                    $filePath = $image->store('images', 'public');
-    
-                    // Add additional image data to the images array
-                    $images[] = [
-                        'house_id' => $house->id,
-                        'image_path' => $filePath,
-                        'is_main' => null, // For additional images, is_main should be null
-                    ];
-    
-                    Log::info('Additional image uploaded', ['image_path' => $filePath]);
-                }
-            } else {
-                Log::warning('No additional images found in the request.');
-            }
-    
             // Debugging: Log the images array before insertion
             Log::info('Images array before insert', ['images' => $images]);
-    
+
             // Bulk insert all images into the database
             if (!empty($images)) {
                 try {
@@ -116,16 +94,14 @@ class AddHousesController extends Controller
             } else {
                 Log::warning('No images to insert into the database.');
             }
-    
-            return redirect()->route('lister.listingForm')->with('success', 'Listing added successfully.');
 
-        } catch (\Exception $e) {
-            Log::error('Error creating house: ' . $e->getMessage());
-            return back()->withErrors(['error' => 'Failed to add house. Please try again later.' . $e->getMessage()]);
-            // return $e->getMessage();
-        }
+        return redirect()->route('lister.listingForm')->with('success', 'Listing added successfully.');
+
+    } catch (\Exception $e) {
+        Log::error('Error creating house: ' . $e->getMessage());
+        return back()->withErrors(['error' => 'Failed to add house. Please try again later.']);
     }
-
+}
     /**
      * Count the number of houses.
      *

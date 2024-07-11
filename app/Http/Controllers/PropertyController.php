@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Property;
-
 use App\Models\House;
+use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
-
 
 class PropertyController extends Controller
 {
@@ -124,56 +123,64 @@ class PropertyController extends Controller
     // Function to display apartments
     public function showApartments()
     {
-        $houses = House::where('category', 'Apartment')->get();
+        $category_id = Category::where('name','Apartment')->first();
+        $houses = House::where('category_id',$category_id)->get();
         return view('property.category.apartments', compact('houses'));
     }
 
     // Function to display houses with own compound
     public function showOwnCompound()
     {
-        $houses = House::where('category', 'Own Compound')->get();
+        $category_id = Category::where('name','Own Compound')->first();
+        $houses = House::where('category_id', $category_id)->get();
         return view('property.category.own-compound', compact('houses'));
     }
 
     // Function to display houses in gated communities
     public function showGatedCommunity()
     {
-        $houses = House::where('category', 'Gated Community Spaces')->get();
+        $category_id = Category::where('name','Gated Community Spaces')->first();
+        $houses = House::where('category_id',  $category_id)->get();
         return view('property.category.gated-community', compact('houses'));
     }
 
     // Function to display townhouses
     public function showTownhouses()
     {
-        $houses = House::where('category', 'Townhouses')->get();
+        $category_id = Category::where('name','Townhouses')->first();
+        $houses = House::where('category_id', $category_id)->get();
         return view('property.category.town-houses', compact('houses'));
     }
 
     // Function to display commercial properties
     public function showCommercialProperties()
     {
-        $houses = House::where('category', 'Commercial Properties')->get();
+        $category_id = Category::where('name','Commercial Properties')->first();
+        $houses = House::where('category_id', $category_id)->get();
         return view('property.category.commercial-properties', compact('houses'));
     }
 
     // Function to display short-term rentals
     public function showShortTermRentals()
     {
-        $houses = House::where('category', 'Short-Term Rentals')->get();
+        $category_id = Category::where('name','Short-Term Rentals')->first();
+        $houses = House::where('category_id', $category_id)->get();
         return view('property.category.short-term-rentals', compact('houses'));
     }
 
     // Function to display luxury villas
     public function showLuxuryVillas()
     {
-        $houses = House::where('category', 'Luxury Villas')->get();
+        $category_id = Category::where('name','Luxury Villas')->first();
+        $houses = House::where('category_id', $category_id)->get();
         return view('property.category.luxury-villas', compact('houses'));
     }
 
     // Function to display property management services
     public function showPropertyManagementServices()
     {
-        $houses = House::where('category', 'Property Management Services')->get();
+        $category_id = Category::where('name','Property Management Servicess')->first();
+        $houses = House::where('category_id', $category_id)->get();
         return view('property.category.property-management-services', compact('houses'));
     }
     public function search(Request $request)

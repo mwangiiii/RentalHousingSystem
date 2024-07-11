@@ -12,7 +12,7 @@
     <link rel="icon" type="image/png" href="{{ asset('makazi-hub-favicon-black.png') }}">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="{{ asset('style.css',true) }}">
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
     <title>{{ config('app.name', 'Makazi Hub') }}</title>
 </head>
 

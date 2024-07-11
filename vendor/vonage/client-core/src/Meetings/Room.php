@@ -21,7 +21,9 @@ class Room implements ArrayHydrateInterface
 
     public function toArray(): array
     {
-        return array_filter($this->data, static fn($value) => $value !== '');
+        return array_filter($this->data, static function ($value) {
+            return $value !== '';
+        });
     }
 
     public function __get($value)

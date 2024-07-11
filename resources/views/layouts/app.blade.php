@@ -11,6 +11,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="{{ asset('makazi-hub-favicon-black.png') }}">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -73,6 +74,7 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- @yield('scripts') -->
 
+    <!-- ("https://shining-rabbit-uniquely.ngrok-free.app/auto-lock" -->
     @stack('scripts')
     <script>
         // Auto lock screen script
@@ -85,7 +87,7 @@
             window.onclick = resetTimer;
 
             function lockScreen() {
-                fetch("https://shining-rabbit-uniquely.ngrok-free.app/auto-lock", {
+                fetch("{{ route('auto-lock')}}", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -94,7 +96,7 @@
                 }).then(response => {
                     if (response.ok) {
                         console.log('Screen locked successfully!');
-                        window.location.href = "https://shining-rabbit-uniquely.ngrok-free.app/lock-screen";
+                        window.location.href = "{{ route('lock-screen')}}";
                     }
                 });
             }
@@ -112,7 +114,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.locked) {
-                        window.location.href = "{https://shining-rabbit-uniquely.ngrok-free.app/lock-screen";
+                        window.location.href = "{{ route('lock-screen')}}";
                     }
                 });
         }

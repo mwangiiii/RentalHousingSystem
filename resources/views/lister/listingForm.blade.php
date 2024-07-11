@@ -25,17 +25,17 @@
                     @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="col-span-6 sm:col-span-4">
-                            <x-label for="location" :value="__('Location')" />
+                            <x-label for="location" :value="('Location')" />
                             <x-input type="text" id="location" class="block mt-1 w-full" name="location" :value="old('location')" required autofocus />
                             <x-input-error for="location" class="mt-2" />
                         </div>
                         <div class="col-span-6 sm:col-span-4">
-                            <x-label for="price" :value="__('Price')" />
+                            <x-label for="price" :value="('Price')" />
                             <x-input id="price" class="block mt-1 w-full" type="number" name="price" :value="old('price')" required autofocus />
                             <x-input-error for="price" class="mt-2" />
                         </div>
                         <div class="col-span-6 sm:col-span-4">
-                            <x-label for="availability" :value="__('Availability')" />
+                            <x-label for="availability" :value="('Availability')" />
                             <x-radio-button-group name="availability" :options="['available' => 'Available', 'unavailable' => 'Unavailable', 'booked' => 'Booked']" selected="{{ old('availability') ?? $house->availability ?? '' }}" /> 
                             <x-input-error for="availability" class="mt-2" />
                         </div>

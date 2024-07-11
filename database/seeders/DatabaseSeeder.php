@@ -14,12 +14,12 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(RolesSeeder::class);
 
-        $adminRole = Role::where('name', 'Admin')->first();
-        $propertyManagerRole = Role::where('name', 'Property Manager')->first();
-        $landlordRole = Role::where('name', 'Landlord')->first();
-        $maintenanceWorkerRole = Role::where('name', 'Maintenance Worker')->first();
-        $accountantRole = Role::where('name', 'Accountant')->first();
-        $tenantRole = Role::where('name', 'Tenant')->first();
+        $adminRole = Role::where('role_name', 'Admin')->first();
+        $propertyManagerRole = Role::where('role_name', 'Property Manager')->first();
+        $landlordRole = Role::where('role_name', 'Landlord')->first();
+        $maintenanceWorkerRole = Role::where('role_name', 'Maintenance Worker')->first();
+        $accountantRole = Role::where('role_name', 'Accountant')->first();
+        $tenantRole = Role::where('role_name', 'Tenant')->first();
 
         // Admin Data Seeded
         User::factory()->create([
@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Dennis Wanjiku',
             'email' => 'dennis.wanjiku@strathmore.edu',
-            'roles_id' => $adminRole->id,
+            'role_id' => $adminRole->id,
             'phone_number' => '+254743614394',
             'id_number' => '41191771',
             'password' => Hash::make('123456789')
@@ -78,6 +78,6 @@ class DatabaseSeeder extends Seeder
             'role_id' => $tenantRole->id,
         ]);
         $this->call(CategorySeeder::class);
-        $this->call(HouseWithImageSeeder::class);
+       // $this->call(HouseWithImageSeeder::class);
     }
 }

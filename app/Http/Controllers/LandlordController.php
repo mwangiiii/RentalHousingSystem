@@ -15,12 +15,13 @@ class LandlordController extends Controller
 {
     public function dashboard()
     {
+        // dd('hello');
         $landlordId = Auth::user()->id;
 
         $properties = Property::where('user_id', $landlordId)->with('rooms.tenants')->get();
-        $occupiedRooms = 0;
-        $availableRooms = 0;
 
+        $occupiedRooms = 0;
+        $availableRooms = 0; 
         foreach ($properties as $property) {
             $totalUnits = $property->units;
             $occupiedUnits = $property->rooms->filter(function ($room) {
@@ -30,15 +31,15 @@ class LandlordController extends Controller
             $occupiedRooms += $occupiedUnits;
             $availableRooms += $totalUnits - $occupiedUnits;
         }
-
+        
         $tenants = Tenant::whereHas('room.property', function ($query) use ($landlordId) {
             $query->where('user_id', $landlordId);
         })->get();
-
+        
         $payments = Payment::whereHas('tenant.room.property', function ($query) use ($landlordId) {
             $query->where('user_id', $landlordId);
         })->get();
-
+       
         $openRequests = MaintenanceRequest::where('status', 'pending')->count();
         $completedRequests = MaintenanceRequest::where('status', 'completed')->count();
 

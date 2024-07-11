@@ -50,7 +50,6 @@ class CreateNewUser implements CreatesNewUsers
 
         // Create a Lister if the role is 'lister'
         if ($input['role'] === 'lister') {
-            
             Lister::create([
                 'user_id' => $user->id,
             ]);

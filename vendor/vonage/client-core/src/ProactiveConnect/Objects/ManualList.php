@@ -86,6 +86,8 @@ class ManualList extends ListBaseObject implements ArrayHydrateInterface
             'attributes' => $this->getAttributes() ?: null
         ];
 
-        return array_filter($returnArray, fn($value) => $value !== null);
+        return array_filter($returnArray, function ($value) {
+            return $value !== null;
+        });
     }
 }

@@ -4,8 +4,11 @@ namespace Vonage\Verify2\VerifyObjects;
 
 class VerifyEvent
 {
-    public function __construct(private array $data)
+    private array $data;
+
+    public function __construct(array $data)
     {
+        $this->data = $data;
     }
 
     public function __get($property)

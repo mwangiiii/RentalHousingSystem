@@ -75,7 +75,7 @@ class Client implements ClientAwareInterface, APIClient
         try {
             $this->api->delete($id);
             return true;
-        } catch (ClientException) {
+        } catch (ClientException $exception) {
             return false;
         }
     }
