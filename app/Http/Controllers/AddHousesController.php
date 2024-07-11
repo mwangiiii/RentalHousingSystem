@@ -34,7 +34,7 @@ class AddHousesController extends Controller
             'amenities' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'home_images.*' => 'image|mimes:jpeg,png,jpg,gif',
-            'main_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'main_image' => 'required|image|mimes:jpeg,png,jpg,gif',
         ]);
 
         // Get the authenticated user's ID
@@ -121,11 +121,44 @@ class AddHousesController extends Controller
 
     } catch (\Exception $e) {
         Log::error('Error creating house: ' . $e->getMessage());
-        return back()->withErrors(['error' => 'Failed to add house. Please try again later.']);
+        return view('components.add-house-confirmation');
     }
 }
 
-     
+
+public function destroy($id)
+{
+    try {
+        // Fetch the house
+        $house = House::findOrFail($id);
+
+        // Check if the authenticated user is the owner of the house
+        if ($house->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized access'], 403);
+        }
+
+        // Delete the house images
+        $images = Image::where('house_id', $house->id)->get();
+        foreach ($images as $image) {
+            // Delete the image file from storage
+            \Storage::disk('public')->delete($image->image_path);
+            // Delete the image record from the database
+            $image->delete();
+        }
+
+        // Delete the house
+        $house->delete();
+
+        // Log the deletion
+        Log::info('House deleted successfully', ['house_id' => $house->id]);
+
+        return response()->json(['success' => 'House deleted successfully'], 200);
+
+    } catch (\Exception $e) {
+        Log::error('Error deleting house: ' . $e->getMessage());
+        return response()->json(['error' => 'Failed to delete house. Please try again later.'], 500);
+    }
+}
 
 
 

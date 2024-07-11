@@ -111,6 +111,7 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
 
     // Add houses related routes
     Route::post('/saveHouse', [AddHousesController::class, 'store'])->name('addListing.store');
+    Route::delete('/house/destroy/{id}', [AddHousesController::class, 'destroy'])->name('house.destroy');
 
     // Lister specific routes
     Route::get('/lister/dashboard', function () {
@@ -185,3 +186,8 @@ Route::get('/property/category/short-term-rentals', [PropertyController::class, 
 Route::get('/property/category/luxury-villas', [PropertyController::class, 'showLuxuryVillas']);
 Route::get('/property/category/property-management-services', [PropertyController::class, 'showPropertyManagementServices']);
 // Route::get('/hunter-dashboard', [HomeController::class, 'hunter'])->name('hunter.dashboard');
+
+
+Route::get('/heh',function(){
+    return view('lister.edit-house');
+});

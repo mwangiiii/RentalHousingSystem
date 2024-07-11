@@ -25,7 +25,7 @@
                 <tbody id="housesTableBody" class="bg-white divide-y divide-gray-200">
                     @if($houses->isNotEmpty())
                         @foreach($houses as $house)
-                        <tr>
+                        <tr id="house-row-{{ $house->id }}">
                             <td class="px-6 py-4 whitespace-nowrap">{{ $house->location }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $house->price }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $house->category->name }}</td>
@@ -39,9 +39,13 @@
                                 <button class="bg-yellow-500 text-white px-4 py-2 rounded ml-2 hover:bg-yellow-700 transition duration-300 ease-in-out view-bookings">
                                     View Bookings
                                 </button>
-                                <button class="bg-red-500 text-white px-4 py-2 rounded ml-2 hover:bg-red-700 transition duration-300 ease-in-out delete-house">
-                                    Delete House
-                                </button>
+                                <form action="{{ url('/house/destroy', ['id' => $house->id]) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded ml-2 hover:bg-red-700 transition duration-300 ease-in-out">
+                                        Delete House
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         @endforeach
@@ -86,6 +90,7 @@
                         houseDetails.classList.add('hidden');
                         data.forEach(house => {
                             const row = document.createElement('tr');
+                            row.id = `house-row-${house.id}`;
                             row.innerHTML = `
                                 <td class="px-6 py-4 whitespace-nowrap">${house.location}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">${house.price}</td>
@@ -100,9 +105,13 @@
                                     <button class="bg-yellow-500 text-white px-4 py-2 rounded ml-2 hover:bg-yellow-700 transition duration-300 ease-in-out view-bookings">
                                         View Bookings
                                     </button>
-                                    <button class="bg-red-500 text-white px-4 py-2 rounded ml-2 hover:bg-red-700 transition duration-300 ease-in-out delete-house">
-                                        Delete House
-                                    </button>
+                                    <form action="/house/destroy/${house.id}" method="POST" style="display:inline;">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded ml-2 hover:bg-red-700 transition duration-300 ease-in-out">
+                                            Delete House
+                                        </button>
+                                    </form>
                                 </td>
                             `;
                             housesTableBody.appendChild(row);
