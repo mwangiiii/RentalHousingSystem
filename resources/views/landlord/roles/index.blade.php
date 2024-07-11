@@ -27,25 +27,25 @@
                 </form>
                 <div class="overflow-x-auto">
                     <table class="table-auto w-full">
-                        <thead>
+                        <thead class="divide-y divide-gray-200">
                             <tr>
-                                <th class="px-4 py-2 text-left tracking-wider">{{ __('Role Name') }}</th>
-                                <th class="px-4 py-2 text-left tracking-wider">{{ __('Property') }}</th>
-                                <th class="px-4 py-2 text-left tracking-wider">{{ __('Actions') }}</th>
+                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('Role Name') }}</th>
+                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('Property') }}</th>
+                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach ($roles as $role)
                             <tr>
-                                <td class="border px-4 py-2">{{ $role->role_name }}</td>
-                                <td class="border px-4 py-2">
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $role->role_name }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     @if ($role->property)
                                         {{ $role->property->name }}
                                     @else
                                         No Property
                                     @endif
                                 </td>
-                                <td class="border px-4 py-2">
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     <form action="{{ route('landlord.roles.edit', $role) }}" method="GET" class="inline">
                                         <x-button type="submit" class="btn btn-sm btn-warning">Edit</x-button>
                                     </form>

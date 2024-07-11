@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckSuspended;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -15,6 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         //
         $middleware->append([LockScreenMiddleware::class]);
+        $middleware->alias([
+            'is-suspended'=>CheckSuspended::class
+        ]);
         $middleware->validateCsrfTokens(except: [
             'tenant/payments/response'
         ]);

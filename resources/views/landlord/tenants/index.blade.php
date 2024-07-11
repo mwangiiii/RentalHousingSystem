@@ -24,12 +24,12 @@
                     <span class="block sm:inline">{{ session('error') }}</span>
                 </div>
                 @endif
-                
+
                 <form action="{{ route('landlord.tenants.create') }}" method="GET" class="inline">
                     <x-button type="submit" class="btn btn-primary mb-4">{{__('Add Tenant')}}</x-button>
                 </form>
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
+                    <table class="table-auto w-full">
                         <thead>
                             <tr>
                                 <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ __('Name') }}</th>
@@ -61,13 +61,21 @@
                                     <form action="{{ route('landlord.tenants.destroy', $tenant) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <x-danger-button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this tenant?')">{{ __('Delete') }}</x-danger-button>
+                                        <x-danger-button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this tenant?')">{{__('Delete')}}</x-danger-button>
                                     </form>
-                                    <form action="{{ route('landlord.tenants.checkout', $tenant) }}" method="POST">
+                                    @if($tenant->user->is_suspended)
+                                    <form action="{{ route('landlord.tenants.checkin', $tenant) }}" method="POST" class="inline">
                                         @csrf
-                                        @method('PUT')
+                                        @method('PATCH')
+                                        <x-button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to check out this tenant?')">{{__('Check In')}}</x-button>
+                                    </form>
+                                    @else
+                                    <form action="{{ route('landlord.tenants.checkout', $tenant) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('PATCH')
                                         <x-danger-button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to check out this tenant?')">{{__('Check Out')}}</x-danger-button>
                                     </form>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach

@@ -39,7 +39,7 @@ class TenantController extends Controller
 
     public function create()
     {
-        $rooms = Room::all();
+        $rooms = Room::whereNot('status', 'assigned')->get();
         $properties = Property::all();
 
         return view('landlord.tenants.create', compact('rooms', 'properties'));
@@ -86,6 +86,12 @@ class TenantController extends Controller
             'lease_end' => $request->lease_end,
             'move_in_date' => date('Y-m-d')
         ]);
+
+        // Update the room status to 'assigned'
+        $room = Room::find($request->room_id);
+        $room->status = 'assigned';
+        $room->save();
+
 
         // Generate the rental agreement PDF
         $pdf = Pdf::loadView('pdf.rental-agreement', [
@@ -141,7 +147,7 @@ class TenantController extends Controller
     public function edit(Tenant $tenant)
     {
         $properties = Property::all();
-        $rooms = Room::all();
+        $rooms = Room::whereNot('status', 'assigned')->get();
         return view('landlord.tenants.edit', compact('tenant', 'rooms', 'properties'));
     }
 
@@ -150,8 +156,8 @@ class TenantController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $tenant->user_id,
-            'phone_number' => 'required', 'string', 'max:14', 'min:10', 'unique:users', Rule::unique('users')->ignore($tenant->user_id),
-            'id_number' => 'required|string|max:255', Rule::unique('users')->ignore($tenant->user_id),
+            'phone_number' => ['required', 'string', 'max:14', 'min:10', Rule::unique('users')->ignore($tenant->user_id)],
+            'id_number' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($tenant->user_id)],
             'property_id' => 'required|exists:properties,id',
             'room_id' => 'required|exists:rooms,id',
             'lease_start' => 'required|date',
@@ -164,7 +170,7 @@ class TenantController extends Controller
             $phoneNumber = '254' . substr($phoneNumber, 1);
         }
 
-        //Update the user
+        // Update the user
         $tenant->user->update([
             'name' => $request->name,
             'email' => $request->email,
@@ -172,7 +178,22 @@ class TenantController extends Controller
             'id_number' => $request->id_number
         ]);
 
-        //Update Tenant 
+        // Check if the tenant is being moved to a new room
+        if ($tenant->room_id != $request->room_id) {
+            // Update the previous room status to 'vacant'
+            if ($tenant->room) {
+                $previousRoom = $tenant->room;
+                $previousRoom->status = Room::STATUS_VACANT;
+                $previousRoom->save();
+            }
+
+            // Update the new room status to 'assigned'
+            $newRoom = Room::find($request->room_id);
+            $newRoom->status = Room::STATUS_ASSIGNED;
+            $newRoom->save();
+        }
+
+        // Update the tenant
         $tenant->update([
             'property_id' => $request->property_id,
             'room_id' => $request->room_id,
@@ -194,11 +215,39 @@ class TenantController extends Controller
     // Tenant Check out
     public function checkout(Tenant $tenant)
     {
+        // Update tenant's move_out_date and lease_end
+        $tenant->move_out_date = now();
+        $tenant->lease_end = now();
+        $tenant->save();
 
-        $tenant->user()->delete(); // Fetch the associated user and delete it
+        // Update the current room status to 'vacant'
+        if ($tenant->room) {
+            $previousRoom = $tenant->room;
+            $previousRoom->status = Room::STATUS_VACANT;
+            $previousRoom->save();
+        }
 
-        $tenant->delete(); // Delete the tenant record 
+        // Suspend the user
+        $user = $tenant->user;
+        $user->is_suspended = true;
+        $user->save();
 
-        return redirect()->route('landlord.tenants.index')->with('success', 'Tenant checked out and deleted successfully');
+        return redirect()->route('landlord.tenants.index')->with('success', 'Tenant checked out successfully');
+    }
+
+    // Second Check in
+    public function checkin(Tenant $tenant)
+    {
+        // Update tenant's move_out_date
+        $tenant->move_in_date = now();
+        // $tenant->lease_end = now();
+        $tenant->save();
+
+        // Suspend the user
+        $user = $tenant->user;
+        $user->is_suspended = false;
+        $user->save();
+
+        return redirect()->route('landlord.tenants.index')->with('success', 'Tenant checked in successfully');
     }
 }

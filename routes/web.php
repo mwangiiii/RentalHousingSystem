@@ -25,6 +25,7 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
+    'is-suspended'
 ])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 });
@@ -63,7 +64,8 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
             'update' => 'landlord.tenants.update',
             'destroy' => 'landlord.tenants.destroy',
         ]);
-        Route::put('/tenants/{tenant}/checkout', [TenantController::class, 'checkout'])->name('landlord.tenants.checkout');
+        Route::patch('/tenants/{tenant}/checkout', [TenantController::class, 'checkout'])->name('landlord.tenants.checkout');
+        Route::patch('/tenants/{tenant}/checkin', [TenantController::class, 'checkin'])->name('landlord.tenants.checkin');
 
         // Landlord Payment routes
         Route::get('/payments', [PaymentController::class, 'index'])->name('landlord.payments.index');
@@ -102,7 +104,6 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
         Route::post('/payments/response', [TenantsController::class, 'callback'])->withoutMiddleware('auth')->name('mpesa.callback');
         Route::post('/payment', [TenantsController::class, 'storePayment'])->name('tenant.payments.store');
         Route::get('/maintenance', [TenantsController::class, 'maintenance'])->name('tenant.maintenance');
-        Route::get('/messages', [TenantsController::class, 'messages'])->name('tenant.messages');
         Route::post('/tenant/maintenance/submit', [TenantsController::class, 'submitMaintenanceRequest'])->name('tenants.maintenance.store');
     });
 
@@ -110,9 +111,6 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
 
     // Add houses related routes
     Route::post('/saveHouse', [AddHousesController::class, 'store'])->name('addListing.store');
-
-    // Test route to verify mass assignment
-    // Route::get('/test-mass-assignment', [AddHousesController::class, 'testMassAssignment'])->name('testMassAssignment');
 
     // Lister specific routes
     Route::get('/lister/dashboard', function () {

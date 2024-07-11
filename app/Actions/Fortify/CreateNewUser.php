@@ -53,11 +53,6 @@ class CreateNewUser implements CreatesNewUsers
             
             Lister::create([
                 'user_id' => $user->id,
-                'name' => $user->name,
-                'contact' => $user->phone_number,
-                'email' => $user->email,
-                'identification_number' => $user->id_number,
-                'password' => Hash::make($input['password']),
             ]);
         }else{
             Hunter::create([
