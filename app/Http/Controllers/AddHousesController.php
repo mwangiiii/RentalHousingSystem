@@ -174,32 +174,45 @@ public function show($id)
         try {
             // Validate the request
             $validatedData = $request->validate([
-                'location' => 'required|string|max:255',
-                'price' => 'required|numeric',
-                'description' => 'required|string',
-                'availability' => 'required|string',
-                'contact' => 'required|string', // Ensure this matches the form field name
+                'location' => 'nullable|string|max:255',
+                'price' => 'nullable|numeric',
+                'description' => 'nullable|string',
+                'contact' => 'nullable|string',
                 'rules_and_regulations' => 'nullable|string',
-                'amenities' => 'required|string',
-                'category_id' => 'required|exists:categories,id',
-                'home_images.*' => 'image|mimes:jpeg,png,jpg,gif',
-                'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif', // Make main_image nullable
+                'amenities' => 'nullable|string',
+                'category_id' => 'nullable|exists:categories,id',
+                'home_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+                'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             ]);
     
             // Get the house to be updated
             $house = House::findOrFail($id);
     
-            // Update house details
-            $house->update([
-                'location' => $validatedData['location'],
-                'price' => $validatedData['price'],
-                'description' => $validatedData['description'],
-                'availability' => $validatedData['availability'],
-                'contact' => $validatedData['contact'],
-                'rules_and_regulations' => $validatedData['rules_and_regulations'],
-                'amenities' => $validatedData['amenities'],
-                'category_id' => $validatedData['category_id'],
-            ]);
+            // Update house details conditionally
+            $houseData = [];
+            if ($request->has('location')) {
+                $houseData['location'] = $validatedData['location'];
+            }
+            if ($request->has('price')) {
+                $houseData['price'] = $validatedData['price'];
+            }
+            if ($request->has('description')) {
+                $houseData['description'] = $validatedData['description'];
+            }
+            if ($request->has('contact')) {
+                $houseData['contact'] = $validatedData['contact'];
+            }
+            if ($request->has('rules_and_regulations')) {
+                $houseData['rules_and_regulations'] = $validatedData['rules_and_regulations'];
+            }
+            if ($request->has('amenities')) {
+                $houseData['amenities'] = $validatedData['amenities'];
+            }
+            if ($request->has('category_id')) {
+                $houseData['category_id'] = $validatedData['category_id'];
+            }
+    
+            $house->update($houseData);
     
             // Initialize array to hold image data
             $images = [];
@@ -229,6 +242,13 @@ public function show($id)
     
             // Handle multiple image uploads (Additional Images) if present
             if ($request->hasFile('home_images')) {
+                // Delete old images if any new images are uploaded
+                $existingImages = Image::where('house_id', $house->id)->where('is_main', false)->get();
+                foreach ($existingImages as $existingImage) {
+                    Storage::disk('public')->delete($existingImage->image_path);
+                    $existingImage->delete();
+                }
+    
                 foreach ($request->file('home_images') as $image) {
                     // Store each image in the public/images directory (for additional images)
                     $filePath = $image->store('images', 'public');
@@ -257,13 +277,16 @@ public function show($id)
                 }
             }
     
-            return redirect()->route('houses.index')->with('success', 'Listing updated successfully.');
+            return redirect()->route('dashboard')->with('success', 'Listing updated successfully.');
     
         } catch (\Exception $e) {
             Log::error('Error updating house: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Failed to update house. Please try again later.']);
         }
     }
+    
+    
+    
     
 
     public function edit($id)

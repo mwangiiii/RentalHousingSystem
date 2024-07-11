@@ -126,7 +126,8 @@ Route::post('/houses/{id}/update', [AddHousesController::class, 'update'])->name
 
 Route::resource('houses', AddHousesController::class);
 
-Route::get('houses', [AddHousesController::class, 'index'])->name('houses.index');
+// Route::get('/houses', [AddHousesController::class, 'methodName'])->name('houses.index');
+
 
 
     // Hunter specific routes

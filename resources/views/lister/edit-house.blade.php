@@ -48,8 +48,20 @@
                     @csrf
                     @method('PUT')
 
-                    <!-- Location -->
+                    <!-- Category -->
                     <div>
+                        <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+                        <select id="category" name="category" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ $house->category_id == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="mt-6">
                         <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
                         <input type="text" name="location" id="location" value="{{ $house->location }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                     </div>
