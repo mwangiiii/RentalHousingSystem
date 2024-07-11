@@ -27,7 +27,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Occupancy Rate Chart -->
                     <div class="bg-red-100 p-3 mt-4 rounded-lg">
                         <h4 class="text-xl font-semibold">Occupancy Rate</h4>
