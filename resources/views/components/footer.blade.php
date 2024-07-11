@@ -91,6 +91,7 @@
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
         
         <!-- Social Links moved to the bottom -->
         <!-- <div class="footer-social-links">
@@ -125,6 +126,8 @@
                 </svg>
             </a>
         </div> -->
+=======
+>>>>>>> 54ea265259cf4e13ca5775b26e73fef95176ea74
     </div>
 </footer>
 

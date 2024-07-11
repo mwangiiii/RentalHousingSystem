@@ -18,28 +18,34 @@
                     <span class="block sm:inline">{{ session('success') }}</span>
                 </div>
                 @endif
+                @if(session('error'))
+                <div id="success-banner" class="alert alert-danger bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <span class="block sm:inline">{{ session('error') }}</span>
+                </div>
+                @endif
+                
                 <form action="{{ route('landlord.properties.create') }}" method="GET" class="inline">
                     <x-button type="submit" class="btn btn-primary mb-4">{{__('Add Property')}}</x-button>
                 </form>
                 <div class="overflow-x-auto">
-                    <table class="table-auto w-full">
+                    <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr>
-                                <th class="px-4 py-2">Name</th>
-                                <th class="px-4 py-2">Address</th>
-                                <th class="px-4 py-2">Units</th>
-                                <th class="px-4 py-2">Description</th>
-                                <th class="px-4 py-2">Actions</th>
+                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
+                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Units</th>
+                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                                <th class="px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="bg-white divide-y divide-gray-200">
                             @foreach($properties as $property)
                             <tr>
-                                <td class="border px-4 py-2">{{ $property->name }}</td>
-                                <td class="border px-4 py-2">{{ $property->address }}</td>
-                                <td class="border px-4 py-2">{{ $property->units }}</td>
-                                <td class="border px-4 py-2">{{ $property->description }}</td>
-                                <td class="border px-4 py-2">
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $property->name }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $property->address }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $property->units }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">{{ $property->description }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     <form action="{{ route('landlord.properties.edit', $property) }}" method="GET" class="inline">
                                         <x-button type="submit" class="btn btn-sm btn-warning">Edit</x-button>
                                     </form>

@@ -38,12 +38,13 @@
                         </div>
                         <div class="col-span-6 sm:col-span-4">
                             <x-label for="property_id" :value="__('Property')" />
-                            <x-select name="property_id" id="property_id" class="mt-1 block w-full" :options="$properties" fieldName="name" idField="id" required></x-select>
+                            <x-select name="property_id" id="property_id" class="mt-1 block w-full" :options="$properties" fieldName="name" idField="id" :selected="old('property_id', $tenant->property_id)" required></x-select>
                             <x-input-error for="property_id" class="mt-2" />
                         </div>
+
                         <div class="col-span-6 sm:col-span-4">
                             <x-label for="room_id" :value="__('Room')" />
-                            <x-select name="room_id" id="room_id" class="mt-1 block w-full" :options="$rooms" fieldName="room_number" idField="id" required></x-select>
+                            <x-select name="room_id" id="room_id" class="mt-1 block w-full" :options="$rooms" fieldName="room_number" idField="id" :selected="old('room_id', $tenant->room_id)" required></x-select>
                             <x-input-error for="room_id" class="mt-2" />
                         </div>
 

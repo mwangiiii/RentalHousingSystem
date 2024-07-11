@@ -6655,6 +6655,16 @@
             "support": {
                 "source": "https://github.com/stella-maris-solutions/clock/tree/0.1.7"
             },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/spatie",
+                    "type": "github"
+                },
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "other"
+                }
+            ],
             "install-path": "../stella-maris/clock"
         },
         {

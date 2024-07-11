@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PropertyController extends Controller
 {
+    
     //Function to display the owned properties absed on user_id
     public function index()
     {
@@ -46,6 +47,7 @@ class PropertyController extends Controller
     //Function to display the edit blade
     public function edit(Property $property)
     {
+        
         return view('landlord.properties.edit', compact('property'));
     }
 

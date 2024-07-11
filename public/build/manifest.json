@@ -16,12 +16,12 @@
     "src": "node_modules/intl-tel-input/build/img/globe@2x.png"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CxePN_Fj.css",
+    "file": "assets/app-Ce9lU-yg.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-DZiRChPH.js",
+    "file": "assets/app-CiJn3_nu.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

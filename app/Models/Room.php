@@ -13,8 +13,13 @@ class Room extends Model
         'room_number',
         'rent', 
         'property_id',
-        'description'
+        'description',
+        'status',
     ];
+
+    const STATUS_VACANT = 'vacant';
+    const STATUS_ASSIGNED = 'assigned';
+    const STATUS_BOOKED = 'booked';
 
     public function property()
     {

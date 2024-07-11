@@ -8,8 +8,9 @@ use App\Models\House;
 use App\Models\Notification;
 use App\Models\SavedHouse;
 use Carbon\Carbon;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class HunterController extends Controller
 {
@@ -52,7 +53,7 @@ class HunterController extends Controller
         try {
             $hunterId = auth()->id(); // Assuming the hunter is the authenticated user
             // Debugging step: Check if hunterId is valid
-            \Log::info('Hunter ID: ' . $hunterId);
+            Log::info('Hunter ID: ' . $hunterId);
     
             $hunter = User::findOrFail($hunterId); // Fetch the hunter's data
             $house = House::findOrFail($request->house_id);
@@ -84,7 +85,7 @@ class HunterController extends Controller
     
             return redirect()->back()->with('success', 'Viewing scheduled and notifications sent to both lister and hunter.');
         } catch (\Exception $e) {
-            \Log::error('Error scheduling viewing: ' . $e->getMessage());
+            Log::error('Error scheduling viewing: ' . $e->getMessage());
             return redirect()->back()->with('error', 'An error occurred while scheduling the viewing. Please try again later.');
         }
     }

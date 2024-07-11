@@ -86,12 +86,12 @@
         <section class="search-section">
             <div class="content">
                 <h1>Find A Rental House Near You</h1>
-                <div class="tabs">
+                <!-- <div class="tabs">
                     <button class="tab active">Rent</button>
                     <button class="tab">Sale</button>
                     <button class="tab">Furnished</button>
                     <button class="tab">Land</button>
-                </div>
+                </div> -->
                 <div class="search-bar">
                     <input type="text" id="locationInput" placeholder="Enter Location, workplace or school, etc">
                     <select id="criteriaInput">

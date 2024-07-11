@@ -27,7 +27,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Occupancy Rate Chart -->
                     <div class="bg-red-100 p-3 mt-4 rounded-lg">
                         <h4 class="text-xl font-semibold">Occupancy Rate</h4>
@@ -72,7 +72,7 @@
 </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
     // Script of the occupany rate graph
@@ -120,6 +120,7 @@
         const occupancychart = new ApexCharts(document.getElementById("occupancy-chart"), getOccupancyChartOptions(occupiedRooms,availableRooms));
         occupancychart.render();
     }
+
     //  Script of the maintenance pie chart
     const getMaintenanceRequestsChartOptions = (open, completed) => {
         return {
@@ -179,6 +180,9 @@
                 height: 420,
                 width: "100%",
                 type: "line",
+                toolbar: {
+                    show: false,
+                },
             },
             dataLabels: {
                 enabled: true,
@@ -222,6 +226,9 @@
                 height: 420,
                 width: "100%",
                 type: "line",
+                toolbar: {
+                    show: false,
+                },
             },
             stroke: {
                 curve: 'smooth'
@@ -254,6 +261,9 @@
                 height: 420,
                 width: "100%",
                 type: "bar",
+                toolbar: {
+                    show: false,
+                },
             },
             plotOptions: {
                 bar: {
@@ -291,20 +301,20 @@
     }
 
     // Script on the payments history
-    const paymentHistoryData = <?php echo json_encode(array_values($paymentHistory->toArray())); ?>;
-    const paymentHistoryCategories = <?php echo json_encode(array_keys($paymentHistory->toArray())); ?>;
-
-    const getPaymentHistoryChartOptions = () => {
+    const getPaymentHistoryChartOptions = (paymentHistoryCategories, paymentHistoryData) => {
         return {
             series: [{
                 name: 'Payment History',
-                data: paymentHistoryData // Replace with your data
+                data: paymentHistoryData // Use paymentHistoryData correctly
             }],
             colors: ["#4BC0C0"],
             chart: {
                 height: 420,
                 width: "100%",
                 type: "area",
+                toolbar: {
+                    show: false,
+                },
             },
             stroke: {
                 curve: 'smooth'
@@ -316,7 +326,7 @@
                 },
             },
             xaxis: {
-                categories: paymentHistoryCategories, // Replace with your data
+                categories: paymentHistoryCategories, // Use paymentHistoryCategories correctly
             },
             legend: {
                 position: "bottom",
@@ -324,51 +334,13 @@
             },
         }
     }
+
+    const paymentHistoryData = <?php echo json_encode(array_values($paymentHistory->toArray())); ?>;
+    const paymentHistoryCategories = <?php echo json_encode(array_keys($paymentHistory->toArray())); ?>;
 
     if (document.getElementById("area-graph") && typeof ApexCharts !== 'undefined') {
-        const chart = new ApexCharts(document.getElementById("area-graph"), getPaymentHistoryChartOptions());
+        const chart = new ApexCharts(document.getElementById("area-graph"), getPaymentHistoryChartOptions(paymentHistoryCategories, paymentHistoryData));
         chart.render();
     }
 </script>
-<!-- Script of the leases expiring graph -->
-<script>
-    const getLeaseExpiryChartOptions = () => {
-        return {
-            series: [{
-                name: 'Leases Expiring',
-                data: [5, 7, 3, 8, 2] // Replace with your data
-            }],
-            colors: ["#FF6384"],
-            chart: {
-                height: 420,
-                width: "100%",
-                type: "bar",
-            },
-            plotOptions: {
-                bar: {
-                    borderRadius: 4,
-                    horizontal: false,
-                }
-            },
-            dataLabels: {
-                enabled: true,
-                style: {
-                    fontFamily: "Inter, sans-serif",
-                },
-            },
-            xaxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May'], // Replace with your data
-            },
-            legend: {
-                position: "bottom",
-                fontFamily: "Inter, sans-serif",
-            },
-        }
-    }
-
-    if (document.getElementById("bar-chart") && typeof ApexCharts !== 'undefined') {
-        const chart = new ApexCharts(document.getElementById("bar-chart"), getLeaseExpiryChartOptions());
-        chart.render();
-    }
-</script>
-@endsection
+@endpush

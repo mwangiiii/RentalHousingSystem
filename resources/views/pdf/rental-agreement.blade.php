@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Rental Agreement</title>
     <style>
@@ -16,7 +17,10 @@
             padding: 20px;
         }
 
-        h1, h2, h3, h4 {
+        h1,
+        h2,
+        h3,
+        h4 {
             text-align: center;
             margin-bottom: 20px;
         }
@@ -25,11 +29,13 @@
             margin: 10px 0;
         }
 
-        .details, .signatures {
+        .details,
+        .signatures {
             margin: 20px 0;
         }
 
-        .details p, .signatures p {
+        .details p,
+        .signatures p {
             margin: 5px 0;
         }
 
@@ -55,6 +61,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Rental Agreement</h1>
@@ -84,8 +91,9 @@
         <div class="details">
             <p><strong>Room Number:</strong> {{ $room->room_number }}</p>
             <p><strong>Rent Amount:</strong> ${{ $room->rent }}</p>
-            <p><strong>Lease Start Date:</strong> {{ $leaseStart->format('M d, Y') }}</p>
-            <p><strong>Lease End Date:</strong> {{ $leaseEnd->format('M d, Y') }}</p>
+            <p><strong>Lease Start Date:</strong> {{ $leaseStart }}</p>
+            <p><strong>Lease End Date:</strong> {{ $leaseEnd }}</p>
+            <p><strong>Check In Date:</strong> {{ $move_in_date }}</p>
         </div>
 
         <h3 class="section-title">Signatures</h3>
@@ -99,4 +107,5 @@
         </div>
     </div>
 </body>
+
 </html>
