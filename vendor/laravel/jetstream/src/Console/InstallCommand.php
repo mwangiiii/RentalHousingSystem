@@ -755,7 +755,11 @@ EOF;
     protected function runDatabaseMigrations()
     {
         if (confirm('New database migrations were added. Would you like to re-run your migrations?', true)) {
-            $this->call('migrate:fresh', ['--force' => true]);
+            (new Process([$this->phpBinary(), 'artisan', 'migrate:fresh', '--force'], base_path()))
+                ->setTimeout(null)
+                ->run(function ($type, $output) {
+                    $this->output->write($output);
+                });
         }
     }
 

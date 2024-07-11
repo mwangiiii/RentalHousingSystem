@@ -17,112 +17,119 @@ class AddHousesController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        try {
-            // Validate the request
-            $validatedData = $request->validate([
-                'location' => 'required|string|max:255',
-                'price' => 'required|numeric',
-                'description' => 'required|string',
-                'availability' => 'required|string',
-                'contact' => 'required|string',
-                'rules_and_regulations' => 'nullable|string',
-                'amenities' => 'required|string',
-                'category_id' => 'required|exists:categories,id',
-                'home_images.*' => 'image|mimes:jpeg,png,jpg,gif',
-                'main_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            ]);
-    
-            // Get the authenticated user's ID
-            $user_id = Auth::id();
-            
-            // Fetch the lister ID for the authenticated user
-            $lister = Lister::where('user_id', $user_id)->first();
-            
-            if ($lister) {
-                $validatedData['lister_id'] = $lister->id;
-            } else {
-                // Log::error('Lister not found for user ID: ' . auth()->id());
-                return back()->withErrors(['error' => 'Failed to find lister information. Please try again later.']);
-            }
-            
-            // Create the house entry
-            $house = House::create([
-                'location' => $validatedData['location'],
-                'price' => $validatedData['price'],
-                'description' => $validatedData['description'],
-                'availability' => $validatedData['availability'],
-                'phone_number' => $validatedData['phone_number'],
-                'rules_and_regulations' => $validatedData['rules_and_regulations'],
-                'amenities' => $validatedData['amenities'],
-                'category_id' => $validatedData['category_id'],
-                'main_image' => $validatedData['main_image']
-            ]);
-            // Log::info('House created successfully', ['house_id' => $house->id]);
-    
-            // Initialize array to hold image data
-            $images = [];
-    
-            // Handle the main image upload (Thumbnail) if present
-            if ($request->hasFile('main_image')) {
-                // Store the main image in the public/images/thumbnails directory
-                $mainImagePath = $request->file('main_image')->store('images/thumbnails', 'public');
-    
-                // Add main image data to the images array
+     * 
+     * */
+     
+     public function store(Request $request)
+{
+    try {
+        // Validate the request
+        $validatedData = $request->validate([
+            'location' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'description' => 'required|string',
+            'availability' => 'required|string',
+            'contact' => 'required|string', // Ensure this matches the form field name
+            'rules_and_regulations' => 'nullable|string',
+            'amenities' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
+            'home_images.*' => 'image|mimes:jpeg,png,jpg,gif',
+            'main_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        // Get the authenticated user's ID
+        $user_id = Auth::id();
+
+        // Fetch the lister ID for the authenticated user
+        $lister = Lister::where('user_id', $user_id)->first();
+
+        if ($lister) {
+            $validatedData['lister_id'] = $lister->id;
+        } else {
+            return back()->withErrors(['error' => 'Failed to find lister information. Please try again later.']);
+        }
+
+        // Create the house entry
+        $house = House::create([
+            'location' => $validatedData['location'],
+            'price' => $validatedData['price'],
+            'description' => $validatedData['description'],
+            'availability' => $validatedData['availability'],
+            'contact' => $validatedData['contact'], // Update to use 'contact'
+            'rules_and_regulations' => $validatedData['rules_and_regulations'],
+            'amenities' => $validatedData['amenities'],
+            'category_id' => $validatedData['category_id'],
+            'main_image' => $validatedData['main_image'],
+            'user_id' => $user_id, // Add this line
+            'lister_id' => $validatedData['lister_id'] // Add this line
+        ]);
+
+        // Initialize array to hold image data
+        $images = [];
+
+        // Handle the main image upload (Thumbnail) if present
+        if ($request->hasFile('main_image')) {
+            // Store the main image in the public/images/thumbnails directory
+            $mainImagePath = $request->file('main_image')->store('images/thumbnails', 'public');
+
+            // Add main image data to the images array
+            $images[] = [
+                'house_id' => $house->id,
+                'image_path' => $mainImagePath,
+                'is_main' => true, // Indicate this is the main image
+            ];
+
+            Log::info('Main image (thumbnail) uploaded', ['image_path' => $mainImagePath]);
+        }
+
+        // Handle multiple image uploads (Additional Images) if present
+        if ($request->hasFile('home_images')) {
+            foreach ($request->file('home_images') as $image) {
+                // Store each image in the public/images directory (for additional images)
+                $filePath = $image->store('images', 'public');
+
+                // Add additional image data to the images array
                 $images[] = [
                     'house_id' => $house->id,
-                    'image_path' => $mainImagePath,
-                    'is_main' => $mainImagePath, // Store the path as string for thumbnail
+                    'image_path' => $filePath,
+                    'is_main' => false, // For additional images, is_main should be false
                 ];
-    
-                Log::info('Main image (thumbnail) uploaded', ['image_path' => $mainImagePath]);
-            }
-    
-            // Handle multiple image uploads (Additional Images) if present
-            if ($request->hasFile('home_images')) {
-                foreach ($request->file('home_images') as $image) {
-                    // Store each image in the public/images directory (for additional images)
-                    $filePath = $image->store('images', 'public');
-    
-                    // Add additional image data to the images array
-                    $images[] = [
-                        'house_id' => $house->id,
-                        'image_path' => $filePath,
-                        'is_main' => null, // For additional images, is_main should be null
-                    ];
-    
-                    Log::info('Additional image uploaded', ['image_path' => $filePath]);
-                }
-            } else {
-                Log::warning('No additional images found in the request.');
-            }
-    
-            // Debugging: Log the images array before insertion
-            Log::info('Images array before insert', ['images' => $images]);
-    
-            // Bulk insert all images into the database
-            if (!empty($images)) {
-                try {
-                    Image::insert($images);
-                    Log::info('Images inserted into the database', ['images' => $images]);
-                } catch (\Exception $e) {
-                    Log::error('Error inserting images into the database: ' . $e->getMessage());
-                    return back()->withErrors(['error' => 'Failed to save images. Please try again later.']);
-                }
-            } else {
-                Log::warning('No images to insert into the database.');
-            }
-    
-            return redirect()->route('lister.listingForm')->with('success', 'Listing added successfully.');
 
-        } catch (\Exception $e) {
-            Log::error('Error creating house: ' . $e->getMessage());
-            // return back()->withErrors(['error' => 'Failed to add house. Please try again later.' $e->getMessage()]);
-            return $e->getMessage();
+                Log::info('Additional image uploaded', ['image_path' => $filePath]);
+            }
+        } else {
+            Log::warning('No additional images found in the request.');
         }
+
+        // Debugging: Log the images array before insertion
+        Log::info('Images array before insert', ['images' => $images]);
+
+        // Bulk insert all images into the database
+        if (!empty($images)) {
+            try {
+                Image::insert($images);
+                Log::info('Images inserted into the database', ['images' => $images]);
+            } catch (\Exception $e) {
+                Log::error('Error inserting images into the database: ' . $e->getMessage());
+                return back()->withErrors(['error' => 'Failed to save images. Please try again later.']);
+            }
+        } else {
+            Log::warning('No images to insert into the database.');
+        }
+
+        return redirect()->route('lister.listingForm')->with('success', 'Listing added successfully.');
+
+    } catch (\Exception $e) {
+        Log::error('Error creating house: ' . $e->getMessage());
+        return back()->withErrors(['error' => 'Failed to add house. Please try again later.']);
     }
+}
+
+     
+
+
+
+    
 
     /**
      * Count the number of houses.

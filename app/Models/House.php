@@ -17,6 +17,7 @@ class House extends Model
         'description',
         'availability',
         'phone_number',
+        'contact',
         'rules_and_regulations',
         'amenities',
         'user_id',

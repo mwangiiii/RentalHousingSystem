@@ -93,7 +93,7 @@
         </div>
         
         <!-- Social Links moved to the bottom -->
-        <div class="footer-social-links">
+        <!-- <div class="footer-social-links">
             <a class="footer-social-link linkedin" href="#" target="_blank">
                 <span class="hidden-link-text">Linkedin</span>
                 <svg class="footer-social-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30">
@@ -124,7 +124,7 @@
                     <path class="footer-social-icon-path" d="M28.88,0H3.89C1.74,0,.16,1.56.16,3.42v25.1c0,1.86,1.58,3.42,3.73,3.42H28.82c2.15,0,3.73-1.56,3.73-3.42V3.42C32.55,1.56,31,0,28.88,0ZM8.55,26.3H4.54V11.35h4V26.3ZM6.54,9.29A2,2,0,1,1,8.53,7.32,2,2,0,0,1,6.54,9.29Zm20.33,17H22.36V19.5c0-1.17-.42-1.97-1.47-1.97s-1.58.61-1.58,1.97v6.8H14.3V11.35h4.1v1.05h.06a3.67,3.67,0,0,1,3.28-1.82c2.35,0,4.11,1.51,4.11,4.75v6.06ZM31.32,26.3H27.31V19.49c0-2.55-1.37-3.74-3.19-3.74s-3.68,1.27-3.68,3.74V26.3H16.26V11.35h4.1v1.05h.06a3.68,3.68,0,0,1,3.28-1.82c2.36,0,4.12,1.51,4.12,4.75V26.3Z"></path>
                 </svg>
             </a>
-        </div>
+        </div> -->
     </div>
 </footer>
 

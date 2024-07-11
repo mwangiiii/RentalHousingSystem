@@ -44,7 +44,7 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             'phone_number' => $phoneNumber,
             'id_number' => $input['id_number'],
-            'role_id' => $input['role'] === 'lister' ? 9 : 10, // Conditional role assignment
+            'role_id' => $input['role'] === 'lister' ? 7 : 8, // Conditional role assignment
             'password' => Hash::make($input['password']),
         ]);
 

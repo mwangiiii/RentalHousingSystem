@@ -924,11 +924,15 @@ class PendingRequest
                             $response->throw($this->throwCallback);
                         }
 
-                        if ($attempt < $this->tries && $shouldRetry) {
+                        $potentialTries = is_array($this->tries)
+                            ? count($this->tries) + 1
+                            : $this->tries;
+
+                        if ($attempt < $potentialTries && $shouldRetry) {
                             $response->throw();
                         }
 
-                        if ($this->tries > 1 && $this->retryThrow) {
+                        if ($potentialTries > 1 && $this->retryThrow) {
                             $response->throw();
                         }
                     }
@@ -1221,7 +1225,7 @@ class PendingRequest
      */
     protected function getReusableClient()
     {
-        return $this->client = $this->client ?: $this->createClient($this->buildHandlerStack());
+        return $this->client ??= $this->createClient($this->buildHandlerStack());
     }
 
     /**
