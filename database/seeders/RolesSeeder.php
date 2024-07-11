@@ -13,28 +13,22 @@ class RolesSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::create([
-            'role_name' => 'Admin',
-        ]);
+        $roles = [
+            ['name' => 'Admin'],
+            ['name' => 'Landlord'],
+            ['name' => 'Property Manager'],
+            ['name' => 'Tenant'],
+            ['name' => 'Accountant'],
+            ['name' => 'Maintenance Worker'],
+            ['name' => 'Lister'],
+            ['name' => 'house hunter']
+        ];
 
-        Role::create([
-            'role_name' => 'Landlord',
-        ]);
-
-        Role::create([
-            'role_name' => 'Property Manager',
-        ]);
-
-        Role::create([
-            'role_name' => 'Tenant',
-        ]);
-
-        Role::create([
-            'role_name' => 'Accountant',
-        ]);
-
-        Role::create([
-            'role_name' => 'Maintenance Worker',
-        ]);
+        foreach ($roles as $role) {
+            Role::firstOrCreate(['name' => $role['name']]);
+        }
+      
     }
+
+    
 }

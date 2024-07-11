@@ -180,17 +180,7 @@ We welcome contributions to improve Makazi Hub! Follow these steps to contribute
 
 ## License
 
-This project is licensed under various licenses:
-- Laravel: [MIT License](https://github.com/git/git-scm.com/blob/main/MIT-LICENSE.txt).
-- PHP: [PHP License](https://www.php.net/license/3_01.txt).
-- MySQL: [OEM License](https://www.mysql.com/about/legal/licensing/oem/).
-- Node.js: [MIT License](https://github.com/nodejs/node/blob/main/LICENSE).
-- Apache: [Apache License 2.0](https://apache.org/licenses/LICENSE-2.0).
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-## Contact
-
-For support and inquiries, contact [Makazi Hub Admin](mailto:dennis.wanjiku@strathmore.edu,elvis.makara@strathmore.edu?subject=Github:Makazi-hub-Support).
-
-## Credits
-
-Special credits to [Pahom21](https://github.com/Pahom21) for the meticulous work done on this project.
+# RentalHousingSystem
+The proposed system helps simplify work in a house rental business as it connects the tenant to the caretakers and their landlords. It offers several features like abstracted communication, maintenance report submission etc.  By allowing the choice of different criteria, a client can decide the location, amenities e.t.c., around they want around.

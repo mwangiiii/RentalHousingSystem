@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Property;
+
 use App\Models\House;
 use Illuminate\Support\Facades\Auth;
 
+
 class PropertyController extends Controller
 {
+    
     //Function to display the owned properties absed on user_id
     public function index()
     {
@@ -45,6 +48,7 @@ class PropertyController extends Controller
     //Function to display the edit blade
     public function edit(Property $property)
     {
+        
         return view('landlord.properties.edit', compact('property'));
     }
 

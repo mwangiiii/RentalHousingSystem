@@ -1,11 +1,3 @@
-@extends ('layouts.app')
-
-@section('header')
-<h2 class="font-semibold text-xl text-gray-800 leading-tight">
-    {{ __('Add a Listing') }}
-</h2>
-@endsection
-
 @section('content')
 <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -78,6 +70,61 @@
                 </form>
             </div>
         </div>
+        @endif
+        <div class="container">
+            <form action="{{ route('addListing.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" name="location" id="location" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="number" name="price" id="price" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea name="description" id="description" class="form-control" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="availability">Availability</label>
+                    <input type="text" name="availability" id="availability" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact">Contact</label>
+                    <input type="text" name="contact" id="contact" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="rules_and_regulations">Rules and Regulations</label>
+                    <textarea name="rules_and_regulations" id="rules_and_regulations" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="amenities">Amenities</label>
+                    <textarea name="amenities" id="amenities" class="form-control" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select name="category_id" id="category" class="input-field" required>
+                        <option value="">Select Category</option>
+                        @foreach($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="main_image">Main Image</label>
+                    <input type="file" name="main_image" id="main_image" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="home_images">Additional Images</label>
+                    <input type="file" name="home_images[]" id="home_images" class="form-control" multiple>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Listing</button>
+            </form>
+        </div>
+
     </div>
-</div>
-@endsection
+
+</body>
+
+</html>

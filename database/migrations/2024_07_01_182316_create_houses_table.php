@@ -20,7 +20,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->text('description');
             $table->enum('availability', ['available', 'unavailable']);
-            $table->string('phone_number');
+            $table->string('contact');
             $table->text('rules_and_regulations')->nullable();
             $table->string('amenities');
             $table->unsignedBigInteger('category_id'); // Define category_id as unsignedBigInteger
