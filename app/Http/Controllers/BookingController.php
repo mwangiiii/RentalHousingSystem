@@ -17,7 +17,7 @@ class BookingController extends Controller
     public function showBookingForm($houseId)
     {
         $house = House::findOrFail($houseId);
-        return view('booking', compact('house'));
+        return view('bookings.booking', compact('house'));
     }
 
     /**
@@ -28,27 +28,19 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the incoming request data
-        $validatedData = $request->validate([
+        $request->validate([
             'house_id' => 'required|exists:houses,id',
             'move_in_date' => 'required|date',
-            'duration' => 'required|integer|min:1|max:30',
+            'lease_duration' => 'required|integer|min=1',
+            'number_of_occupants' => 'required|integer|min=1',
+            'employment_status' => 'required|string',
+            'contact_method' => 'required|string',
             'message' => 'nullable|string',
         ]);
 
-        // Create a new booking instance
-        $booking = new Booking();
-        $booking->house_id = $validatedData['house_id'];
-        $booking->move_in_date = $validatedData['move_in_date'];
-        $booking->duration = $validatedData['duration'];
-        $booking->message = $validatedData['message'];
-        $booking->user_id = Auth::id(); // Assuming authenticated user
+        Booking::create($request->all());
 
-        // Save the booking
-        $booking->save();
-
-        // Redirect back or to a thank-you page
-        return redirect()->back()->with('success', 'Booking successful!');
+        return redirect()->route('dashboard')->with('success', 'Booking successful!');
     }
 
     /**
@@ -56,11 +48,11 @@ class BookingController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
-    {
-        $bookings = Booking::where('user_id', Auth::id())->get();
-        return view('bookings.index', compact('bookings'));
-    }
+    // public function index()
+    // {
+    //     $bookings = Booking::where('user_id', Auth::id())->get();
+    //     return view('bookings.index'), compact('bookings'));
+    // }
 
     /**
      * Display the specified booking.
@@ -68,11 +60,11 @@ class BookingController extends Controller
      * @param  int  $id
      * @return \Illuminate\View\View
      */
-    public function show($id)
-    {
-        $booking = Booking::findOrFail($id);
-        return view('bookings.show', compact('booking'));
-    }
+    // public function show($id)
+    // {
+    //     $booking = Booking::findOrFail($id);
+    //     return view('bookings.show', compact('booking'));
+    // }
 
     /**
      * Show the form for editing the specified booking.
@@ -80,11 +72,11 @@ class BookingController extends Controller
      * @param  int  $id
      * @return \Illuminate\View\View
      */
-    public function edit($id)
-    {
-        $booking = Booking::findOrFail($id);
-        return view('bookings.edit', compact('booking'));
-    }
+    // public function edit($id)
+    // {
+    //     $booking = Booking::findOrFail($id);
+    //     return view('bookings.edit', compact('booking'));
+    // }
 
     /**
      * Update the specified booking in storage.
@@ -93,27 +85,27 @@ class BookingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        // Validate the incoming request data
-        $validatedData = $request->validate([
-            'move_in_date' => 'required|date',
-            'duration' => 'required|integer|min:1|max:30',
-            'message' => 'nullable|string',
-        ]);
+    // public function update(Request $request, $id)
+    // {
+    //     // Validate the incoming request data
+    //     $validatedData = $request->validate([
+    //         'move_in_date' => 'required|date',
+    //         'duration' => 'required|integer|min:1|max:30',
+    //         'message' => 'nullable|string',
+    //     ]);
 
-        // Find the booking and update it
-        $booking = Booking::findOrFail($id);
-        $booking->move_in_date = $validatedData['move_in_date'];
-        $booking->duration = $validatedData['duration'];
-        $booking->message = $validatedData['message'];
+    //     // Find the booking and update it
+    //     $booking = Booking::findOrFail($id);
+    //     $booking->move_in_date = $validatedData['move_in_date'];
+    //     $booking->duration = $validatedData['duration'];
+    //     $booking->message = $validatedData['message'];
 
-        // Save the updated booking
-        $booking->save();
+    //     // Save the updated booking
+    //     $booking->save();
 
-        // Redirect back or to a specific page
-        return redirect()->route('bookings.show', $booking->id)->with('success', 'Booking updated successfully!');
-    }
+    //     // Redirect back or to a specific page
+    //     return redirect()->route('bookings.show', $booking->id)->with('success', 'Booking updated successfully!');
+    // }
 
     /**
      * Remove the specified booking from storage.
@@ -121,13 +113,13 @@ class BookingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        // Find the booking and delete it
-        $booking = Booking::findOrFail($id);
-        $booking->delete();
+    // public function destroy($id)
+    // {
+    //     // Find the booking and delete it
+    //     $booking = Booking::findOrFail($id);
+    //     $booking->delete();
 
-        // Redirect back or to a specific page
-        return redirect()->route('bookings.index')->with('success', 'Booking deleted successfully!');
-    }
+    //     // Redirect back or to a specific page
+    //     return redirect()->route('bookings.index')->with('success', 'Booking deleted successfully!');
+    // }
 }

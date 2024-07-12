@@ -22,30 +22,30 @@ class HomeController extends Controller
 
             // Get the authenticated user and their role ID
             $user = Auth::user();
-            $roleId = $user->roles_id; // Ensure 'roles_id' exists in users table
+            $roleId = $user->role_id; // Ensure 'role_id' exists in users table
 
             // Determine which dashboard view to return based on the user's role ID
             switch ($roleId) {
                 case 1:
-                    return view('admin.dashboard'); // Admin dashboard
+                    return redirect()->route('admin.dashboard'); // Admin dashboard
                 case 2:
-                    return view('landlord.dashboard'); // Landlord dashboard
+                    return redirect()->route('landlord.dashboard'); // Landlord dashboard
                 case 3:
-                    return view('manager.dashboard'); // Property Manager dashboard
+                    return redirect()->route('manager.dashboard'); // Property Manager dashboard
                 case 4:
-                    return view('tenant.dashboard'); // Tenant dashboard
+                    return redirect()->route('tenant.dashboard'); // Tenant dashboard
                 case 5:
-                    return view('accountant.dashboard'); // Accountant dashboard
+                    return redirect()->route('accountant.dashboard'); // Accountant dashboard
                 case 6:
-                    return view('maintenance.dashboard'); // Maintenance Worker dashboard
+                    return redirect()->route('maintenance.dashboard'); // Maintenance Worker dashboard
                 case 7:
                     // Fetch houses listed by this user
                     $houses = House::where('user_id', $user->id)->get();
                     return view('lister.dashboard', ['houses' => $houses]); // House Lister dashboard
                 case 8:
-                    return view('hunter.dashboard'); // House Hunter dashboard
+                    return redirect()->route('hunter.dashboard'); // House Hunter dashboard
                 default:
-                    return view('tenant.dashboard'); // Default to tenant dashboard for other users
+                    return redirect()->route('tenant.dashboard'); // Default to tenant dashboard for other users
             }
 
         } else {
@@ -53,11 +53,11 @@ class HomeController extends Controller
             return redirect()->route('login');
         }
     }
+
     public function locations()
     {
         // Your logic for handling locations
     }
-    
     
     public function index()
     {

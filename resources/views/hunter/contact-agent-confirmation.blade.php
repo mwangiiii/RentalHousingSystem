@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Request Sent</title>
+   
+    <title>{{ config('app.name', 'Makazi Hub') }}</title>
+    <link rel="icon" type="image/png" href="{{ asset('makazi-hub-favicon-black.png') }}">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         /* Add your custom styles here */

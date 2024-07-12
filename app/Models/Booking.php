@@ -10,16 +10,13 @@ class Booking extends Model
     use HasFactory;
 
     protected $fillable = [
-        'house_id', // Foreign key
-        'name',
-        'phone_number',
-        'email',
-        'check_in_date',
-        'status',
-        'payment_status',
-        'payment_method',
-        'transaction_id',
-        'additional_notes',
+        'house_id',
+        'move_in_date',
+        'lease_duration',
+        'number_of_occupants',
+        'employment_status',
+        'contact_method',
+        'message',
     ];
 
     public function house()

@@ -138,12 +138,13 @@ Route::resource('houses', AddHousesController::class);
     // })->name('hunter.dashboard');
 
     Route::get('/hunter/dashboard', [HunterController::class, 'dashboard'])->name('hunter.dashboard');
-    Route::get('/houses/{id}', 'HunterController@show')->name('houses.show');
+    Route::get('/houses/{id}', 'HunterController@index')->name('houses.show');
     Route::post('/contact-agent/{houseId}', [HunterController::class, 'contactAgent'])->name('contact.agent');
 
 
     // Routes for booking houses
-    Route::get('/booking/{houseId}', [BookingController::class, 'showBookingForm'])->name('booking');
+ 
+    Route::get('/houses/{houseId}/book', [BookingController::class, 'showBookingForm'])->name('booking');
     Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
     Route::get('/bookings/{id}', [BookingController::class, 'show'])->name('bookings.show');

@@ -30,20 +30,40 @@
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $house->price }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $house->category->name }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <a href="{{ route('houses.show', ['id' => $house->id]) }}">
-                                        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 ease-in-out view-details">
-                                            View Details
-                                        </button>
-                                    </a>
-                                    <button class="bg-green-500 text-white px-4 py-2 rounded ml-2 hover:bg-green-700 transition duration-300 ease-in-out save-house" data-id="{{ $house->id }}">
-                                        Save House
-                                    </button>
-                                    <form action="{{ route('contact.agent', ['houseId' => $house->id]) }}" method="POST" class="inline">
-                                        @csrf
-                                        <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded ml-2 hover:bg-yellow-700 transition duration-300 ease-in-out">
-                                            Contact Agent
-                                        </button>
-                                    </form>
+                               
+
+
+
+
+        <a href="{{ route('houses.show', ['id' => $house->id]) }}">
+            <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 ease-in-out view-details">
+                View Details
+            </button>
+        </a>
+                <a href="">
+                <button class="bg-green-500 text-white px-4 py-2 rounded ml-2 hover:bg-green-700 transition duration-300 ease-in-out save-house" data-id="{{ $house->id }}">
+                    Save House
+                </button>
+          </a>
+          <a>
+                <form action="{{ route('contact.agent', ['houseId' => $house->id]) }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded ml-2 hover:bg-yellow-700 transition duration-300 ease-in-out">
+                        Contact Agent
+                    </button>
+                    
+                    </form>
+        </a>
+
+<a href="{{ route('booking', ['houseId' => $house->id]) }}">
+    <button class="bg-purple-500 text-white px-4 py-2 rounded ml-2 hover:bg-purple-700 transition duration-300 ease-in-out">
+        Book Now
+    </button>
+
+</a>
+
+
+                                    
                                 </td>
                             </tr>
                         @endforeach
