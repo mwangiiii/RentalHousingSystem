@@ -45,6 +45,7 @@ class House extends Model
     {
         return $this->hasOne(Image::class)->whereNotNull('is_main');
     }
+    
 
     public function category()
     {

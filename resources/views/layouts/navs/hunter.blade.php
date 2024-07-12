@@ -61,9 +61,9 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link href="{{ route('lister.listingForm') }}" :active="request()->routeIs('lister.listingForm')">
+            <!-- <x-responsive-nav-link href="{{ route('lister.listingForm') }}" :active="request()->routeIs('lister.listingForm')">
                 {{ __('Search Houses') }}
-            </x-responsive-nav-link>
+            </x-responsive-nav-link> -->
 
             <x-responsive-nav-link href="{{ route('lister.houses') }}" :active="request()->routeIs('lister.houses')">
                 {{ __('Saved Houses') }}

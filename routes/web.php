@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HunterController;
 use App\Http\Controllers\LockScreenController;
 use App\Http\Controllers\LandlordController;
 use App\Http\Controllers\TenantController;
@@ -124,6 +125,7 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
   Route::get('/houses/{id}/edit', [AddHousesController::class, 'edit'])->name('houses.edit');
 Route::post('/houses/{id}/update', [AddHousesController::class, 'update'])->name('houses.update');
 
+
 Route::resource('houses', AddHousesController::class);
 
 // Route::get('/houses', [AddHousesController::class, 'methodName'])->name('houses.index');
@@ -135,7 +137,10 @@ Route::resource('houses', AddHousesController::class);
     //     return view('hunter.dashboard'); // Replace with your hunter dashboard view
     // })->name('hunter.dashboard');
 
-    Route::get('/hunter/dashboard', [AddHousesController::class, 'hunter'])->name('hunter.dashboard');
+    Route::get('/hunter/dashboard', [HunterController::class, 'dashboard'])->name('hunter.dashboard');
+    Route::get('/houses/{id}', 'HunterController@show')->name('houses.show');
+    Route::post('/contact-agent/{houseId}', [HunterController::class, 'contactAgent'])->name('contact.agent');
+
 
     // Routes for booking houses
     Route::get('/booking/{houseId}', [BookingController::class, 'showBookingForm'])->name('booking');
@@ -194,5 +199,5 @@ Route::get('/property/category/property-management-services', [PropertyControlle
 
 
 Route::get('/heh',function(){
-    return view('lister.edit-house');
+    return view('houses-info');
 });

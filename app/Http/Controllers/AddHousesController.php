@@ -71,39 +71,39 @@ class AddHousesController extends Controller
         if ($request->hasFile('main_image')) {
             // Store the main image in the public/images/thumbnails directory
             $mainImagePath = $request->file('main_image')->store('images/thumbnails', 'public');
-
-            // Add main image data to the images array
+        
+            // Add main image data to the images array with the path stored in is_main
             $images[] = [
                 'house_id' => $house->id,
                 'image_path' => $mainImagePath,
-                'is_main' => true, // Indicate this is the main image
+                'is_main' => $mainImagePath, // Store the thumbnail path in is_main
             ];
-
+        
             Log::info('Main image (thumbnail) uploaded', ['image_path' => $mainImagePath]);
         }
-
+        
         // Handle multiple image uploads (Additional Images) if present
         if ($request->hasFile('home_images')) {
             foreach ($request->file('home_images') as $image) {
                 // Store each image in the public/images directory (for additional images)
                 $filePath = $image->store('images', 'public');
-
+        
                 // Add additional image data to the images array
                 $images[] = [
                     'house_id' => $house->id,
                     'image_path' => $filePath,
-                    'is_main' => false, // For additional images, is_main should be false
+                    'is_main' => null, // For additional images, is_main should be null
                 ];
-
+        
                 Log::info('Additional image uploaded', ['image_path' => $filePath]);
             }
         } else {
             Log::warning('No additional images found in the request.');
         }
-
+        
         // Debugging: Log the images array before insertion
         Log::info('Images array before insert', ['images' => $images]);
-
+        
         // Bulk insert all images into the database
         if (!empty($images)) {
             try {
@@ -113,7 +113,10 @@ class AddHousesController extends Controller
                 Log::error('Error inserting images into the database: ' . $e->getMessage());
                 return back()->withErrors(['error' => 'Failed to save images. Please try again later.']);
             }
-        } else {
+        }
+        
+        
+     else {
             Log::warning('No images to insert into the database.');
         }
 
@@ -152,7 +155,7 @@ public function destroy($id)
         // Log the deletion
         Log::info('House deleted successfully', ['house_id' => $house->id]);
 
-        return response()->json(['success' => 'House deleted successfully'], 200);
+        return view('delete-house-confirmation');
 
     } catch (\Exception $e) {
         Log::error('Error deleting house: ' . $e->getMessage());
@@ -161,22 +164,26 @@ public function destroy($id)
 }
 
 
-
-public function show($id)
-    {
-        
-        $house = House::with('images')->findOrFail($id);
-        return view('lister.edit-house', compact('house'));
-    }
-
     public function update(Request $request, $id)
     {
         try {
+            // Get the house to be updated
+            $house = House::findOrFail($id);
+    
+            // Ensure the authenticated user is the lister of the house
+            $user_id = Auth::id();
+            $lister = Lister::where('user_id', $user_id)->first();
+    
+            if ($lister && $house->lister_id !== $lister->id) {
+                return back()->withErrors(['error' => 'You do not have permission to update this house.']);
+            }
+    
             // Validate the request
             $validatedData = $request->validate([
                 'location' => 'nullable|string|max:255',
                 'price' => 'nullable|numeric',
                 'description' => 'nullable|string',
+                'availability' => 'nullable|string',
                 'contact' => 'nullable|string',
                 'rules_and_regulations' => 'nullable|string',
                 'amenities' => 'nullable|string',
@@ -184,35 +191,6 @@ public function show($id)
                 'home_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif',
                 'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
             ]);
-    
-            // Get the house to be updated
-            $house = House::findOrFail($id);
-    
-            // Update house details conditionally
-            $houseData = [];
-            if ($request->has('location')) {
-                $houseData['location'] = $validatedData['location'];
-            }
-            if ($request->has('price')) {
-                $houseData['price'] = $validatedData['price'];
-            }
-            if ($request->has('description')) {
-                $houseData['description'] = $validatedData['description'];
-            }
-            if ($request->has('contact')) {
-                $houseData['contact'] = $validatedData['contact'];
-            }
-            if ($request->has('rules_and_regulations')) {
-                $houseData['rules_and_regulations'] = $validatedData['rules_and_regulations'];
-            }
-            if ($request->has('amenities')) {
-                $houseData['amenities'] = $validatedData['amenities'];
-            }
-            if ($request->has('category_id')) {
-                $houseData['category_id'] = $validatedData['category_id'];
-            }
-    
-            $house->update($houseData);
     
             // Initialize array to hold image data
             $images = [];
@@ -228,7 +206,7 @@ public function show($id)
                 $mainImagePath = $request->file('main_image')->store('images/thumbnails', 'public');
     
                 // Update the house main image path
-                $house->update(['main_image' => $mainImagePath]);
+                $house->main_image = $mainImagePath;
     
                 // Add main image data to the images array
                 $images[] = [
@@ -262,20 +240,47 @@ public function show($id)
     
                     Log::info('Additional image uploaded', ['image_path' => $filePath]);
                 }
+            }
     
-                // Bulk insert all images into the database
-                if (!empty($images)) {
-                    try {
-                        Image::insert($images);
-                        Log::info('Images inserted into the database', ['images' => $images]);
-                    } catch (\Exception $e) {
-                        Log::error('Error inserting images into the database: ' . $e->getMessage());
-                        return back()->withErrors(['error' => 'Failed to save images. Please try again later.']);
-                    }
-                } else {
-                    Log::warning('No images to insert into the database.');
+            // Bulk insert all images into the database
+            if (!empty($images)) {
+                try {
+                    Image::insert($images);
+                    Log::info('Images inserted into the database', ['images' => $images]);
+                } catch (\Exception $e) {
+                    Log::error('Error inserting images into the database: ' . $e->getMessage());
+                    return back()->withErrors(['error' => 'Failed to save images. Please try again later.']);
                 }
             }
+    
+            // Update house details conditionally
+            $houseData = [];
+            if ($request->has('location')) {
+                $houseData['location'] = $validatedData['location'];
+            }
+            if ($request->has('price')) {
+                $houseData['price'] = $validatedData['price'];
+            }
+            if ($request->has('description')) {
+                $houseData['description'] = $validatedData['description'];
+            }
+            if ($request->has('availability')) {
+                $houseData['availability'] = $validatedData['availability'];
+            }
+            if ($request->has('contact')) {
+                $houseData['contact'] = $validatedData['contact'];
+            }
+            if ($request->has('rules_and_regulations')) {
+                $houseData['rules_and_regulations'] = $validatedData['rules_and_regulations'];
+            }
+            if ($request->has('amenities')) {
+                $houseData['amenities'] = $validatedData['amenities'];
+            }
+            if ($request->has('category_id')) {
+                $houseData['category_id'] = $validatedData['category_id'];
+            }
+    
+            $house->update($houseData);
     
             return redirect()->route('dashboard')->with('success', 'Listing updated successfully.');
     
@@ -287,17 +292,35 @@ public function show($id)
     
     
     
-    
-
-    public function edit($id)
+     public function edit($id)
     {
         $categories=Category::all();
         $house = House::findOrFail($id);
         return view('lister.edit-house', compact('house', 'categories'));
     }
-    
+    public function show($id)
+    {
+        // Fetch the house with its associated images
+        $house = House::findOrFail($id);
+        $images = Image::where('house_id', $house->id)->get();
 
-    
+        return view('houses-info', compact('house', 'images'));
+    }
+
+
+
+public function index($listerId = null)
+{
+    if (!$listerId) {
+        $listerId = Auth::id(); // Get the authenticated user's ID if $listerId is not provided
+    }
+
+    $houses = House::where('user_id', $listerId)->get();
+
+    return view('lister.lister-houses-info', compact('houses'));
+}
+
+
 
     /**
      * Count the number of houses.

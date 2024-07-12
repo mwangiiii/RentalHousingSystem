@@ -30,9 +30,11 @@
                             <td class="px-6 py-4 whitespace-nowrap">{{ $house->price }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $house->category->name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 ease-in-out view-details" data-id="{{ $house->id }}">
-                                    View Details
-                                </button>
+                            <a href="{{ route('houses.show', ['id' => $house->id]) }}">
+    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 ease-in-out view-details">
+        View Details
+    </button>
+</a>
                                 <a href="{{ route('houses.edit', $house->id) }}">
                                 <button class="bg-green-500 text-white px-4 py-2 rounded ml-2 hover:bg-green-700 transition duration-300 ease-in-out modify-house">
                                     Modify House
@@ -98,9 +100,11 @@
                                 <td class="px-6 py-4 whitespace-nowrap">${house.price}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">${house.category.name}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 ease-in-out view-details" data-id="${house.id}">
-                                        View Details
-                                    </button>
+                                 <a href="{{ route('houses.show', ['id' => $house->id]) }}">
+    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 ease-in-out view-details">
+        View Details
+    </button>
+</a>
                                     <button class="bg-green-500 text-white px-4 py-2 rounded ml-2 hover:bg-green-700 transition duration-300 ease-in-out modify-house">
                                         Modify House
                                     </button>

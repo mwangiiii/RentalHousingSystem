@@ -9,8 +9,11 @@ class Hunter extends Model
 {
     use HasFactory;
 
-    protected $table = 'hunter'; // Explicitly specifying the table name
-    
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'user_id',
         'name',
@@ -21,9 +24,28 @@ class Hunter extends Model
         'role_id',
     ];
 
-    // Define the relationship with User
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password',
+    ];
+
+    /**
+     * Get the user that owns the hunter.
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the role associated with the hunter.
+     */
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
     }
 }
