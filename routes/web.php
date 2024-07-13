@@ -132,10 +132,7 @@ Route::resource('houses', AddHousesController::class);
 
 
 
-    // Hunter specific routes
-    // Route::get('/hunter/dashboard', function () {
-    //     return view('hunter.dashboard'); // Replace with your hunter dashboard view
-    // })->name('hunter.dashboard');
+    
 
     Route::get('/hunter/dashboard', [HunterController::class, 'dashboard'])->name('hunter.dashboard');
     Route::get('/lister/house/{id}', 'AddHousesController@show')->name('houses.show');
@@ -145,7 +142,7 @@ Route::resource('houses', AddHousesController::class);
 
     // Routes for booking houses
  
-    Route::get('/houses/{houseId}/book', [BookingController::class, 'showBookingForm'])->name('booking');
+    Route::get('/houses/{houseId}/book', [BookingController::class, 'showBookingForm'])->name('booking.form');
     Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
     Route::resource('bookings', BookingController::class);
@@ -200,7 +197,7 @@ Route::get('/property/category/commercial-properties', [PropertyController::clas
 Route::get('/property/category/short-term-rentals', [PropertyController::class, 'showShortTermRentals']);
 Route::get('/property/category/luxury-villas', [PropertyController::class, 'showLuxuryVillas']);
 Route::get('/property/category/property-management-services', [PropertyController::class, 'showPropertyManagementServices']);
-// Route::get('/hunter-dashboard', [HomeController::class, 'hunter'])->name('hunter.dashboard');
+
 
 
 Route::get('/heh',function(){

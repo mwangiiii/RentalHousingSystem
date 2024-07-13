@@ -46,7 +46,7 @@
                                             Contact Agent
                                         </button>
                                     </form>
-                                    <a href="{{ route('booking', ['houseId' => $house->id]) }}">
+                                    <a href="{{ route('booking.form', ['houseId' => $house->id]) }}">
                                         <button class="bg-purple-500 text-white px-4 py-2 rounded ml-2 hover:bg-purple-700 transition duration-300 ease-in-out">
                                             Book Now
                                         </button>

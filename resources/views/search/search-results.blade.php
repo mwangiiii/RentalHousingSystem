@@ -75,7 +75,7 @@
                             <p class="card-text">{{ Str::limit($house->description, 100) }}</p>
                             <p class="property-price">${{ number_format($house->price) }}</p>
                             <p class="property-location"><i class="fas fa-map-marker-alt"></i> {{ $house->location }}</p>
-                            <a href="{{ route('houses.show') }}" class="btn btn-primary"><i class="fas fa-info-circle"></i> View Details</a>
+                            <a href="{{ route('houseshunter.show', ['id' => $house->id]) }}" class="btn btn-primary"><i class="fas fa-info-circle"></i> View Details</a>
                         </div>
                     </div>
                 </div>
