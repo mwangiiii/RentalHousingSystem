@@ -109,7 +109,10 @@
                         <input type="number" placeholder="Min Amount" id="minAmount">
                         <input type="number" placeholder="Max Amount" id="maxAmount">
                     </div>
+                    <a href="/search">
+                        
                     <button class="search-button">Find Rental House</button>
+</a>
 
                     <script>
                         function searchFunction(location, criteria, minAmount, maxAmount) {

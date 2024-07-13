@@ -223,8 +223,30 @@ class BookingController extends Controller
 
     public function destroy($id)
     {
-        $booking = Booking::findOrFail($id);
+        // Get the authenticated user's ID
+        $user_id = Auth::id();
+        
+        // Find the booking by ID and ensure it belongs to the authenticated user
+        $booking = Booking::where('id', $id)->where('user_id', $user_id)->firstOrFail();
+        
+        // Fetch the house and lister information
+        $house = House::findOrFail($booking->house_id);
+        $lister = User::findOrFail($house->lister_id);
+        
+        // Delete the booking
         $booking->delete();
+        
+        // Delete any related notifications
+        Notification::where('house_id', $house->id)->where('hunter_id', $user_id)->delete();
+        
+        // Send an email to the lister about the deletion
+        Mail::send('emails.bookings-deletion', ['house' => $house, 'lister' => $lister], function($message) use ($lister) {
+            $message->to($lister->email);
+            $message->subject('Booking Deletion Notification');
+            $message->embed(public_path('makazi-hub-favicon-black.png'));
+        });
+        
         return redirect()->route('bookings.index')->with('success', 'Booking deleted successfully.');
     }
+    
 }
