@@ -138,7 +138,8 @@ Route::resource('houses', AddHousesController::class);
     // })->name('hunter.dashboard');
 
     Route::get('/hunter/dashboard', [HunterController::class, 'dashboard'])->name('hunter.dashboard');
-    Route::get('/houses/{id}', 'HunterController@index')->name('houses.show');
+    Route::get('/lister/house/{id}', 'AddHousesController@show')->name('houses.show');
+    Route::get('/hunter/viewing/a/house/{id}', [HunterController::class, 'show'])->name('houseshunter.show');
     Route::post('/contact-agent/{houseId}', [HunterController::class, 'contactAgent'])->name('contact.agent');
 
 
@@ -147,10 +148,13 @@ Route::resource('houses', AddHousesController::class);
     Route::get('/houses/{houseId}/book', [BookingController::class, 'showBookingForm'])->name('booking');
     Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::resource('bookings', BookingController::class);
     Route::get('/bookings/{id}', [BookingController::class, 'show'])->name('bookings.show');
     Route::get('/booking/{id}/edit', [BookingController::class, 'edit'])->name('booking.edit');
     Route::put('/booking/{id}', [BookingController::class, 'update'])->name('booking.update');
     Route::delete('/booking/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
+Route::put('/bookings/{id}', [BookingController::class, 'update'])->name('bookings.update');
+
 });
 
 // In web.php

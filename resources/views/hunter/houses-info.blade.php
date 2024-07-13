@@ -11,7 +11,7 @@
     <div class="container mx-auto p-6">
         <nav aria-label="Breadcrumb">
             <ol class="flex items-center space-x-4 text-gray-600">
-                <li><a href="#" class="hover:text-gray-900">Home</a></li>
+                <li><a href="/dashboard" class="hover:text-gray-900">Dashboard</a></li>
                 <li>&gt;</li>
                 <li><a href="#" class="hover:text-gray-900">Listings</a></li>
                 <li>&gt;</li>
@@ -23,15 +23,15 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="col-span-1">
                     <!-- Display the main image -->
-                    @if($house->images->where('is_main', '!=', null)->first())
+                    @if($house->images->where('is_main', true)->first())
                         <div class="aspect-w-4 aspect-h-3 rounded-lg overflow-hidden">
-                            <img src="{{ asset('storage/' . $house->images->where('is_main', '!=', null)->first()->image_path) }}" alt="House Image" class="object-cover w-full h-full">
+                            <img src="{{ asset('storage/' . $house->images->where('is_main', true)->first()->image_path) }}" alt="House Image" class="object-cover w-full h-full">
                         </div>
                     @endif
 
                     <!-- Display additional images -->
                     <div class="grid grid-cols-3 gap-4 mt-4">
-                        @foreach($house->images->where('is_main', null) as $image)
+                        @foreach($house->images->where('is_main', false) as $image)
                             <div class="aspect-w-4 aspect-h-3 rounded-lg overflow-hidden">
                                 <img src="{{ asset('storage/' . $image->image_path) }}" alt="House Image {{ $loop->index + 1 }}" class="object-cover w-full h-full">
                             </div>

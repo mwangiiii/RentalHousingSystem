@@ -5,6 +5,11 @@ use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\House;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Notification;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+
+
 
 class BookingController extends Controller
 {
@@ -31,28 +36,66 @@ class BookingController extends Controller
         $request->validate([
             'house_id' => 'required|exists:houses,id',
             'move_in_date' => 'required|date',
-            'lease_duration' => 'required|integer|min=1',
-            'number_of_occupants' => 'required|integer|min=1',
+            'lease_duration' => 'required|integer|min:1',
+            'number_of_occupants' => 'required|integer|min:1',
             'employment_status' => 'required|string',
             'contact_method' => 'required|string',
             'message' => 'nullable|string',
         ]);
-
-        Booking::create($request->all());
-
+    
+        // Get the authenticated user's ID
+        $user_id = Auth::id();
+    
+        // Create a new Booking with the user_id included
+        $booking = new Booking();
+        $booking->user_id = $user_id;
+        $booking->house_id = $request->house_id;
+        $booking->move_in_date = $request->move_in_date;
+        $booking->lease_duration = $request->lease_duration;
+        $booking->number_of_occupants = $request->number_of_occupants;
+        $booking->employment_status = $request->employment_status;
+        $booking->contact_method = $request->contact_method;
+        $booking->message = $request->message;
+        $booking->save();
+    
+        // Fetch the house and lister information
+        $house = House::findOrFail($request->house_id);
+        $lister = User::findOrFail($house->lister_id);
+    
+        // Create a notification for the lister
+        $notification = new Notification();
+        $notification->lister_id = $lister->id;
+        $notification->house_id = $house->id;
+        $notification->hunter_id = $user_id;
+        $notification->message = "A booking has been made for your house: " . $house->location;
+        $notification->save();
+    
+        // Send an email to the lister with the embedded image
+        Mail::send('emails.booking-information', ['house' => $house, 'booking' => $booking], function($message) use ($lister) {
+            $message->to($lister->email);
+            $message->subject('New Booking Notification');
+            $message->embed(public_path('makazi-hub-favicon-black.png'));
+        });
+    
         return redirect()->route('dashboard')->with('success', 'Booking successful!');
     }
+
 
     /**
      * Display a listing of the bookings.
      *
      * @return \Illuminate\View\View
      */
-    // public function index()
-    // {
-    //     $bookings = Booking::where('user_id', Auth::id())->get();
-    //     return view('bookings.index'), compact('bookings'));
-    // }
+    //
+    
+    public function index()
+    {
+        // Fetch bookings for the authenticated user
+        $user = Auth::user();
+        $bookings = Booking::where('user_id', $user->id)->with('house')->get();
+
+        return view('hunter.view-bookings', compact('bookings'));
+    }
 
     /**
      * Display the specified booking.
@@ -122,4 +165,66 @@ class BookingController extends Controller
     //     // Redirect back or to a specific page
     //     return redirect()->route('bookings.index')->with('success', 'Booking deleted successfully!');
     // }
+
+    public function edit($id)
+    {
+        $booking = Booking::findOrFail($id);
+        return view('bookings.edit-booking', compact('booking'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'move_in_date' => 'required|date',
+            'lease_duration' => 'required|integer|min:1',
+            'number_of_occupants' => 'required|integer|min:1',
+            'employment_status' => 'required|string',
+            'contact_method' => 'required|string',
+            'message' => 'nullable|string',
+        ]);
+    
+        // Get the authenticated user's ID
+        $user_id = Auth::id();
+    
+        // Find the booking by ID and ensure it belongs to the authenticated user
+        $booking = Booking::where('id', $id)->where('user_id', $user_id)->firstOrFail();
+        
+        // Update the booking details
+        $booking->move_in_date = $request->move_in_date;
+        $booking->lease_duration = $request->lease_duration;
+        $booking->number_of_occupants = $request->number_of_occupants;
+        $booking->employment_status = $request->employment_status;
+        $booking->contact_method = $request->contact_method;
+        $booking->message = $request->message;
+        $booking->save();
+    
+        // Fetch the house and lister information
+        $house = House::findOrFail($booking->house_id);
+        $lister = User::findOrFail($house->lister_id);
+    
+        // Create a notification for the lister
+        $notification = new Notification();
+        $notification->lister_id = $lister->id;
+        $notification->house_id = $house->id;
+        $notification->hunter_id = $user_id;
+        $notification->message = "A booking has been updated for your house: " . $house->location;
+        $notification->save();
+    
+        // Send an email to the lister with the embedded image
+        Mail::send('emails.bookings-update', ['house' => $house, 'booking' => $booking], function($message) use ($lister) {
+            $message->to($lister->email);
+            $message->subject('Booking Update Notification');
+            $message->embed(public_path('makazi-hub-favicon-black.png'));
+        });
+        return view('bookings.booking-confirmation')->with('success', 'Booking updated successfully.');
+
+    }
+
+
+    public function destroy($id)
+    {
+        $booking = Booking::findOrFail($id);
+        $booking->delete();
+        return redirect()->route('bookings.index')->with('success', 'Booking deleted successfully.');
+    }
 }

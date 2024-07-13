@@ -124,7 +124,7 @@ class HunterController extends Controller
         $house = House::findOrFail($id); // Adjust if using different logic to fetch house
 
         // Pass the $house object to a view to display details
-        return view('houses-info', ['house' => $house]);
+        return view('hunter.houses-info', ['house' => $house]);
     }
 
     public function contactAgent(Request $request, $houseId)
@@ -140,7 +140,16 @@ class HunterController extends Controller
         $hunter = Auth::user();
     
         // Send the email to the lister
-        Mail::to($listerEmail)->send(new ContactAgentMail($house, $hunter));
+        Mail::send('emails.contact-agent', ['house' => $house, 'hunter' => $hunter], function($message) use ($listerEmail) {
+            $message->to($listerEmail)
+                    ->subject('Contact Request for Your House Listing')
+                    ->embed(public_path('makazi-hub-favicon-black.png'), [
+                        'as' => 'makazi-hub-favicon-black.png',
+                        'mime' => 'image/png',
+                    ]);
+        });
+    
+
     
         // Create a notification
         Notification::create([
@@ -153,7 +162,7 @@ class HunterController extends Controller
     
         return view('hunter.contact-agent-confirmation');
     }
-
+    
     
 
 

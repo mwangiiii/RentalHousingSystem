@@ -32,6 +32,7 @@ return array(
     'App\\Http\\Middleware\\CheckSuspended' => $baseDir . '/app/Http/Middleware/CheckSuspended.php',
     'App\\Http\\Middleware\\LockScreenMiddleware' => $baseDir . '/app/Http/Middleware/LockScreenMiddleware.php',
     'App\\Http\\Middleware\\NotFoundHandler' => $baseDir . '/app/Http/Middleware/NotFoundHandler.php',
+    'App\\Mail\\ContactAgentMail' => $baseDir . '/app/Mail/ContactAgentMail.php',
     'App\\Mail\\MaintenanceRequestSubmitted' => $baseDir . '/app/Mail/MaintenanceRequestSubmitted.php',
     'App\\Mail\\RentReminder' => $baseDir . '/app/Mail/RentReminder.php',
     'App\\Mail\\TenantMessage' => $baseDir . '/app/Mail/TenantMessage.php',

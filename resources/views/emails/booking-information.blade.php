@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Contact Request for House Listing - {{ config('app.name', 'Makazi Hub') }}</title>
+    <title>Makazi Hub - New Booking Notification</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 20px;
@@ -47,8 +46,21 @@
             margin: 15px 0;
             font-size: 16px;
         }
-        .content p strong {
-            color: #333;
+        .content ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 15px 0;
+        }
+        .content ul li {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #eaeaea;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .content ul li b {
+            color: #007bff;
         }
         .footer {
             text-align: center;
@@ -67,20 +79,26 @@
     <div class="container">
         <div class="header">
             <img src="{{ $message->embed(public_path('makazi-hub-favicon-black.png')) }}" alt="Makazi Hub Logo">
-            <h1>{{ config('app.name', 'Makazi Hub') }}</h1>
+            <h1>Makazi Hub</h1>
         </div>
         <div class="content">
-            <h2>Contact Request for House Listing</h2>
-            <p>A hunter has contacted you regarding your house listing:</p>
-            <p><strong>Location:</strong> {{ $house->location }}</p>
-            <p><strong>Price:</strong> {{ $house->price }}</p>
-            <p><strong>Category:</strong> {{ $house->category->name }}</p>
-            <p><strong>Hunter Name:</strong> {{ $hunter->name }}</p>
-            <p><strong>Hunter Email:</strong> {{ $hunter->email }}</p>
-            <p>Please get in touch with the hunter as soon as possible.</p>
+            <h2>New Booking Notification</h2>
+            <p>Dear {{ $house->lister->name }},</p>
+            <p>A booking has been made for your house located at {{ $house->location }}.</p>
+            <p><strong>Booking Details:</strong></p>
+            <ul>
+                <li><b>Move-in Date:</b> {{ $booking->move_in_date }}</li>
+                <li><b>Lease Duration:</b> {{ $booking->lease_duration }} months</li>
+                <li><b>Number of Occupants:</b> {{ $booking->number_of_occupants }}</li>
+                <li><b>Employment Status:</b> {{ $booking->employment_status }}</li>
+                <li><b>Contact Method:</b> {{ $booking->contact_method }}</li>
+                <li><b>Message:</b> {{ $booking->message }}</li>
+            </ul>
+            <p>Please contact Makazi Hub for more information.</p>
+            <p>Thank you for using our service.</p>
         </div>
         <div class="footer">
-            <p>&copy; {{ date('Y') }} {{ config('app.name', 'Makazi Hub') }}. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} Makazi Hub. All rights reserved.</p>
         </div>
     </div>
 </body>

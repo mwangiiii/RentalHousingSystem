@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $maintenanceWorkerRole = Role::where('role_name', 'Maintenance Worker')->first();
         $accountantRole = Role::where('role_name', 'Accountant')->first();
         $tenantRole = Role::where('role_name', 'Tenant')->first();
+        
 
         // Admin Data Seeded
         User::factory()->create([

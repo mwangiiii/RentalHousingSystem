@@ -3,7 +3,7 @@
 @section('header')
 <div class="flex justify-between items-center mb-6">
     <h2 class="font-semibold text-2xl text-gray-800 leading-tight">
-        {{ __('House Hunter Dashboard') }}
+        {{ __('House Lister Dashboard') }}
     </h2>
 </div>
 @endsection
@@ -25,29 +25,39 @@
                 <tbody id="housesTableBody" class="bg-white divide-y divide-gray-200">
                     @if($houses->isNotEmpty())
                         @foreach($houses as $house)
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $house->location }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $house->price }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ $house->category->name }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <a href="{{ route('houses.show', ['id' => $house->id]) }}">
-                                        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 ease-in-out view-details">
-                                            View Details
-                                        </button>
-                                    </a>
-                                    <button class="bg-green-500 text-white px-4 py-2 rounded ml-2 hover:bg-green-700 transition duration-300 ease-in-out save-house" data-id="{{ $house->id }}">
-                                        Save House
+                        <tr id="house-row-{{ $house->id }}">
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $house->location }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $house->price }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $house->category->name }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <a href="{{ route('houses.show', ['id' => $house->id]) }}">
+                                    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 ease-in-out view-details">
+                                        View Details
                                     </button>
-                                    <button class="bg-yellow-500 text-white px-4 py-2 rounded ml-2 hover:bg-yellow-700 transition duration-300 ease-in-out contact-listing-agent" data-id="{{ $house->id }}">
-                                        Contact Agent
+                                </a>
+
+                                <a href="{{ route('houses.edit', ['house' => $house->id]) }}">
+                                    <button class="bg-green-500 text-white px-4 py-2 rounded ml-2 hover:bg-green-700 transition duration-300 ease-in-out modify-house">
+                                        Modify House
                                     </button>
-                                </td>
-                            </tr>
+                                </a>
+                                <button class="bg-yellow-500 text-white px-4 py-2 rounded ml-2 hover:bg-yellow-700 transition duration-300 ease-in-out view-bookings">
+                                    View Bookings
+                                </button>
+                                <form action="{{ route('houses.destroy', ['house' => $house->id]) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded ml-2 hover:bg-red-700 transition duration-300 ease-in-out">
+                                        Delete House
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
                         @endforeach
                     @else
-                        <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">No houses found.</td>
-                        </tr>
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">No houses found.</td>
+                    </tr>
                     @endif
                 </tbody>
             </table>
@@ -67,10 +77,64 @@
         const housesTableBody = document.getElementById('housesTableBody');
         const houseDetails = document.getElementById('houseDetails');
 
+        // Function to fetch houses
+        const fetchHouses = () => {
+            fetch('/houses')
+                .then(response => response.json())
+                .then(data => {
+                    housesTableBody.innerHTML = '';
+                    if (data.length === 0) {
+                        housesTableBody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">No houses found.</td></tr>';
+                        houseDetails.classList.add('hidden');
+                    } else {
+                        data.forEach(house => {
+                            const row = document.createElement('tr');
+                            row.id = `house-row-${house.id}`;
+                            row.innerHTML = `
+                                <td class="px-6 py-4 whitespace-nowrap">${house.location}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${house.price}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">${house.category.name}</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <a href="/houses/${house.id}">
+                                        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 ease-in-out view-details">
+                                            View Details
+                                        </button>
+                                    </a>
+
+                                    <a href="/houses/${house.id}/edit">
+                                        <button class="bg-green-500 text-white px-4 py-2 rounded ml-2 hover:bg-green-700 transition duration-300 ease-in-out modify-house">
+                                            Modify House
+                                        </button>
+                                    </a>
+                                    <button class="bg-yellow-500 text-white px-4 py-2 rounded ml-2 hover:bg-yellow-700 transition duration-300 ease-in-out view-bookings">
+                                        View Bookings
+                                    </button>
+                                    <form action="/houses/${house.id}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded ml-2 hover:bg-red-700 transition duration-300 ease-in-out">
+                                            Delete House
+                                        </button>
+                                    </form>
+                                </td>
+                            `;
+                            housesTableBody.appendChild(row);
+                        });
+                        houseDetails.classList.add('hidden');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching houses:', error);
+                });
+        };
+
+        // Fetch houses on initial load
+        fetchHouses();
+
         // Event listener for viewing house details
         housesTableBody.addEventListener('click', function(e) {
             if (e.target.closest('.view-details')) {
-                const houseId = e.target.closest('.view-details').getAttribute('data-id');
+                const houseId = e.target.closest('.view-details').parentNode.getAttribute('href').split('/').pop();
                 fetch(`/houses/${houseId}`)
                     .then(response => response.json())
                     .then(house => {
@@ -81,55 +145,14 @@
                             <p><strong>Category:</strong> ${house.category.name}</p>
                             <p><strong>Description:</strong> ${house.description}</p>
                             <p><strong>Availability:</strong> ${house.availability}</p>
-                            <div class="mt-4">
-                                <h4 class="font-medium text-gray-900">Images</h4>
-                                <div class="grid grid-cols-3 gap-4 mt-2">
-                                    ${house.images.map(image => `
-                                        <img src="/storage/${image.image_path}" alt="House Image" class="w-full h-32 object-cover">
-                                    `).join('')}
-                                </div>
-                            </div>
+                            <p><strong>Contact:</strong> ${house.contact}</p>
+                            <p><strong>Amenities:</strong> ${house.amenities}</p>
                         `;
                         houseDetails.classList.remove('hidden');
                     })
                     .catch(error => {
                         console.error('Error fetching house details:', error);
                     });
-            }
-        });
-
-        // Event listener for saving houses
-        housesTableBody.addEventListener('click', function(e) {
-            if (e.target.closest('.save-house')) {
-                const houseId = e.target.closest('.save-house').getAttribute('data-id');
-                fetch(`/hunter/save-house`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({ house_id: houseId })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('House saved successfully.');
-                    } else {
-                        alert('Failed to save house.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error saving house:', error);
-                });
-            }
-        });
-
-        // Event listener for contacting listing agent
-        housesTableBody.addEventListener('click', function(e) {
-            if (e.target.closest('.contact-listing-agent')) {
-                const houseId = e.target.closest('.contact-listing-agent').getAttribute('data-id');
-                // Add functionality to contact the listing agent
-                alert(`Contact agent functionality for house ID: ${houseId} is not yet implemented.`);
             }
         });
     });

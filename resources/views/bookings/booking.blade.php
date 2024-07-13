@@ -3,9 +3,6 @@
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-        <!-- <div class="relative h-32">
-            <img src="{{ asset('makazi-hub-favicon-black.png') }}" alt="House Image" class="w-full h-full object-cover rounded-t-lg">
-        </div> -->
         <div class="p-6">
             <h1 class="text-3xl font-semibold text-gray-900 mb-4">Book Your Long-term Stay</h1>
             <p class="text-lg text-gray-700 mb-6">Please fill in the details below to book this house for your long-term stay.</p>
@@ -23,8 +20,6 @@
                     <label for="lease_duration" class="block text-lg font-semibold text-gray-900">Lease Duration (months)</label>
                     <input type="number" name="lease_duration" id="lease_duration" class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" min="1" required>
                 </div>
-
-                
 
                 <div>
                     <label for="number_of_occupants" class="block text-lg font-semibold text-gray-900">Number of Occupants</label>
@@ -63,4 +58,11 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('move_in_date').setAttribute('min', today);
+    });
+</script>
 @endsection
