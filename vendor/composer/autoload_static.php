@@ -652,6 +652,7 @@ class ComposerStaticInitda9b7a1dc1dd923105198c572cc7df8d
         'App\\Http\\Middleware\\CheckSuspended' => __DIR__ . '/../..' . '/app/Http/Middleware/CheckSuspended.php',
         'App\\Http\\Middleware\\LockScreenMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/LockScreenMiddleware.php',
         'App\\Http\\Middleware\\NotFoundHandler' => __DIR__ . '/../..' . '/app/Http/Middleware/NotFoundHandler.php',
+        'App\\Mail\\ContactAgentMail' => __DIR__ . '/../..' . '/app/Mail/ContactAgentMail.php',
         'App\\Mail\\MaintenanceRequestSubmitted' => __DIR__ . '/../..' . '/app/Mail/MaintenanceRequestSubmitted.php',
         'App\\Mail\\RentReminder' => __DIR__ . '/../..' . '/app/Mail/RentReminder.php',
         'App\\Mail\\TenantMessage' => __DIR__ . '/../..' . '/app/Mail/TenantMessage.php',

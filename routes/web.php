@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HunterController;
 use App\Http\Controllers\LockScreenController;
 use App\Http\Controllers\LandlordController;
 use App\Http\Controllers\TenantController;
@@ -111,6 +112,7 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
 
     // Add houses related routes
     Route::post('/saveHouse', [AddHousesController::class, 'store'])->name('addListing.store');
+    Route::delete('/house/destroy/{id}', [AddHousesController::class, 'destroy'])->name('house.destroy');
 
     // Lister specific routes
     Route::get('/lister/dashboard', function () {
@@ -120,20 +122,32 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
     })->name('lister.dashboard');
 
     Route::get('/lister/houses', [AddHousesController::class, 'getListerHouses'])->name('lister.houses');
-    Route::get('/lister/dashboard/house/edit', [AddHousesController::class, 'edit'])->name('houses.edit');
-    Route::put('/lister/dashboard/house/update', [AddHousesController::class, 'update'])->name('houses.update');
+    Route::get('/houses/{id}/edit', [AddHousesController::class, 'edit'])->name('houses.edit');     
+    Route::post('/houses/{id}/update', [AddHousesController::class, 'update'])->name('houses.update');
 
-    // Hunter routes
-    Route::get('/hunter/dashboard', [AddHousesController::class, 'hunter'])->name('hunter.dashboard');
+
+    Route::resource('houses', AddHousesController::class);
+
+// Route::get('/houses', [AddHousesController::class, 'methodName'])->name('houses.index');
+
+    Route::get('/hunter/dashboard', [HunterController::class, 'dashboard'])->name('hunter.dashboard');
+    Route::get('/lister/house/{id}', [AddHousesController::class,'show'])->name('houses.show');
+    Route::get('/hunter/viewing/a/house/{id}', [HunterController::class, 'show'])->name('houseshunter.show');
+    Route::post('/contact-agent/{houseId}', [HunterController::class, 'contactAgent'])->name('contact.agent');
+
 
     // Routes for booking houses
-    Route::get('/booking/{houseId}', [BookingController::class, 'showBookingForm'])->name('booking.form');
+ 
+    Route::get('/houses/{houseId}/book', [BookingController::class, 'showBookingForm'])->name('booking.form');
     Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::resource('bookings', BookingController::class);
     Route::get('/bookings/{id}', [BookingController::class, 'show'])->name('bookings.show');
     Route::get('/booking/{id}/edit', [BookingController::class, 'edit'])->name('booking.edit');
     Route::put('/booking/{id}', [BookingController::class, 'update'])->name('booking.update');
     Route::delete('/booking/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
+Route::put('/bookings/{id}', [BookingController::class, 'update'])->name('bookings.update');
+
 });
 
 // In web.php
@@ -179,4 +193,9 @@ Route::get('/property/category/commercial-properties', [PropertyController::clas
 Route::get('/property/category/short-term-rentals', [PropertyController::class, 'showShortTermRentals']);
 Route::get('/property/category/luxury-villas', [PropertyController::class, 'showLuxuryVillas']);
 Route::get('/property/category/property-management-services', [PropertyController::class, 'showPropertyManagementServices']);
-// Route::get('/hunter-dashboard', [HomeController::class, 'hunter'])->name('hunter.dashboard');
+
+
+
+Route::get('/heh',function(){
+    return view('houses-info');
+});

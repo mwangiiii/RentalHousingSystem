@@ -8,6 +8,7 @@ use App\Models\Image;
 use App\Models\Lister;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Category;
 
 class AddHousesController extends Controller
@@ -148,12 +149,7 @@ class AddHousesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        $house = House::with('images')->findOrFail($id);
-        return view('house.show', compact('house'));
-    }
-
+   
     /**
      * Get houses uploaded by the authenticated lister.
      *
@@ -214,6 +210,26 @@ class AddHousesController extends Controller
 
         return view('home', compact('houses'));
     }
+    // // For home
+    // public function homeImages()
+    // {
+    //     // Retrieve houses with their listers and main images
+    //     $houses = House::with('lister')
+    //         ->orderBy('created_at', 'desc')
+    //         ->get();
+    
+    //     // Transform each house to include main image URL
+    //     $houses->transform(function ($house) {
+    //         // Assign main image URL to 'mainImage' attribute
+    //         $house->mainImage = $house->main_image ? Storage::url($house->main_image) : null;
+    
+    //         return $house;
+    //     });
+    
+    //     return view('home', compact('houses'));
+    // }
+    
+
 
     public function listingView()
     {

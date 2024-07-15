@@ -48,8 +48,20 @@
                     @csrf
                     @method('PUT')
 
-                    <!-- Location -->
+                    <!-- Category -->
                     <div>
+                        <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+                        <select id="category" name="category" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            @foreach($categories as $category)
+                                <option value="{{ $category->id }}" {{ $house->category_id == $category->id ? 'selected' : '' }}>
+                                    {{ $category->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="mt-6">
                         <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
                         <input type="text" name="location" id="location" value="{{ $house->location }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                     </div>
@@ -97,6 +109,13 @@
                         <input type="file" name="images[]" id="images" multiple class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                     </div>
 
+                    <!-- Availability -->
+                    <div class="col-span-6 sm:col-span-4 mt-6">
+                        <x-label for="availability" :value="('Availability')" />
+                        <x-radio-button-group name="availability" :options="['available' => 'Available', 'unavailable' => 'Unavailable', 'booked' => 'Booked']" selected="{{ old('availability') ?? $house->availability ?? '' }}" /> 
+                        <x-input-error for="availability" class="mt-2" />
+                    </div>
+
                     <button type="submit" class="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Update House</button>
                 </form>
             </div>
@@ -121,7 +140,9 @@
                 document.querySelector(`button[onclick="deleteImage(${imageId})"]`).parentElement.remove();
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error deleting image:', error);
+        });
     }
 </script>
 @endsection

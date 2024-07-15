@@ -51,10 +51,7 @@
                     </ul>
                 </div>
 
-                <div class="relative group">
-                    <a href="#" class="text-gray-700 hover:text-black focus:outline-none">Favourites</a>
-                    <ul class="absolute left-0 hidden bg-white text-gray-700 pt-1 group-hover:block z-10"></ul>
-                </div>
+
             </div>
 
             <div class="auth-links">
@@ -110,41 +107,36 @@
                         <input type="number" placeholder="Max Amount" id="maxAmount">
                     </div>
                     <button class="search-button">Find Rental House</button>
-
-                    <script>
-                        function searchFunction(location, criteria, minAmount, maxAmount) {
-                            let url = '/search';
-                            const params = [];
-
-                            if (location) params.push('location=' + encodeURIComponent(location));
-                            if (criteria && criteria !== 'all-bedrooms') params.push('category=' + encodeURIComponent(criteria));
-                            if (minAmount) params.push('min_amount=' + encodeURIComponent(minAmount));
-                            if (maxAmount) params.push('max_amount=' + encodeURIComponent(maxAmount));
-
-                            if (params.length > 0) url += '?' + params.join('&');
-
-                            // Redirect to the search URL
-                            window.location.href = url;
-                        }
-
-                        // Assuming you have input fields for location, description, and criteria
-                        const locationInput = document.getElementById('locationInput');
-                        const criteriaInput = document.getElementById('criteriaInput');
-                        const minAmountInput = document.getElementById('minAmount');
-                        const maxAmountInput = document.getElementById('maxAmount');
-                        const searchButton = document.querySelector('.search-button');
-
-                        searchButton.addEventListener('click', () => {
-                            const location = locationInput.value;
-                            const criteria = criteriaInput.value;
-                            const minAmount = minAmountInput.value;
-                            const maxAmount = maxAmountInput.value;
-                            searchFunction(location, criteria, minAmount, maxAmount);
-                        });
-                    </script>
                 </div>
+
+                <script>
+                    function searchFunction(location, criteria, minAmount, maxAmount) {
+                        let url = '/search';
+                        const params = [];
+
+                        if (location) params.push('location=' + encodeURIComponent(location));
+                        if (criteria && criteria !== 'all-bedrooms') params.push('category=' + encodeURIComponent(criteria));
+                        if (minAmount) params.push('min_amount=' + encodeURIComponent(minAmount));
+                        if (maxAmount) params.push('max_amount=' + encodeURIComponent(maxAmount));
+
+                        if (params.length > 0) url += '?' + params.join('&');
+
+                        // Redirect to the search URL
+                        window.location.href = url;
+                    }
+
+                    document.querySelector('.search-button').addEventListener('click', () => {
+                        const location = document.getElementById('locationInput').value;
+                        const criteria = document.getElementById('criteriaInput').value;
+                        const minAmount = document.getElementById('minAmount').value;
+                        const maxAmount = document.getElementById('maxAmount').value;
+                        searchFunction(location, criteria, minAmount, maxAmount);
+                    });
+                </script>
+
             </div>
-        </section>
+    </div>
+    </section>
     </div>
 
     <main>
@@ -162,11 +154,13 @@
                 <div class="house">
                     <div class="image-container">
                         @if($house->main_image)
-                            <img src="{{ Storage::url($house->main_image) }}" alt="Image of {{ $house->location }}">
+                        <img src="{{ asset('storage/' . $house->main_image) }}" alt="Image of {{ $house->location }}">
+
                         @else
-                            <p>No images available</p>
+                        <p>No images available</p>
                         @endif
                     </div>
+
                     <div class="house-content">
                         <h1>{{ $house->location }}</h1>
                         <p>Price: {{ $house->price }}</p>
@@ -182,7 +176,7 @@
         </div>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const housesData = <?php echo json_encode($houses)?>;
+                const housesData = <?php echo json_encode($houses) ?>;
                 const housesContainer = document.querySelector('.housesContainer');
 
                 housesData.forEach(house => {
@@ -234,7 +228,7 @@
                 </div>
 
                 <div data-text="Contact Landlord" style="--r:5;font-size:20px;" class="glass">
-                    <img style="width:100%; height:auto; max-width:100%; max-height:100%; margin-top:0;" src="{{ asset('contact-us.png') }}" alt="Example photo of landlord">
+                    <img style="width:100%; height:auto; max-width:100%; max-height:100%; margin-top:0;" src="{{ asset('contact us.png') }}" alt="Example photo of landlord">
                 </div>
 
                 <div data-text="View the House" style="--r:5;font-size:20px;" class="glass">

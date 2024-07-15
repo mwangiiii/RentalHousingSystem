@@ -43,11 +43,17 @@ class House extends Model
     
     public function mainImage()
     {
-        return $this->hasOne(Image::class)->whereNotNull('is_main');
+        return $this->hasOne(Image::class)->where('is_main', true);
     }
+    
 
     public function category()
     {
         return $this->belongsTo(Category::class); // Ensure correct relationship method name
+    }
+
+    public function getMainImageUrlAttribute()
+    {
+        return $this->mainImage ? asset('storage/' . $this->mainImage->image_path) : asset('storage/default_image.jpg');
     }
 }

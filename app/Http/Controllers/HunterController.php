@@ -11,6 +11,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use App\Mail\ContactAgentMail;
+
+
 
 class HunterController extends Controller
 {
@@ -106,5 +109,94 @@ class HunterController extends Controller
 
         $savedHouses = $query->paginate(10);
         return view('hunter.saved', compact('savedHouses'));
+    }
+
+
+    public function dashboard()
+    {
+        $houses = House::with('category', 'images')->get();
+        return view('hunter.dashboard', compact('houses'));
+    }
+
+    public function show($id)
+    {
+        // Retrieve the house details from the database
+        $house = House::findOrFail($id); // Adjust if using different logic to fetch house
+
+        // Pass the $house object to a view to display details
+        return view('hunter.houses-info', ['house' => $house]);
+    }
+
+    public function contactAgent(Request $request, $houseId)
+    {
+        // Retrieve the house details
+        $house = House::findOrFail($houseId);
+    
+        // Retrieve the lister's email using the lister_id in the houses table
+        $lister = User::findOrFail($house->lister_id);
+        $listerEmail = $lister->email;
+    
+        // Get the hunter (current user)
+        $hunter = Auth::user();
+    
+        // Send the email to the lister
+        Mail::send('emails.contact-agent', ['house' => $house, 'hunter' => $hunter], function($message) use ($listerEmail) {
+            $message->to($listerEmail)
+                    ->subject('Contact Request for Your House Listing')
+                    ->embed(public_path('makazi-hub-favicon-black.png'), [
+                        'as' => 'makazi-hub-favicon-black.png',
+                        'mime' => 'image/png',
+                    ]);
+        });
+    
+
+    
+        // Create a notification
+        Notification::create([
+            'lister_id' => $house->lister_id,
+            'house_id' => $houseId,
+            'hunter_id' => $hunter->id,
+            'message' => 'A hunter has contacted you regarding your house listing.',
+            'is_read' => false,
+        ]);
+    
+        return view('hunter.contact-agent-confirmation');
+    }
+    
+    
+
+
+    // public function contactAgent($houseId, Request $request)
+    // {
+    //     $house = House::findOrFail($houseId);
+    //     $agentEmail = $house->agent->email; // Assuming the house has an agent relationship
+
+    //     $details = [
+    //         'title' => 'New Contact Request for Your House Listing',
+    //         'house' => $house
+    //     ];
+
+    //     Mail::to($agentEmail)->send(new \App\Mail\ContactAgentMail($details));
+
+    //     return response()->json(['success' => true]);
+    // }
+
+
+    public function hunter()
+    {
+        
+        // Retrieve houses with their listers and main images
+        $houses = House::with(['lister', 'images' => function($query) {
+            $query->where('is_main', true);
+        }])
+        ->orderBy('created_at', 'desc')
+        ->get();
+    
+        // Add a mainImage attribute to each house
+        $houses->each(function($house) {
+            $house->mainImage = $house->images->first();
+        });
+    
+        return view('hunter.dashboard', compact('houses','images'));
     }
 }
