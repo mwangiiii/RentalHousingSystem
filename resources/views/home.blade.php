@@ -152,13 +152,15 @@
                 @else
                 @foreach ($houses as $house)
                 <div class="house">
-                    <div class="image-container">
-                        @if($house->mainImage)
-                        <img src="{{ asset('storage/' . $house->mainImage->is_main) }}" alt="Image of {{ $house->location }}">
-                        @else
-                        <p>No images available</p>
-                        @endif
-                    </div>
+                <div class="image-container">
+    @if($house->main_image)
+    <img src="{{ asset('storage/' . $house->main_image) }}" alt="Image of {{ $house->location }}">
+
+    @else
+        <p>No images available</p>
+    @endif
+</div>
+
                     <div class="house-content">
                         <h1>{{ $house->location }}</h1>
                         <p>Price: {{ $house->price }}</p>

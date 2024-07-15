@@ -226,46 +226,70 @@ public function showPropertyManagementServices()
 
 
     
-public function search(Request $request)
-{
-    $query = House::query();
+// public function search(Request $request)
+// {
+//     $query = House::query();
 
-    if ($request->filled('location')) {
-        $query->where('location', 'like', '%' . $request->location . '%');
-    }
+//     if ($request->filled('location')) {
+//         $query->where('location', 'like', '%' . $request->location . '%');
+//     }
     
-    if ($request->filled('category')) {
-        $categoryName = $request->category;
-        $category = Category::where('name', $categoryName)->firstOrFail();
-        $query->where('category_id', $category->id);
-    }
+//     if ($request->filled('category')) {
+//         $categoryName = $request->category;
+//         $category = Category::where('name', $categoryName)->firstOrFail();
+//         $query->where('category_id', $category->id);
+//     }
 
-    if ($request->filled('min_amount')) {
-        $query->where('price', '>=', $request->min_amount);
-    }
+//     if ($request->filled('min_amount')) {
+//         $query->where('price', '>=', $request->min_amount);
+//     }
 
-    if ($request->filled('max_amount')) {
-        $query->where('price', '<=', $request->max_amount);
-    }
+//     if ($request->filled('max_amount')) {
+//         $query->where('price', '<=', $request->max_amount);
+//     }
 
-    $houses = $query->get();
+//     $houses = $query->get();
   
 
-    if ($houses->isEmpty()) {
-        return redirect()->back()->with('error', 'No properties found matching your search criteria.');
+//     if ($houses->isEmpty()) {
+//         return redirect()->back()->with('error', 'No properties found matching your search criteria.');
 
-    // Check if houses were found
-    $housesFound = count($houses) > 0;
+//     // Check if houses were found
+//     $housesFound = count($houses) > 0;
 
-    return view('property.search.search-results', compact('houses', 'housesFound'));
+//     return view('property.search.search-results', compact('houses', 'housesFound'));
+// }
+
+public function search(Request $request)
+{
+    try {
+        $query = House::query();
+
+        if ($request->filled('location')) {
+            $query->where('location', 'like', '%' . $request->location . '%');
+        }
+
+        if ($request->filled('category')) {
+            $categoryName = Category::where('name', $request->category)->firstOrFail();
+            $query->where('category_id', $categoryName->id);
+        }
+
+        if ($request->filled('min_amount')) {
+            $query->where('price', '>=', $request->min_amount);
+        }
+
+        if ($request->filled('max_amount')) {
+            $query->where('price', '<=', $request->max_amount);
+        }
+
+        // Execute the query
+        $houses = $query->get();
+
+        return view('property.search.search-results', compact('houses'));
+    } catch (\Exception $e) {
+        // Handle any exceptions that occur during the search
+        \Log::error('Error searching houses: ' . $e->getMessage());
+        return back()->withError('Error searching houses. Please try again later.');
+    }
 }
-
-}
-
-
-    // public function category($category)
-    // {
-    //     $houses = House::where('category', $category)->get();
-    //     return view('property.category', compact('houses'))->with('category', $category);
-    // }
 }

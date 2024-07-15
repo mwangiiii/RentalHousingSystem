@@ -122,20 +122,16 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
     })->name('lister.dashboard');
 
     Route::get('/lister/houses', [AddHousesController::class, 'getListerHouses'])->name('lister.houses');
-  Route::get('/houses/{id}/edit', [AddHousesController::class, 'edit'])->name('houses.edit');
-Route::post('/houses/{id}/update', [AddHousesController::class, 'update'])->name('houses.update');
+    Route::get('/houses/{id}/edit', [AddHousesController::class, 'edit'])->name('houses.edit');     
+    Route::post('/houses/{id}/update', [AddHousesController::class, 'update'])->name('houses.update');
 
 
-Route::resource('houses', AddHousesController::class);
+    Route::resource('houses', AddHousesController::class);
 
 // Route::get('/houses', [AddHousesController::class, 'methodName'])->name('houses.index');
 
-
-
-    
-
     Route::get('/hunter/dashboard', [HunterController::class, 'dashboard'])->name('hunter.dashboard');
-    Route::get('/lister/house/{id}', 'AddHousesController@show')->name('houses.show');
+    Route::get('/lister/house/{id}', [AddHousesController::class,'show'])->name('houses.show');
     Route::get('/hunter/viewing/a/house/{id}', [HunterController::class, 'show'])->name('houseshunter.show');
     Route::post('/contact-agent/{houseId}', [HunterController::class, 'contactAgent'])->name('contact.agent');
 
