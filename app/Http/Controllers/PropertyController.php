@@ -11,19 +11,19 @@ use Illuminate\Support\Facades\Auth;
 class PropertyController extends Controller
 {
     
-    //Function to display the owned properties absed on user_id
+    // Function to display the owned properties based on user_id
     public function index()
     {
         $properties = Property::where('user_id', Auth::id())->get();
         return view('landlord.properties.index', compact('properties'));
     }
     
-    //Function to display view to create a property
+    // Function to display view to create a property
     public function create(){
         return view('landlord.properties.create');
     }
 
-    //Function to store the properties in the database
+    // Function to store the properties in the database
     public function store(Request $request)
     {
         $request->validate([
@@ -44,7 +44,7 @@ class PropertyController extends Controller
         return redirect()->route('landlord.properties.index')->with('success', 'Property added successfully.');
     }
 
-    //Function to display the edit blade
+    // Function to display the edit blade
     public function edit(Property $property)
     {
         
@@ -70,7 +70,7 @@ class PropertyController extends Controller
         return redirect()->route('landlord.properties.index')->with('success', 'Property updated successfully.');
     }
 
-    //Function to delete a property
+    // Function to delete a property
     public function destroy(Property $property)
     {
         $property->delete();
@@ -187,16 +187,17 @@ class PropertyController extends Controller
     {
         $query = House::query();
 
-        if ($request->has('location')) {
+        if ($request->filled('location')) {
             $query->where('location', 'like', '%' . $request->location . '%');
         }
-        if ($request->has('category')) {
-            $query->where('category', $request->category);
+        if ($request->filled('category')) {
+            $categoryName =  Category::where('name', $request->category)->firstOrFail();
+            $query->where('category_id', $categoryName->id);
         }
-        if ($request->has('min_amount')) {
+        if ($request->filled('min_amount')) {
             $query->where('price', '>=', $request->min_amount);
         }
-        if ($request->has('max_amount')) {
+        if ($request->filled('max_amount')) {
             $query->where('price', '<=', $request->max_amount);
         }
 

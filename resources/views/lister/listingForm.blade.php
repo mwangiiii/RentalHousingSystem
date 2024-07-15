@@ -36,7 +36,7 @@
                         </div>
                         <div class="col-span-6 sm:col-span-4">
                             <x-label for="availability" :value="('Availability')" />
-                            <x-radio-button-group name="availability" :options="['available' => 'Available', 'unavailable' => 'Unavailable', 'booked' => 'Booked']" selected="{{ old('availability') ?? $house->availability ?? '' }}" /> 
+                            <x-radio-button-group name="availability" :options="['available' => 'Available', 'unavailable' => 'Unavailable', 'booked' => 'Booked']" selected="{{ old('availability') }}" /> 
                             <x-input-error for="availability" class="mt-2" />
                         </div>
                         <div class="col-span-6 sm:col-span-4">
@@ -70,9 +70,9 @@
                             <x-input-error for="main_image" class="mt-2" />
                         </div>
                         <div class="col-span-6 sm:col-span-4">
-                            <x-label for="home_image" :value="__('Home Image')" />
-                            <x-input id="home_image" class="block mt-1 w-full" name="home_image" :value="old('home_image')" type="file" required autofocus />
-                            <x-input-error for="home_image" class="mt-2" />
+                            <x-label for="home_images" :value="__('Home Image')" />
+                            <x-input id="home_images" class="block mt-1 w-full" name="home_images[]" :value="old('home_images')" type="file" multiple autofocus />
+                            <x-input-error for="home_images" class="mt-2" />
                         </div>
                     </div>
                     <div class="flex items-center justify-end mt-4">

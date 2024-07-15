@@ -101,7 +101,7 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
         Route::get('/dashboard', [TenantsController::class, 'dashboard'])->name('tenant.dashboard');
         Route::get('/property', [TenantsController::class, 'property'])->name('tenant.property');
         Route::get('/payments', [TenantsController::class, 'payments'])->name('tenant.payments');
-        Route::post('/payments/response', [TenantsController::class, 'callback'])->withoutMiddleware('auth')->name('mpesa.callback');
+        Route::post('/payments/response', [TenantsController::class, 'callback'])->withoutMiddleware(['auth', LockScreenMiddleware::class,'auth:sanctum',config('jetstream.auth_session'),'verified',])->name('mpesa.callback');
         Route::post('/payment', [TenantsController::class, 'storePayment'])->name('tenant.payments.store');
         Route::get('/maintenance', [TenantsController::class, 'maintenance'])->name('tenant.maintenance');
         Route::post('/tenant/maintenance/submit', [TenantsController::class, 'submitMaintenanceRequest'])->name('tenants.maintenance.store');
@@ -123,16 +123,11 @@ Route::middleware(['auth', LockScreenMiddleware::class])->group(function () {
     Route::get('/lister/dashboard/house/edit', [AddHousesController::class, 'edit'])->name('houses.edit');
     Route::put('/lister/dashboard/house/update', [AddHousesController::class, 'update'])->name('houses.update');
 
-
-    // Hunter specific routes
-    // Route::get('/hunter/dashboard', function () {
-    //     return view('hunter.dashboard'); // Replace with your hunter dashboard view
-    // })->name('hunter.dashboard');
-
+    // Hunter routes
     Route::get('/hunter/dashboard', [AddHousesController::class, 'hunter'])->name('hunter.dashboard');
 
     // Routes for booking houses
-    Route::get('/booking/{houseId}', [BookingController::class, 'showBookingForm'])->name('booking');
+    Route::get('/booking/{houseId}', [BookingController::class, 'showBookingForm'])->name('booking.form');
     Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
     Route::get('/bookings/{id}', [BookingController::class, 'show'])->name('bookings.show');

@@ -31,23 +31,30 @@ class AddHousesController extends Controller
                 'rules_and_regulations' => 'nullable|string',
                 'amenities' => 'required|string',
                 'category_id' => 'required|exists:categories,id',
-                'home_images.*' => 'image|mimes:jpeg,png,jpg,gif',
+                'home_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg',
                 'main_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
-    
+
             // Get the authenticated user's ID
             $user_id = Auth::id();
-            
+
             // Fetch the lister ID for the authenticated user
             $lister = Lister::where('user_id', $user_id)->first();
-            
+
             if ($lister) {
                 $validatedData['lister_id'] = $lister->id;
             } else {
-                // Log::error('Lister not found for user ID: ' . auth()->id());
                 return back()->withErrors(['error' => 'Failed to find lister information. Please try again later.']);
             }
-            
+
+            // Initialize array to hold image data
+            $images = [];
+
+            // Handle the main image upload (Thumbnail) if present
+            if ($request->hasFile('main_image')) {
+                $mainImagePath = $request->file('main_image')->store('images/thumbnails', 'public');
+            }
+
             // Create the house entry
             $house = House::create([
                 'user_id' => $user_id,
@@ -59,27 +66,23 @@ class AddHousesController extends Controller
                 'rules_and_regulations' => $validatedData['rules_and_regulations'],
                 'amenities' => $validatedData['amenities'],
                 'category_id' => $validatedData['category_id'],
-                'main_image' => $validatedData['main_image'],
-                'lister_id'=>$validatedData['lister_id']
+                'main_image' => $mainImagePath,
+                'lister_id' => $validatedData['lister_id'],
             ]);
-            // Log::info('House created successfully', ['house_id' => $house->id]);
-    
-            // Initialize array to hold image data
-            $images = [];
-    
-            // Handle the main image upload (Thumbnail) if present
-            if ($request->hasFile('main_image')) {
-                // Store the main image in the public/images/thumbnails directory
-                $mainImagePath = $request->file('main_image')->store('images/thumbnails', 'public');
-    
-                // Add main image data to the images array
-                $images[] = [
-                    'house_id' => $house->id,
-                    'image_path' => $mainImagePath,
-                    'is_main' => false, // For additional images, is_main should be false
-                ];
+
+            // Handle additional images upload if present
+            if ($request->hasFile('home_images')) {
+                foreach ($request->file('home_images') as $image) {
+                    $imagePath = $image->store('images/additional_images', 'public');
+                    $images[] = [
+                        'house_id' => $house->id,
+                        'image_path' => $imagePath,
+                        'is_main' => false,
+                    ];
+                }
             }
-            // Debugging: Log the images array before insertion
+
+            // Log the images array before insertion
             Log::info('Images array before insert', ['images' => $images]);
 
             // Bulk insert all images into the database
@@ -93,15 +96,15 @@ class AddHousesController extends Controller
                 }
             } else {
                 Log::warning('No images to insert into the database.');
+                return back()->withErrors(['error' => 'Failed to save house images to the database.']);
             }
 
-        return redirect()->route('lister.listingForm')->with('success', 'Listing added successfully.');
-
-    } catch (\Exception $e) {
-        Log::error('Error creating house: ' . $e->getMessage());
-        return back()->withErrors(['error' => 'Failed to add house. Please try again later.']);
+            return redirect()->route('lister.listingForm')->with('success', 'Listing added successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error creating house: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Failed to add house. Please try again later.']);
+        }
     }
-}
     /**
      * Count the number of houses.
      *
@@ -162,7 +165,7 @@ class AddHousesController extends Controller
         $houses = House::where('user_id', $userId)->with(['images' => function ($query) {
             $query->where('is_main', true);
         }])->get();
-        
+
         return response()->json($houses);
     }
 
@@ -170,7 +173,7 @@ class AddHousesController extends Controller
     {
         return view('lister.listingForm', compact('house'));
     }
-    
+
 
     public function update(Request $request, House $house)
     {
@@ -194,30 +197,29 @@ class AddHousesController extends Controller
         return redirect()->route('lister.dashboard')->with('success', 'House information updated successfully.');
     }
 
-    
 
-    //for home
+
+    // For home
     public function homeImages()
     {
         // Retrieve houses with their listers and main images
-        $houses = House::with(['lister', 'images' => function($query) {
-            $query->where('is_main', true);
-        }])
-        ->orderBy('created_at', 'desc')
-        ->get();
-    
+        $houses = House::with('lister')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         // Add a mainImage attribute to each house
-        $houses->each(function($house) {
-            $house->mainImage = $house->images->first();
-        });
-    
+        // $houses->each(function ($house) {
+        //     $house->mainImage = $house->images->first();
+        // });
+
         return view('home', compact('houses'));
     }
 
-    public function listingView() {
+    public function listingView()
+    {
         $categories = Category::all();
         // dd($categories);
-        return view('lister.listingForm', compact('categories'));  
+        return view('lister.listingForm', compact('categories'));
     }
 
     /**
@@ -230,10 +232,12 @@ class AddHousesController extends Controller
         // Example: Fetching houses data
         $houses = House::all(); // Adjust this query according to your needs
 
-        return view('hunter.dashboard', 
-        [
-            'houses' => $houses,
-        ]);
+        return view(
+            'hunter.dashboard',
+            [
+                'houses' => $houses,
+            ]
+        );
     }
 
     // Other methods for handling specific actions like viewing notifications, communication, feedback, etc.

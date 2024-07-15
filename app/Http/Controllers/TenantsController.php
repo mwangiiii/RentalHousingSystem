@@ -70,7 +70,7 @@ class TenantsController extends Controller
         }
     }
 
-    //Payments Form
+    // Payments Form
     public function payments()
     {
         try {
@@ -121,7 +121,7 @@ class TenantsController extends Controller
 
             // Initiate an STK Push
             $response = $this->initiateSTKPush($final_phone_number, $paymentReason);
-
+            // dd($response);
             if ($response['ResponseCode'] == "0") {
                 // Create a new payment
                 $payment = Payment::create([
@@ -199,7 +199,6 @@ class TenantsController extends Controller
                 'AccountReference' => $accountReference,
                 'TransactionDesc' => $TransactionDesc
             ]);
-
             return $response;
         } catch (Exception $e) {
             Log::error('Failed to initiate STK Push', ['error' => $e->getMessage()]);

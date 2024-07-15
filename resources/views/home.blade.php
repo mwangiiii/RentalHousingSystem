@@ -161,17 +161,17 @@
                 @foreach ($houses as $house)
                 <div class="house">
                     <div class="image-container">
-                        @if($house->mainImage)
-                        <img src="{{ asset('storage/' . $house->mainImage->is_main) }}" alt="Image of {{ $house->location }}">
+                        @if($house->main_image)
+                            <img src="{{ Storage::url($house->main_image) }}" alt="Image of {{ $house->location }}">
                         @else
-                        <p>No images available</p>
+                            <p>No images available</p>
                         @endif
                     </div>
                     <div class="house-content">
                         <h1>{{ $house->location }}</h1>
                         <p>Price: {{ $house->price }}</p>
                         <p>Availability: {{ $house->availability }}</p>
-                        <p>Contact: {{ $house->contact }}</p>
+                        <p>Contact: {{ $house->phone_number }}</p>
                         <p>Description: {{ $house->description }}</p>
                         <p>Amenities: {{ $house->amenities }}</p>
                     </div>
@@ -182,24 +182,24 @@
         </div>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                const housesData = <?php echo json_encode($houses) ?>;
+                const housesData = <?php echo json_encode($houses)?>;
                 const housesContainer = document.querySelector('.housesContainer');
 
                 housesData.forEach(house => {
                     const houseDiv = document.createElement('div');
                     houseDiv.classList.add('house');
                     houseDiv.innerHTML = `
-                        <div class="image-container">
-                            ${house.mainImage ? `<img src="/storage/${house.mainImage.is_main}" alt="Image of ${house.location}">` : '<p>No images available</p>'}
-                        </div>
-                        <div class="house-content">
-                            <h2>${house.location}</h2>
-                            <p>${house.description}</p>
-                            <p>Price: ${house.price}</p>
-                            <p>Availability: ${house.availability}</p>
-                            <p>Contact: ${house.contact}</p>
-                        </div>
-                    `;
+                <div class="image-container">
+                    ${house.mainImage ? `<img src="/storage/${house.main_image}" alt="Image of ${house.location}">` : '<p>No images available</p>'}
+                </div>
+                <div class="house-content">
+                    <h2>${house.location}</h2>
+                    <p>${house.description}</p>
+                    <p>Price: ${house.price}</p>
+                    <p>Availability: ${house.availability}</p>
+                    <p>Contact: ${house.contact}</p>
+                </div>
+            `;
                     housesContainer.appendChild(houseDiv);
                 });
 
