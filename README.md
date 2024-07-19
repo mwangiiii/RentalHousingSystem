@@ -125,16 +125,19 @@ Extract the downloaded Ngrok executable to a directory of your choice (e.g., `/p
 
 #### 3.1 Authentication (Optional)
 
-If you have an Ngrok account and want to use authentication, authenticate your Ngrok client:
+If you have an Ngrok account and want to use authentication, authenticate your Ngrok client by running the following command:
 
-    ```bash
-    ./ngrok authtoken your_auth_token
-we have to start the server by running the following command on the terminal (making sure that you are in the project's directory).this starts the server. the 
+```bash
+./ngrok authtoken your_auth_token
+```
 
-    ```bash
-    php artisan serve
-  The application should now be running on 'http://localhost:8000'.
-  
+Next, start the Laravel server by running the following command in the terminal, making sure that you are in the project's directory:
+
+```bash
+php artisan serve
+```
+The application should now be running on `http://localhost:8000`.
+
 ## Usage
 
 After successful installation and running of the application, we'll take you through the usage of the application. 
@@ -201,11 +204,11 @@ We welcome contributions from the community to improve this project! If you'd li
 
 ## License. 
 The project is licensed under Licenses. 
--    Laravel: [MIT License](https://github.com/git/git-scm.com/blob/main/MIT-LICENSE.txt).
--    PHP: [PHP License](https://www.php.net/license/3_01.txt)
--    MySQL: [OEM](https://www.mysql.com/about/legal/licensing/oem/)
--    Node.js: [MIT License](https://github.com/nodejs/node/blob/main/LICENSE).
--    Apache: [Apache License 2.0](https://apache.org/licenses/LICENSE-2.0)
+-     [MIT License] (https://github.com/git/git-scm.com/blob/main/MIT-LICENSE.txt)
+-     [PHP License] (https://www.php.net/license/3_01.txt)
+-     [OEM] (https://www.mysql.com/about/legal/licensing/oem/)
+-     [MIT License] (https://github.com/nodejs/node/blob/main/LICENSE).
+-     [Apache License 2.0] (https://apache.org/licenses/LICENSE-2.0)
 
 ## Contact
 You can contact us at [Makazi Hub Admin](mailto:dennis.wanjiku@strathmore.edu,elvis.makara@strathmore.edu?subject=Github:Makazi-hub-Support) 
