@@ -15,35 +15,6 @@ Makazi Hub is a comprehensive system designed to streamline both house hunting a
 8. [Contact](#contact)
 9. [Credits](#credits)
 
-## Core Features
-
-### 1. House Hunting
-
-- **Search Functionality**: Allows house hunters to search for properties based on various criteria such as location, rent price, amenities, and more.
-- **Privacy Protection**: Ensures user privacy by enabling secure communication with landlords or property listers without sharing personal contact information.
-
-### 2. Rental Management
-
-#### Tenant Tools:
-- Track rent payments and rental history.
-- Submit maintenance requests and move-out notices.
-
-#### Landlord Tools:
-- Assign roles to property managers and maintenance staff.
-- Monitor property history, rental income, and expenses.
-
-#### Caretaker Tools:
-- Register new tenants.
-- Issue notices and analyze complaints.
-- Manage day-to-day operations and communications.
-
-## Benefits
-
-- **Efficiency**: Streamlines both house hunting and rental management processes, saving time and effort for all users.
-- **Privacy**: Maintains the privacy of users by allowing secure communication within the system.
-- **Organization**: Keeps all rental operations organized, with clear roles and responsibilities for each user type.
-
-Makazi Hub enhances the rental experience by providing a unified platform that caters to the needs of both property managers and house hunters, ensuring efficient management and a seamless search process.
 
 ## Installation
 
@@ -181,6 +152,3 @@ We welcome contributions to improve Makazi Hub! Follow these steps to contribute
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-# RentalHousingSystem
-The proposed system helps simplify work in a house rental business as it connects the tenant to the caretakers and their landlords. It offers several features like abstracted communication, maintenance report submission etc.  By allowing the choice of different criteria, a client can decide the location, amenities e.t.c., around they want around.
