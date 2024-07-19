@@ -9,10 +9,10 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('makazi-hub-favicon-black.png',true) }}">
+    <link rel="icon" type="image/png" href="{{ asset('makazi-hub-favicon-black.png') }}">
 
     <!-- Styles -->
-    <link rel="stylesheet" href="{{ asset('style.css',true) }}">
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
     <title>{{ config('app.name', 'Makazi Hub') }}</title>
 </head>
 
@@ -51,10 +51,7 @@
                     </ul>
                 </div>
 
-                <div class="relative group">
-                    <a href="#" class="text-gray-700 hover:text-black focus:outline-none">Favourites</a>
-                    <ul class="absolute left-0 hidden bg-white text-gray-700 pt-1 group-hover:block z-10"></ul>
-                </div>
+            
             </div>
 
             <div class="auth-links">
@@ -86,62 +83,57 @@
         <section class="search-section">
             <div class="content">
                 <h1>Find A Rental House Near You</h1>
-                <div class="tabs">
+                <!-- <div class="tabs">
                     <button class="tab active">Rent</button>
                     <button class="tab">Sale</button>
                     <button class="tab">Furnished</button>
                     <button class="tab">Land</button>
-                </div>
+                </div> -->
                 <div class="search-bar">
-                    <input type="text" id="locationInput" placeholder="Enter Location, workplace or school, etc">
-                    <select id="criteriaInput">
-                        <option value="all-bedrooms">All Bedrooms</option>
-                        <option value="apartment">Apartment</option>
-                        <option value="own-compound">Own Compound</option>
-                        <option value="gated-community">Gated Community Spaces</option>
-                        <option value="townhouses">Townhouses</option>
-                        <option value="commercial-properties">Commercial Properties</option>
-                        <option value="short-term-rentals">Short-Term Rentals</option>
-                        <option value="luxury-villas">Luxury Villas</option>
-                        <option value="property-management-services">Property Management Services</option>
-                    </select>
-                    <div class="price-range">
-                        <input type="number" placeholder="Min Amount" id="minAmount">
-                        <input type="number" placeholder="Max Amount" id="maxAmount">
-                    </div>
-                    <button class="search-button">Find Rental House</button>
+    <input type="text" id="locationInput" placeholder="Enter Location, workplace or school, etc">
+    <select id="criteriaInput">
+        <option value="all-bedrooms">All Bedrooms</option>
+        <option value="apartment">Apartment</option>
+        <option value="own-compound">Own Compound</option>
+        <option value="gated-community">Gated Community Spaces</option>
+        <option value="townhouses">Townhouses</option>
+        <option value="commercial-properties">Commercial Properties</option>
+        <option value="short-term-rentals">Short-Term Rentals</option>
+        <option value="luxury-villas">Luxury Villas</option>
+        <option value="property-management-services">Property Management Services</option>
+    </select>
+    <div class="price-range">
+        <input type="number" placeholder="Min Amount" id="minAmount">
+        <input type="number" placeholder="Max Amount" id="maxAmount">
+    </div>
+    <button class="search-button">Find Rental House</button>
+</div>
 
-                    <script>
-                        function searchFunction(location, criteria, minAmount, maxAmount) {
-                            let url = '/search';
-                            const params = [];
+<script>
+    function searchFunction(location, criteria, minAmount, maxAmount) {
+        let url = '/search';
+        const params = [];
 
-                            if (location) params.push('location=' + encodeURIComponent(location));
-                            if (criteria && criteria !== 'all-bedrooms') params.push('category=' + encodeURIComponent(criteria));
-                            if (minAmount) params.push('min_amount=' + encodeURIComponent(minAmount));
-                            if (maxAmount) params.push('max_amount=' + encodeURIComponent(maxAmount));
+        if (location) params.push('location=' + encodeURIComponent(location));
+        if (criteria && criteria !== 'all-bedrooms') params.push('category=' + encodeURIComponent(criteria));
+        if (minAmount) params.push('min_amount=' + encodeURIComponent(minAmount));
+        if (maxAmount) params.push('max_amount=' + encodeURIComponent(maxAmount));
 
-                            if (params.length > 0) url += '?' + params.join('&');
+        if (params.length > 0) url += '?' + params.join('&');
 
-                            // Redirect to the search URL
-                            window.location.href = url;
-                        }
+        // Redirect to the search URL
+        window.location.href = url;
+    }
 
-                        // Assuming you have input fields for location, description, and criteria
-                        const locationInput = document.getElementById('locationInput');
-                        const criteriaInput = document.getElementById('criteriaInput');
-                        const minAmountInput = document.getElementById('minAmount');
-                        const maxAmountInput = document.getElementById('maxAmount');
-                        const searchButton = document.querySelector('.search-button');
+    document.querySelector('.search-button').addEventListener('click', () => {
+        const location = document.getElementById('locationInput').value;
+        const criteria = document.getElementById('criteriaInput').value;
+        const minAmount = document.getElementById('minAmount').value;
+        const maxAmount = document.getElementById('maxAmount').value;
+        searchFunction(location, criteria, minAmount, maxAmount);
+    });
+</script>
 
-                        searchButton.addEventListener('click', () => {
-                            const location = locationInput.value;
-                            const criteria = criteriaInput.value;
-                            const minAmount = minAmountInput.value;
-                            const maxAmount = maxAmountInput.value;
-                            searchFunction(location, criteria, minAmount, maxAmount);
-                        });
-                    </script>
                 </div>
             </div>
         </section>
@@ -154,32 +146,64 @@
         </h2>
 
         <div class="carouselContainer">
-            <div class="housesContainer">
-                @if($houses->isEmpty())
-                <p>No houses available</p>
+    <div class="housesContainer">
+        @if($houses->isEmpty())
+        <p>No houses available</p>
+        @else
+        @foreach ($houses as $house)
+        <div class="house">
+            <div class="image-container">
+                @if($thumbnails->isEmpty())
+                <img src="{{ asset('storage/' . $house->mainImage->is_main) }}" alt="Image of {{ $house->location }}">
                 @else
-                @foreach ($houses as $house)
-                <div class="house">
-                    <div class="image-container">
-                        @if($house->mainImage)
-                        <img src="{{ asset('storage/' . $house->mainImage->is_main) }}" alt="Image of {{ $house->location }}">
-                        @else
-                        <p>No images available</p>
-                        @endif
-                    </div>
-                    <div class="house-content">
-                        <h1>{{ $house->location }}</h1>
-                        <p>Price: {{ $house->price }}</p>
-                        <p>Availability: {{ $house->availability }}</p>
-                        <p>Contact: {{ $house->contact }}</p>
-                        <p>Description: {{ $house->description }}</p>
-                        <p>Amenities: {{ $house->amenities }}</p>
-                    </div>
-                </div>
-                @endforeach
+                <p>No images available</p>
                 @endif
             </div>
+            <div class="house-content">
+                <h1>{{ $house->location }}</h1>
+                <p>Price: {{ $house->price }}</p>
+                <p>Availability: {{ $house->availability }}</p>
+                <!-- <p>Contact: {{ $house->contact }}</p> -->
+                <p>Description: {{ $house->description }}</p>
+                <p>Amenities: {{ $house->amenities }}</p>
+            </div>
         </div>
+        @endforeach
+        @endif
+
+        <!-- Manually created image cards -->
+        <div class="house">
+    <div class="image-container">
+        <img src="{{ asset('image 2.jpg') }}" alt="Manual Image 1">
+    </div>
+    <div class="house-content">
+        <h1>Kitsuru</h1>
+        <p>Price: 10000</p>
+        <p>Availability: available</p>
+        <p>Description:its found in kitisuru a well suburb area.</p>
+        <p>Amenities: swimming pool.</p>
+    </div>
+</div>
+
+<div class="house">
+    <div class="image-container">
+        <img src="{{ asset('image 1.jpeg') }}" alt="Manual Image 2">
+    </div>
+    <div class="house-content">
+        <h1>kitengela</h1>
+        <p>Price: 15000</p>
+        <p>Availability: available</p>
+        <p>Description: found in suburbs of nairobi.</p>
+        <p>Amenities: hospital.</p>
+    </div>
+
+</div>
+
+        <!-- End of manually created image cards -->
+
+    </div>
+</div>
+
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const housesData = <?php echo json_encode($houses) ?>;
@@ -234,7 +258,7 @@
                 </div>
 
                 <div data-text="Contact Landlord" style="--r:5;font-size:20px;" class="glass">
-                    <img style="width:100%; height:auto; max-width:100%; max-height:100%; margin-top:0;" src="{{ asset('contact-us.png') }}" alt="Example photo of landlord">
+                    <img style="width:100%; height:auto; max-width:100%; max-height:100%; margin-top:0;" src="{{ asset('contact us.png') }}" alt="Example photo of landlord">
                 </div>
 
                 <div data-text="View the House" style="--r:5;font-size:20px;" class="glass">

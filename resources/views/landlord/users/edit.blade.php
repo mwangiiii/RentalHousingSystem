@@ -36,10 +36,9 @@
                             <x-input id="phone_number" class="block mt-1 w-full" type="tel" name="phone_number" value="{{ old('phone_number', $user->phone_number) }}" required autofocus />
                             <x-input-error for="phone_number" class="mt-2" />
                         </div>
-
                         <div class="col-span-6 sm:col-span-4">
                             <x-label for="role_id" :value="__('Role')" />
-                            <x-select name="role_id" id="role_id" class="mt-1 block w-full" :options="$roles" fieldName="role_name" idField="id" required></x-select>
+                            <x-select name="role_id" id="role_id" class="mt-1 block w-full" :options="$roles" fieldName="role_name" idField="id" :selected="old('role_id', $user->role_id)" required autofocus />
                             <x-input-error for="role_id" class="mt-2" />
                         </div>
                     </div>

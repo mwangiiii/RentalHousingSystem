@@ -43,4 +43,3 @@ class Property extends Model
             ->where('roles.role_name', 'Maintenance Worker');
     }
 }
-

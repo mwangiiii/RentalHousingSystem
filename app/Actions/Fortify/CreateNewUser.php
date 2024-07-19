@@ -44,7 +44,7 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             'phone_number' => $phoneNumber,
             'id_number' => $input['id_number'],
-            'role_id' => $input['role'] === 'lister' ? 9 : 10, // Conditional role assignment
+            'role_id' => $input['role'] === 'lister' ? 7 : 8, // Conditional role assignment
             'password' => Hash::make($input['password']),
         ]);
 
@@ -53,11 +53,6 @@ class CreateNewUser implements CreatesNewUsers
             
             Lister::create([
                 'user_id' => $user->id,
-                'name' => $user->name,
-                'contact' => $user->phone_number,
-                'email' => $user->email,
-                'identification_number' => $user->id_number,
-                'password' => Hash::make($input['password']),
             ]);
         }else{
             Hunter::create([

@@ -32,4 +32,8 @@ class Role extends Model
     {
         return $this->hasMany(Lister::class);
     }
+    public function hunter()
+    {
+        return $this->hasMany(hunter::class);
+    }
 }

@@ -5,45 +5,29 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('admin.dashboard') }}">
+                    <a href="{{ route('lister.dashboard') }}">
                         <x-application-mark class="block h-9 w-auto" />
                     </a>
                 </div>
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link href="{{ route('lister.dashboard') }}" :active="request()->routeIs('lister.dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
                     <x-nav-link href="{{ route('lister.listingForm') }}" :active="request()->routeIs('lister.listingForm')">
-                        {{ __('Add House') }}
-                    </x-nav-link>
-
-                    <x-nav-link href="{{ route('lister.houses') }}" :active="request()->routeIs('lister.houses')">
-                        {{ __('Houses') }}
-                    </x-nav-link>
-
-                    <x-nav-link href="{{ route('lister.houses') }}" :active="request()->routeIs('lister.houses')">
-                        {{ __('Notifications') }}
-                    </x-nav-link>
-
-                    <x-nav-link href="{{ route('lister.houses') }}" :active="request()->routeIs('lister.houses')">
-                        {{ __('Communication') }}
-                    </x-nav-link>
-
-                    <x-nav-link href="{{ route('lister.houses') }}" :active="request()->routeIs('lister.houses')">
-                        {{ __('Feedback') }}
+                        {{ __('Add Houses') }}
                     </x-nav-link>
                 </div>
             </div>
 
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <!-- Settings Dropdown -->
                 @include('layouts.nav-settings')
             </div>
 
             <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
+            <div class="-mr-2 flex items-center sm:hidden">
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -57,28 +41,12 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+            <x-responsive-nav-link href="{{ route('lister.dashboard') }}" :active="request()->routeIs('lister.dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
             <x-responsive-nav-link href="{{ route('lister.listingForm') }}" :active="request()->routeIs('lister.listingForm')">
-                {{ __('Add House') }}
-            </x-responsive-nav-link>
-
-            <x-responsive-nav-link href="{{ route('lister.houses') }}" :active="request()->routeIs('lister.houses')">
-                {{ __('Houses') }}
-            </x-responsive-nav-link>
-
-            <x-responsive-nav-link href="{{ route('lister.houses') }}" :active="request()->routeIs('lister.houses')">
-                {{ __('Notifications') }}
-            </x-responsive-nav-link>
-
-            <x-responsive-nav-link href="{{ route('lister.houses') }}" :active="request()->routeIs('lister.houses')">
-                {{ __('Communication') }}
-            </x-responsive-nav-link>
-
-            <x-responsive-nav-link href="{{ route('lister.houses') }}" :active="request()->routeIs('lister.houses')">
-                {{ __('Feedback') }}
+                {{ __('Add Houses') }}
             </x-responsive-nav-link>
         </div>
 

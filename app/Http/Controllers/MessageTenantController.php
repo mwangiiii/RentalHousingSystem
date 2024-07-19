@@ -17,7 +17,7 @@ class MessageTenantController extends Controller
 {
     public function index()
     {
-        $messages = Message::with('tenant.user')->paginate(5);
+        $messages = Message::with('tenant.user')->orderBy('created_at', 'desc')->paginate(5);
         return view('landlord.messages.index', compact('messages'));
     }
 

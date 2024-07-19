@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Tenant;
 use App\Models\Property;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use App\Mail\TenantWelcomeMail;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use App\Actions\Fortify\PasswordValidationRules;
+use Illuminate\Support\Facades\Log;
+
 
 
 class TenantController extends Controller
@@ -36,7 +39,7 @@ class TenantController extends Controller
 
     public function create()
     {
-        $rooms = Room::all();
+        $rooms = Room::whereNot('status', 'assigned')->get();
         $properties = Property::all();
 
         return view('landlord.tenants.create', compact('rooms', 'properties'));
@@ -57,14 +60,14 @@ class TenantController extends Controller
         ]);
 
         // Sanitize phone number
-        $phoneNumber = preg_replace('/\D/', '', $request->phone_number); // Remove all non-numeric characters
+        $phoneNumber = preg_replace('/\D/', '', $request->phone_number);
         if (substr($phoneNumber, 0, 1) === '0') {
             $phoneNumber = '254' . substr($phoneNumber, 1);
         } elseif (substr($phoneNumber, 0, 3) !== '254') {
             $phoneNumber = '254' . $phoneNumber;
         }
 
-        //Create the user
+        // Create the user
         $password = $request->password;
         $user = User::create([
             'name' => $request->name,
@@ -84,8 +87,11 @@ class TenantController extends Controller
             'move_in_date' => date('Y-m-d')
         ]);
 
-        // Load the role relationship
-        $user->load('role');
+        // Update the room status to 'assigned'
+        $room = Room::find($request->room_id);
+        $room->status = 'assigned';
+        $room->save();
+
 
         // Generate the rental agreement PDF
         $pdf = Pdf::loadView('pdf.rental-agreement', [
@@ -93,25 +99,55 @@ class TenantController extends Controller
             'tenant' => $user,
             'property' => Property::find($request->property_id),
             'room' => Room::find($request->room_id),
-            'leaseStart' => $request->lease_start,
-            'leaseEnd' => $request->lease_end,
-            'move_in_date' => date('Y-m-d')
+            'leaseStart' => Carbon::parse($request->lease_start)->format('M d, Y'),
+            'leaseEnd' => Carbon::parse($request->lease_end)->format('M d, Y'),
+            'move_in_date' => Carbon::parse(date('Y-m-d'))->format('M d, Y'),
         ]);
 
         // Save the PDF to the storage
         $pdfPath = 'rental-agreements/' . $user->id . '.pdf';
         Storage::put($pdfPath, $pdf->output());
 
-        //Send email to tenant
-        Mail::to($user->email)->send(new TenantWelcomeMail($user, $password, Storage::path($pdfPath)));
+        // Debug the PDF path
+        $tenantpdfPath = Storage::path($pdfPath);
 
+        // Check if the file exists with a maximum of 75 attempts
+        $attempts = 0;
+        $maxAttempts = 75;
+
+        while (!Storage::exists($pdfPath) && $attempts < $maxAttempts) {
+            sleep(1); // Delay for 1 second
+            $attempts++;
+        }
+
+        if (!Storage::exists($pdfPath)) {
+            // Handle the error case where the file still doesn't exist
+            Log::error('Failed to generate PDF in time', ['path' => $tenantpdfPath]);
+            return redirect()->route('landlord.tenants.index')->with('error', 'Error generating PDF.');
+        } else {
+            // Send email to tenant
+            try {
+                // Verify again before sending email
+                if (Storage::exists($pdfPath)) {
+                    Mail::to($user->email)->send(new TenantWelcomeMail($user, $password, $tenantpdfPath));
+                    Log::info('Email sent to: ' . $user->email);
+                } else {
+                    Log::error('PDF file does not exist: ' . $tenantpdfPath);
+                    return redirect()->route('landlord.tenants.index')->with('error', 'PDF file not found.');
+                }
+            } catch (\Exception $e) {
+                Log::error('Failed to send email: ' . $e->getMessage());
+                return redirect()->route('landlord.tenants.index')->with('error', 'Failed to send email to tenant. ' . $e->getMessage());
+            }
+        }
         return redirect()->route('landlord.tenants.index')->with('success', 'Tenant added successfully');
     }
+
 
     public function edit(Tenant $tenant)
     {
         $properties = Property::all();
-        $rooms = Room::all();
+        $rooms = Room::whereNot('status', 'assigned')->get();
         return view('landlord.tenants.edit', compact('tenant', 'rooms', 'properties'));
     }
 
@@ -120,8 +156,8 @@ class TenantController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $tenant->user_id,
-            'phone_number' => 'required', 'string', 'max:14', 'min:10', 'unique:users', Rule::unique('users')->ignore($tenant->user_id),
-            'id_number' => 'required|string|max:255', Rule::unique('users')->ignore($tenant->user_id),
+            'phone_number' => ['required', 'string', 'max:14', 'min:10', Rule::unique('users')->ignore($tenant->user_id)],
+            'id_number' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($tenant->user_id)],
             'property_id' => 'required|exists:properties,id',
             'room_id' => 'required|exists:rooms,id',
             'lease_start' => 'required|date',
@@ -134,7 +170,7 @@ class TenantController extends Controller
             $phoneNumber = '254' . substr($phoneNumber, 1);
         }
 
-        //Update the user
+        // Update the user
         $tenant->user->update([
             'name' => $request->name,
             'email' => $request->email,
@@ -142,7 +178,22 @@ class TenantController extends Controller
             'id_number' => $request->id_number
         ]);
 
-        //Update Tenant 
+        // Check if the tenant is being moved to a new room
+        if ($tenant->room_id != $request->room_id) {
+            // Update the previous room status to 'vacant'
+            if ($tenant->room) {
+                $previousRoom = $tenant->room;
+                $previousRoom->status = Room::STATUS_VACANT;
+                $previousRoom->save();
+            }
+
+            // Update the new room status to 'assigned'
+            $newRoom = Room::find($request->room_id);
+            $newRoom->status = Room::STATUS_ASSIGNED;
+            $newRoom->save();
+        }
+
+        // Update the tenant
         $tenant->update([
             'property_id' => $request->property_id,
             'room_id' => $request->room_id,
@@ -164,10 +215,39 @@ class TenantController extends Controller
     // Tenant Check out
     public function checkout(Tenant $tenant)
     {
-        $tenant->user()->delete(); // Fetch the associated user and delete it
+        // Update tenant's move_out_date and lease_end
+        $tenant->move_out_date = now();
+        $tenant->lease_end = now();
+        $tenant->save();
 
-        $tenant->delete(); // Delete the tenant record 
+        // Update the current room status to 'vacant'
+        if ($tenant->room) {
+            $previousRoom = $tenant->room;
+            $previousRoom->status = Room::STATUS_VACANT;
+            $previousRoom->save();
+        }
 
-        return redirect()->route('landlord.tenants.index')->with('success', 'Tenant checked out and deleted successfully');
+        // Suspend the user
+        $user = $tenant->user;
+        $user->is_suspended = true;
+        $user->save();
+
+        return redirect()->route('landlord.tenants.index')->with('success', 'Tenant checked out successfully');
+    }
+
+    // Second Check in
+    public function checkin(Tenant $tenant)
+    {
+        // Update tenant's move_out_date
+        $tenant->move_in_date = now();
+        // $tenant->lease_end = now();
+        $tenant->save();
+
+        // Suspend the user
+        $user = $tenant->user;
+        $user->is_suspended = false;
+        $user->save();
+
+        return redirect()->route('landlord.tenants.index')->with('success', 'Tenant checked in successfully');
     }
 }

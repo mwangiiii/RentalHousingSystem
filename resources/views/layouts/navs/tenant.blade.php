@@ -25,10 +25,6 @@
                     <x-nav-link href="{{ route('tenant.maintenance') }}" :active="request()->routeIs('tenant.maintenance')">
                         {{ __('Maintenance') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('tenant.messages') }}" :active="request()->routeIs('tenant.messages')">
-                        {{ __('Messages') }}
-                    </x-nav-link>
-
                 </div>
             </div>
 
@@ -63,9 +59,6 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('tenant.maintenance') }}" :active="request()->routeIs('tenant.maintenance')">
                 {{ __('Maintenance') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('tenant.messages') }}" :active="request()->routeIs('tenant.messages')">
-                {{ __('Messages') }}
             </x-responsive-nav-link>
         </div>
 

@@ -9,17 +9,19 @@ use App\Models\Property;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MaintenanceRequest;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class LandlordController extends Controller
 {
     public function dashboard()
     {
+        // dd('hello');
         $landlordId = Auth::user()->id;
 
         $properties = Property::where('user_id', $landlordId)->with('rooms.tenants')->get();
-        $occupiedRooms = 0;
-        $availableRooms = 0;
 
+        $occupiedRooms = 0;
+        $availableRooms = 0; 
         foreach ($properties as $property) {
             $totalUnits = $property->units;
             $occupiedUnits = $property->rooms->filter(function ($room) {
@@ -29,38 +31,46 @@ class LandlordController extends Controller
             $occupiedRooms += $occupiedUnits;
             $availableRooms += $totalUnits - $occupiedUnits;
         }
-
+        
         $tenants = Tenant::whereHas('room.property', function ($query) use ($landlordId) {
             $query->where('user_id', $landlordId);
         })->get();
-
+        
         $payments = Payment::whereHas('tenant.room.property', function ($query) use ($landlordId) {
             $query->where('user_id', $landlordId);
         })->get();
-
+       
         $openRequests = MaintenanceRequest::where('status', 'pending')->count();
         $completedRequests = MaintenanceRequest::where('status', 'completed')->count();
 
         // Calculate churn rate for the last 12 months
         $churnData = [];
-        $totalTenantsAtStart = Tenant::whereHas('room.property', function ($query) use ($landlordId) {
-            $query->where('user_id', $landlordId);
-        })->whereNull('move_out_date')->count();
-
         for ($i = 11; $i >= 0; $i--) {
             $startDate = Carbon::now()->subMonths($i + 1)->startOfMonth();
             $endDate = Carbon::now()->subMonths($i + 1)->endOfMonth();
 
+            // Total tenants at the start of the month
+            $totalTenantsAtStart = Tenant::whereHas('room.property', function ($query) use ($landlordId) {
+                $query->where('user_id', $landlordId);
+            })->where('lease_start', '<=', $startDate)
+                ->where(function ($query) use ($startDate) {
+                    $query->whereNull('move_out_date')->orWhere('move_out_date', '>=', $startDate);
+                })->count();
+
+            // Debugging logs to verify the query result
+            Log::info("Start Date: $startDate");
+            Log::info("Total Tenants at Start: $totalTenantsAtStart");
+
+            // Tenants who left during the month
             $tenantsLeft = Tenant::whereHas('room.property', function ($query) use ($landlordId) {
                 $query->where('user_id', $landlordId);
             })->whereBetween('move_out_date', [$startDate, $endDate])->count();
 
+            // Calculate churn rate
             $churnRate = $totalTenantsAtStart > 0 ? ($tenantsLeft / $totalTenantsAtStart) * 100 : 0;
-            $churnData[Carbon::now()->subMonths($i + 1)->format('M Y')] = $churnRate;
-
-            // Adjust the total tenants at start for the next month
-            $totalTenantsAtStart -= $tenantsLeft;
+            $churnData[$startDate->format('M Y')] = $churnRate;
         }
+        // dd($totalTenantsAtStart);
 
         $rentCollected = Payment::whereHas('tenant.room.property', function ($query) use ($landlordId) {
             $query->where('user_id', $landlordId);
@@ -87,11 +97,11 @@ class LandlordController extends Controller
         $paymentHistory = Payment::whereHas('tenant.room.property', function ($query) use ($landlordId) {
             $query->where('user_id', $landlordId);
         })
-            ->selectRaw('sum(amount) as total, DATE_FORMAT(created_at, "%b") as month')
+            ->selectRaw('sum(amount) as total, DATE_FORMAT(created_at, "%b %Y") as month')
             ->groupBy('month')
             ->orderByRaw('MIN(created_at) asc')
             ->pluck('total', 'month');
 
-        return view('landlord.dashboard', compact('properties', 'occupiedRooms', 'availableRooms', 'tenants', 'payments', 'openRequests', 'completedRequests', 'churnData', 'rentCollected', 'outstandingPayments','paymentHistory'));
+        return view('landlord.dashboard', compact('properties', 'occupiedRooms', 'availableRooms', 'tenants', 'payments', 'openRequests', 'completedRequests', 'churnData', 'rentCollected', 'outstandingPayments', 'paymentHistory'));
     }
 }

@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Vonage Client Library for PHP
+ *
+ * @copyright Copyright (c) 2016-2022 Vonage, Inc. (http://vonage.com)
+ * @license https://github.com/Vonage/vonage-php-sdk-core/blob/master/LICENSE.txt Apache License 2.0
+ */
+
 declare(strict_types=1);
 
 namespace Vonage\Insights;
@@ -7,21 +14,19 @@ namespace Vonage\Insights;
 use Psr\Http\Client\ClientExceptionInterface;
 use Vonage\Client\APIClient;
 use Vonage\Client\APIResource;
+use Vonage\Client\ClientAwareInterface;
+use Vonage\Client\ClientAwareTrait;
 use Vonage\Client\Exception as ClientException;
-use Vonage\Client\Exception\Exception;
-use Vonage\Client\Exception\Request;
-use Vonage\Client\Exception\Server;
 use Vonage\Entity\Filter\KeyValueFilter;
-use Vonage\Entity\IterableAPICollection;
 use Vonage\Numbers\Number;
+
+use function is_null;
 
 /**
  * Class Client
  */
 class Client implements APIClient
 {
-    protected array $chargeableCodes = [0, 43, 44, 45];
-
     public function __construct(protected ?APIResource $api = null)
     {
     }
@@ -34,11 +39,10 @@ class Client implements APIClient
     /**
      * @param $number
      *
-     * @return Basic
      * @throws ClientExceptionInterface
-     * @throws Exception
-     * @throws Request
-     * @throws Server
+     * @throws ClientException\Exception
+     * @throws ClientException\Request
+     * @throws ClientException\Server
      */
     public function basic($number): Basic
     {
@@ -52,11 +56,10 @@ class Client implements APIClient
     /**
      * @param $number
      *
-     * @return StandardCnam
      * @throws ClientExceptionInterface
-     * @throws Exception
-     * @throws Request
-     * @throws Server
+     * @throws ClientException\Exception
+     * @throws ClientException\Request
+     * @throws ClientException\Server
      */
     public function standardCNam($number): StandardCnam
     {
@@ -69,11 +72,10 @@ class Client implements APIClient
     /**
      * @param $number
      *
-     * @return AdvancedCnam
      * @throws ClientExceptionInterface
-     * @throws Exception
-     * @throws Request
-     * @throws Server
+     * @throws ClientException\Exception
+     * @throws ClientException\Request
+     * @throws ClientException\Server
      */
     public function advancedCnam($number): AdvancedCnam
     {
@@ -144,9 +146,6 @@ class Client implements APIClient
     {
         $api = $this->getApiResource();
         $api->setBaseUri($path);
-        $collectionPrototype = new IterableAPICollection();
-        $collectionPrototype->setHasPagination(false);
-        $api->setCollectionPrototype($collectionPrototype);
 
         if ($number instanceof Number) {
             $number = $number->getMsisdn();
@@ -157,7 +156,7 @@ class Client implements APIClient
         $data = $result->getPageData();
 
         // check the status field in response (HTTP status is 200 even for errors)
-        if (! in_array((int)$data['status'], $this->chargeableCodes, true)) {
+        if ((int)$data['status'] !== 0) {
             throw $this->getNIException($data);
         }
 

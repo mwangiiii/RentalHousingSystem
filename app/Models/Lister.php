@@ -12,11 +12,6 @@ class Lister extends Model
 
     protected $fillable = [
         'user_id',
-        'name',
-        'contact',
-        'email',
-        'identification_number',
-        'password',
     ];
 
     /**

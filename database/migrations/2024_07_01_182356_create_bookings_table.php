@@ -4,39 +4,36 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateBookingsTable extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('bookings', function (Blueprint $table) {
-            $table->engine = 'InnoDB'; // Ensure InnoDB engine is used
-            $table->id(); // Creates an unsigned big integer as the primary key
-            $table->unsignedBigInteger('house_id'); // Foreign key referencing the houses table
-            $table->string('name');
-            $table->string('phone_number');
-            $table->string('email');
-            $table->date('check_in_date');
-            $table->enum('status', ['pending', 'confirmed', 'canceled', 'completed'])->default('pending');
-            $table->enum('payment_status', ['pending', 'completed', 'refunded'])->default('pending');
-            $table->string('payment_method');
-            $table->string('transaction_id');
-            $table->text('additional_notes');
+            $table->id();
+            $table->foreignId('house_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Add this line for user_id
+            $table->date('move_in_date');
+            $table->integer('lease_duration');
+            $table->integer('number_of_occupants');
+            $table->string('employment_status');
+            $table->string('contact_method');
+            $table->text('message')->nullable();
             $table->timestamps();
-
-            // Add the foreign key constraint
-            $table->foreign('house_id')->references('id')->on('houses')->onDelete('cascade')->onUpdate('cascade');
         });
-
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('booking');
+        Schema::dropIfExists('bookings');
     }
-};
+}

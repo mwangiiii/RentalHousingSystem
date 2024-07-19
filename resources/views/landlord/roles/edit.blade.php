@@ -23,7 +23,7 @@
 
                         <div class="col-span-6 sm:col-span-4">
                             <x-label for="property_id" class="block text-gray-700 text-sm font-bold mb-2" :value=" __('Property')" />
-                            <x-select name="property_id" id="property_id" class="mt-1 block w-full" :options="$properties" fieldName="name" idField="id" required></x-select>
+                            <x-select name="property_id" id="property_id" class="mt-1 block w-full" :options="$properties" fieldName="name" idField="id" :selected="old('property_id', $role->property_id)" required></x-select>
                             <x-input-error for="property_id" class="mt-2" />
                         </div>
                     </div>

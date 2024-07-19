@@ -5,6 +5,11 @@ use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\House;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Notification;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+
+
 
 class BookingController extends Controller
 {
@@ -17,7 +22,7 @@ class BookingController extends Controller
     public function showBookingForm($houseId)
     {
         $house = House::findOrFail($houseId);
-        return view('booking', compact('house'));
+        return view('bookings.booking', compact('house'));
     }
 
     /**
@@ -28,38 +33,68 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the incoming request data
-        $validatedData = $request->validate([
+        $request->validate([
             'house_id' => 'required|exists:houses,id',
             'move_in_date' => 'required|date',
-            'duration' => 'required|integer|min:1|max:30',
+            'lease_duration' => 'required|integer|min:1',
+            'number_of_occupants' => 'required|integer|min:1',
+            'employment_status' => 'required|string',
+            'contact_method' => 'required|string',
             'message' => 'nullable|string',
         ]);
-
-        // Create a new booking instance
+    
+        // Get the authenticated user's ID
+        $user_id = Auth::id();
+    
+        // Create a new Booking with the user_id included
         $booking = new Booking();
-        $booking->house_id = $validatedData['house_id'];
-        $booking->move_in_date = $validatedData['move_in_date'];
-        $booking->duration = $validatedData['duration'];
-        $booking->message = $validatedData['message'];
-        $booking->user_id = Auth::id(); // Assuming authenticated user
-
-        // Save the booking
+        $booking->user_id = $user_id;
+        $booking->house_id = $request->house_id;
+        $booking->move_in_date = $request->move_in_date;
+        $booking->lease_duration = $request->lease_duration;
+        $booking->number_of_occupants = $request->number_of_occupants;
+        $booking->employment_status = $request->employment_status;
+        $booking->contact_method = $request->contact_method;
+        $booking->message = $request->message;
         $booking->save();
-
-        // Redirect back or to a thank-you page
-        return redirect()->back()->with('success', 'Booking successful!');
+    
+        // Fetch the house and lister information
+        $house = House::findOrFail($request->house_id);
+        $lister = User::findOrFail($house->lister_id);
+    
+        // Create a notification for the lister
+        $notification = new Notification();
+        $notification->lister_id = $lister->id;
+        $notification->house_id = $house->id;
+        $notification->hunter_id = $user_id;
+        $notification->message = "A booking has been made for your house: " . $house->location;
+        $notification->save();
+    
+        // Send an email to the lister with the embedded image
+        Mail::send('emails.booking-information', ['house' => $house, 'booking' => $booking], function($message) use ($lister) {
+            $message->to($lister->email);
+            $message->subject('New Booking Notification');
+            $message->embed(public_path('makazi-hub-favicon-black.png'));
+        });
+    
+        return view('bookings\booking-confirmation')->with('success', 'Booking created successfully.');
     }
+
 
     /**
      * Display a listing of the bookings.
      *
      * @return \Illuminate\View\View
      */
+    //
+    
     public function index()
     {
-        $bookings = Booking::where('user_id', Auth::id())->get();
-        return view('bookings.index', compact('bookings'));
+        // Fetch bookings for the authenticated user
+        $user = Auth::user();
+        $bookings = Booking::where('user_id', $user->id)->with('house')->get();
+
+        return view('hunter.view-bookings', compact('bookings'));
     }
 
     /**
@@ -68,11 +103,11 @@ class BookingController extends Controller
      * @param  int  $id
      * @return \Illuminate\View\View
      */
-    public function show($id)
-    {
-        $booking = Booking::findOrFail($id);
-        return view('bookings.show', compact('booking'));
-    }
+    // public function show($id)
+    // {
+    //     $booking = Booking::findOrFail($id);
+    //     return view('bookings.show', compact('booking'));
+    // }
 
     /**
      * Show the form for editing the specified booking.
@@ -80,11 +115,11 @@ class BookingController extends Controller
      * @param  int  $id
      * @return \Illuminate\View\View
      */
-    public function edit($id)
-    {
-        $booking = Booking::findOrFail($id);
-        return view('bookings.edit', compact('booking'));
-    }
+    // public function edit($id)
+    // {
+    //     $booking = Booking::findOrFail($id);
+    //     return view('bookings.edit', compact('booking'));
+    // }
 
     /**
      * Update the specified booking in storage.
@@ -93,27 +128,27 @@ class BookingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        // Validate the incoming request data
-        $validatedData = $request->validate([
-            'move_in_date' => 'required|date',
-            'duration' => 'required|integer|min:1|max:30',
-            'message' => 'nullable|string',
-        ]);
+    // public function update(Request $request, $id)
+    // {
+    //     // Validate the incoming request data
+    //     $validatedData = $request->validate([
+    //         'move_in_date' => 'required|date',
+    //         'duration' => 'required|integer|min:1|max:30',
+    //         'message' => 'nullable|string',
+    //     ]);
 
-        // Find the booking and update it
-        $booking = Booking::findOrFail($id);
-        $booking->move_in_date = $validatedData['move_in_date'];
-        $booking->duration = $validatedData['duration'];
-        $booking->message = $validatedData['message'];
+    //     // Find the booking and update it
+    //     $booking = Booking::findOrFail($id);
+    //     $booking->move_in_date = $validatedData['move_in_date'];
+    //     $booking->duration = $validatedData['duration'];
+    //     $booking->message = $validatedData['message'];
 
-        // Save the updated booking
-        $booking->save();
+    //     // Save the updated booking
+    //     $booking->save();
 
-        // Redirect back or to a specific page
-        return redirect()->route('bookings.show', $booking->id)->with('success', 'Booking updated successfully!');
-    }
+    //     // Redirect back or to a specific page
+    //     return redirect()->route('bookings.show', $booking->id)->with('success', 'Booking updated successfully!');
+    // }
 
     /**
      * Remove the specified booking from storage.
@@ -121,13 +156,116 @@ class BookingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // public function destroy($id)
+    // {
+    //     // Find the booking and delete it
+    //     $booking = Booking::findOrFail($id);
+    //     $booking->delete();
+
+    //     // Redirect back or to a specific page
+    //     return redirect()->route('bookings.index')->with('success', 'Booking deleted successfully!');
+    // }
+
+    public function edit($id)
+    {
+        $booking = Booking::findOrFail($id);
+        return view('bookings.edit-booking', compact('booking'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'move_in_date' => 'required|date',
+            'lease_duration' => 'required|integer|min:1',
+            'number_of_occupants' => 'required|integer|min:1',
+            'employment_status' => 'required|string',
+            'contact_method' => 'required|string',
+            'message' => 'nullable|string',
+        ]);
+    
+        // Get the authenticated user's ID
+        $user_id = Auth::id();
+    
+        // Find the booking by ID and ensure it belongs to the authenticated user
+        $booking = Booking::where('id', $id)->where('user_id', $user_id)->firstOrFail();
+        
+        // Update the booking details
+        $booking->move_in_date = $request->move_in_date;
+        $booking->lease_duration = $request->lease_duration;
+        $booking->number_of_occupants = $request->number_of_occupants;
+        $booking->employment_status = $request->employment_status;
+        $booking->contact_method = $request->contact_method;
+        $booking->message = $request->message;
+        $booking->save();
+    
+        // Fetch the house and lister information
+        $house = House::findOrFail($booking->house_id);
+        $lister = User::findOrFail($house->lister_id);
+    
+        // Create a notification for the lister
+        $notification = new Notification();
+        $notification->lister_id = $lister->id;
+        $notification->house_id = $house->id;
+        $notification->hunter_id = $user_id;
+        $notification->message = "A booking has been updated for your house: " . $house->location;
+        $notification->save();
+    
+        // Send an email to the lister with the embedded image
+        Mail::send('emails.bookings-update', ['house' => $house, 'booking' => $booking], function($message) use ($lister) {
+            $message->to($lister->email);
+            $message->subject('Booking Update Notification');
+            $message->embed(public_path('makazi-hub-favicon-black.png'));
+        });
+        return view('bookings.booking-confirmation')->with('success', 'Booking updated successfully.');
+
+    }
+
+
     public function destroy($id)
     {
-        // Find the booking and delete it
-        $booking = Booking::findOrFail($id);
+        // Get the authenticated user's ID
+        $user_id = Auth::id();
+        
+        // Find the booking by ID and ensure it belongs to the authenticated user
+        $booking = Booking::where('id', $id)->where('user_id', $user_id)->firstOrFail();
+        
+        // Fetch the house and lister information
+        $house = House::findOrFail($booking->house_id);
+        $lister = User::findOrFail($house->lister_id);
+        
+        // Delete the booking
         $booking->delete();
+        
+        // Delete any related notifications
+        Notification::where('house_id', $house->id)->where('hunter_id', $user_id)->delete();
+        
+        // Send an email to the lister about the deletion
+        Mail::send('emails.bookings-deletion', ['house' => $house, 'lister' => $lister], function($message) use ($lister) {
+            $message->to($lister->email);
+            $message->subject('Booking Deletion Notification');
+            $message->embed(public_path('makazi-hub-favicon-black.png'));
+        });
+        
+        return redirect()->route('bookings.index')->with('success', 'Booking deleted successfully.');
+    }
 
-        // Redirect back or to a specific page
-        return redirect()->route('bookings.index')->with('success', 'Booking deleted successfully!');
+    public function isHouseBooked($houseId)
+    {
+        $house = House::findOrFail($houseId);
+        $isBooked = Booking::where('house_id', $houseId)->exists();
+
+        return response()->json([
+            'house_id' => $houseId,
+            'is_booked' => $isBooked,
+        ]);
+    }
+
+   public function showBookingStatus($houseId)
+    {
+        $house = House::findOrFail($houseId);
+        $bookings = Booking::where('house_id', $houseId)->get();
+        $isBooked = $bookings->isNotEmpty();
+
+        return view('search.booking-status', compact('house', 'isBooked', 'bookings'));
     }
 }

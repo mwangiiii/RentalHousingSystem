@@ -27,7 +27,7 @@
                         {{ __('Tenants') }}
                     </x-nav-link>
 
-                    <x-nav-link href="{{ route('admin.payments') }}" :active="request()->routeIs('admin.payments')">
+                    <x-nav-link href="{{ route('landlord.payments.index') }}" :active="request()->routeIs('landlord.payments.index')">
                         {{ __('Payments') }}
                     </x-nav-link>
 
@@ -77,7 +77,7 @@
             <x-responsive-nav-link href="{{ route('landlord.tenants.index') }}" :active="request()->routeIs('landlord.tenants.index')">
                 {{ __('Tenants') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link href="{{ route('admin.payments') }}" :active="request()->routeIs('admin.payments')">
+            <x-responsive-nav-link href="{{ route('landlord.payments.index') }}" :active="request()->routeIs('landlord.payments.index')">
                 {{ __('Payments') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link href="{{ route('landlord.roles.index') }}" :active="request()->routeIs('landlord.roles.index')">

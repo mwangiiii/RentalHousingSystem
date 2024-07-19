@@ -10,7 +10,7 @@ class RoleController extends Controller
 {
     public function index()
     {
-        $roles = Role::with('property')->get();
+        $roles = Role::with('property')->whereNotNull('property_id')->get();
         return view('landlord.roles.index', compact('roles'));
     }
 
