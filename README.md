@@ -1,34 +1,11 @@
 # Web House-Hunting and Rental-Management System
 # Makazi Hub
-Makazi Hub is a comprehensive system designed to streamline both house hunting and rental management. It provides powerful tools for landlords, caretakers, and tenants to manage rental operations efficiently, while also offering features to help house hunters find their ideal homes.
 
-## Core Features
-### 1. House Hunting:
-
-Search Functionality: Allows house hunters to search for properties based on various criteria such as location, rent price, amenities, and more.
-Privacy Protection: Ensures user privacy by enabling secure communication with landlords or property listers without sharing personal contact information.
-
-### 2. Rental Management:
-
-- #### Tenant Tools:
-Track rent payments and rental history.
-Submit maintenance requests and move-out notices.
-- #### Landlord Tools:
-Assign roles to property managers and maintenance staff.
-Monitor property history, rental income, and expenses.
-- #### Caretaker Tools:
-Register new tenants.
-Issue notices and analyze complaints.
-Manage day-to-day operations and communications.
-## Benefits
-Efficiency: Streamlines both house hunting and rental management processes, saving time and effort for all users.
-Privacy: Maintains the privacy of users by allowing secure communication within the system.
-Organization: Keeps all rental operations organized, with clear roles and responsibilities for each user type.
-
-Makazi Hub enhances the rental experience by providing a unified platform that caters to the needs of both property managers and house hunters, ensuring efficient management and a seamless search process.
+Makazi Hub is a unified platform designed to streamline house hunting and rental management. It allows house hunters to search for properties based on criteria like location and rent price while ensuring secure communication with landlords. For rental management, it provides tools for tenants to track rent payments and submit maintenance requests, landlords to monitor property history and assign roles, and caretakers to manage day-to-day operations and register new tenants. The system enhances efficiency, privacy, and organization, making the rental process seamless for all users.
 
 
-## Installation
+
+## Installation Steps.
 To install the Makazi hub project, we would recommend you to do the following:.
 
 ### Must-Have
