@@ -204,16 +204,5 @@ We welcome contributions from the community to improve this project! If you'd li
 
 ## License. 
 The project is licensed under Licenses. 
--     [MIT License] (https://github.com/git/git-scm.com/blob/main/MIT-LICENSE.txt)
--     [PHP License] (https://www.php.net/license/3_01.txt)
--     [OEM] (https://www.mysql.com/about/legal/licensing/oem/)
--     [MIT License] (https://github.com/nodejs/node/blob/main/LICENSE).
--     [Apache License 2.0] (https://apache.org/licenses/LICENSE-2.0)
-
-## Contact
-You can contact us at [Makazi Hub Admin](mailto:dennis.wanjiku@strathmore.edu,elvis.makara@strathmore.edu?subject=Github:Makazi-hub-Support) 
-
-## Credits
-Special credits to [Pahom21](https://github.com/Pahom21) for the meticoulous job done in this project.
-
+This project is licensed under the [MIT License](https://github.com/git/git-scm.com/blob/main/MIT-LICENSE.txt)
 
