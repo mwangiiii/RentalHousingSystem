@@ -41,10 +41,12 @@
                                         Modify House
                                     </button>
                                 </a>
-                                <button class="bg-yellow-500 text-white px-4 py-2 rounded ml-2 hover:bg-yellow-700 transition duration-300 ease-in-out view-bookings">
-                                    View Bookings
-                                </button>
-                                <form action="{{ route('houses.destroy', ['house' => $house->id]) }}" method="POST" style="display:inline;">
+                                <a href="{{ route('houses.bookingStatus', ['id' => $house->id]) }}">
+    <button class="bg-yellow-500 text-white px-4 py-2 rounded ml-2 hover:bg-yellow-700 transition duration-300 ease-in-out view-bookings">
+        View Bookings
+    </button>
+</a>
+                         <form action="{{ route('houses.destroy', ['house' => $house->id]) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded ml-2 hover:bg-red-700 transition duration-300 ease-in-out">

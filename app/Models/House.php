@@ -23,7 +23,7 @@ class House extends Model
         'user_id',
         'lister_id', // Make sure 'lister_id' is correctly listed in fillable array
         'category_id', // Corrected field name to match database schema
-        'main_image', // Ensure this matches the actual field name in your database
+        // 'main_image', // Ensure this matches the actual field name in your database
     ];
 
     public function images()
@@ -43,17 +43,12 @@ class House extends Model
     
     public function mainImage()
     {
-        return $this->hasOne(Image::class)->where('is_main', true);
+        return $this->hasOne(Image::class)->whereNotNull('is_main');
     }
     
 
     public function category()
     {
         return $this->belongsTo(Category::class); // Ensure correct relationship method name
-    }
-
-    public function getMainImageUrlAttribute()
-    {
-        return $this->mainImage ? asset('storage/' . $this->mainImage->image_path) : asset('storage/default_image.jpg');
     }
 }

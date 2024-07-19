@@ -25,7 +25,6 @@ return new class extends Migration
             $table->text('rules_and_regulations')->nullable(); // Rules and regulations, nullable
             $table->text('amenities'); // Amenities
             $table->unsignedBigInteger('category_id'); // Foreign key for categories table
-            $table->string('main_image'); // Main image path
             $table->timestamps(); // Timestamps for created_at and updated_at
 
             // Adding foreign key constraints

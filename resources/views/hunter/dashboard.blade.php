@@ -31,22 +31,23 @@
                                 <td class="px-6 py-4 whitespace-nowrap">{{ $house->category->name }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <a href="{{ route('houseshunter.show', ['id' => $house->id]) }}">
-                                        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 ease-in-out view-details">
+                                        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 ease-in-out view-details" data-id="{{ $house->id }}">
                                             View Details
                                         </button>
                                     </a>
-                                    <a href="">
-                                        <button class="bg-green-500 text-white px-4 py-2 rounded ml-2 hover:bg-green-700 transition duration-300 ease-in-out save-house" data-id="{{ $house->id }}">
+                                    <form action="{{ route('houses.save', ['houseId' => $house->id]) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded ml-2 hover:bg-green-700 transition duration-300 ease-in-out">
                                             Save House
                                         </button>
-                                    </a>
+                                    </form>
                                     <form action="{{ route('contact.agent', ['houseId' => $house->id]) }}" method="POST" class="inline">
                                         @csrf
                                         <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded ml-2 hover:bg-yellow-700 transition duration-300 ease-in-out">
                                             Contact Agent
                                         </button>
                                     </form>
-                                    <a href="{{ route('booking.form', ['houseId' => $house->id]) }}">
+                                    <a href="{{ route('booking.form', ['houseId' => $house->id])}}">
                                         <button class="bg-purple-500 text-white px-4 py-2 rounded ml-2 hover:bg-purple-700 transition duration-300 ease-in-out">
                                             Book Now
                                         </button>
@@ -56,7 +57,7 @@
                         @endforeach
                     @else
                         <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">No houses found.</td>
+                            <td colspan="4" class="px-6 py-4 text-center text-gray-500">No houses found.</td>
                         </tr>
                     @endif
                 </tbody>
@@ -113,20 +114,17 @@
         housesTableBody.addEventListener('click', function(e) {
             if (e.target.closest('.save-house')) {
                 const houseId = e.target.closest('.save-house').getAttribute('data-id');
-                fetch(`/hunter/save-house`, {
+                fetch(`/hunter/save-house/${houseId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({ house_id: houseId })
+                    }
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success) {
-                        alert('House saved successfully.');
-                    } else {
-                        alert('Failed to save house.');
+                    if (data.message) {
+                        alert(data.message);
                     }
                 })
                 .catch(error => {

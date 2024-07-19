@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use App\Mail\ContactAgentMail;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -94,22 +95,43 @@ class HunterController extends Controller
     }
     
 
-    public function saveHouse(Request $request)
+    public function saveHouse(Request $request, $houseId)
     {
-        $userId = auth()->id();
-        $query = SavedHouse::where('user_id', $userId)->with('house');
-
-        if ($request->has('search')) {
-            $search = $request->input('search');
-            $query->whereHas('house', function ($q) use ($search) {
-                $q->where('name', 'like', "%$search%")
-                  ->orWhere('description', 'like', "%$search%");
-            });
+        // Check if the house exists
+        $house = House::find($houseId);
+        if (!$house) {
+            return response()->json(['message' => 'House not found'], 404);
         }
 
-        $savedHouses = $query->paginate(10);
-        return view('hunter.saved', compact('savedHouses'));
+        // Check if the user is a hunter
+        $user = Auth::user();
+        if ($user->role_id !== 8) {  // assuming 'hunter' role_id is 2
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        // Check if the house is already saved by the hunter
+        $existingSavedHouse = DB::table('saved_houses')
+            ->where('user_id', $user->id)
+            ->where('house_id', $houseId)
+            ->first();
+
+        if ($existingSavedHouse) {
+            return redirect()->back()->with('error', 'House already saved');
+        }
+
+        // Save the house for the hunter
+        DB::table('saved_houses')->insert([
+            'user_id' => $user->id,
+            'house_id' => $houseId,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        // return redirect()->back()->with('success', 'House saved successfully');
+        return back()->withErrors(['error' => 'House saved successfully']);
     }
+
+    
 
 
     public function dashboard()
@@ -180,6 +202,10 @@ class HunterController extends Controller
 
     //     return response()->json(['success' => true]);
     // }
+
+    
+   
+    
 
 
     public function hunter()

@@ -11,24 +11,12 @@
                 </div>
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link href="{{ route('hunter.dashboard') }}" :active="request()->routeIs('hunter.dashboard')">
+                    <x-nav-link href="{{ route('lister.dashboard') }}" :active="request()->routeIs('lister.dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    <x-nav-link href="{{ route('hunter.bookings') }}" :active="request()->routeIs('hunter.bookings')">
-                        {{ __('My Bookings') }}
-                    </x-nav-link>
-
-                    <x-nav-link href="{{ route('hunter.notifications') }}" :active="request()->routeIs('hunter.notifications')">
-                        {{ __('Notifications') }}
-                    </x-nav-link>
-
-                    <x-nav-link href="{{ route('hunter.communication') }}" :active="request()->routeIs('hunter.communication')">
-                        {{ __('Communication') }}
-                    </x-nav-link>
-
-                    <x-nav-link href="{{ route('hunter.feedback') }}" :active="request()->routeIs('hunter.feedback')">
-                        {{ __('Feedback') }}
+                    <x-nav-link href="{{ route('lister.listingForm') }}" :active="request()->routeIs('lister.listingForm')">
+                        {{ __('Add Houses') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -53,24 +41,12 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link href="{{ route('hunter.dashboard') }}" :active="request()->routeIs('hunter.dashboard')">
+            <x-responsive-nav-link href="{{ route('lister.dashboard') }}" :active="request()->routeIs('lister.dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link href="{{ route('hunter.bookings') }}" :active="request()->routeIs('hunter.bookings')">
-                {{ __('My Bookings') }}
-            </x-responsive-nav-link>
-
-            <x-responsive-nav-link href="{{ route('hunter.notifications') }}" :active="request()->routeIs('hunter.notifications')">
-                {{ __('Notifications') }}
-            </x-responsive-nav-link>
-
-            <x-responsive-nav-link href="{{ route('hunter.communication') }}" :active="request()->routeIs('hunter.communication')">
-                {{ __('Communication') }}
-            </x-responsive-nav-link>
-
-            <x-responsive-nav-link href="{{ route('hunter.feedback') }}" :active="request()->routeIs('hunter.feedback')">
-                {{ __('Feedback') }}
+            <x-responsive-nav-link href="{{ route('lister.listingForm') }}" :active="request()->routeIs('lister.listingForm')">
+                {{ __('Add Houses') }}
             </x-responsive-nav-link>
         </div>
 

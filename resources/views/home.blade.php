@@ -146,34 +146,64 @@
         </h2>
 
         <div class="carouselContainer">
-            <div class="housesContainer">
-                @if($houses->isEmpty())
-                <p>No houses available</p>
+    <div class="housesContainer">
+        @if($houses->isEmpty())
+        <p>No houses available</p>
+        @else
+        @foreach ($houses as $house)
+        <div class="house">
+            <div class="image-container">
+                @if($thumbnails->isEmpty())
+                <img src="{{ asset('storage/' . $house->mainImage->is_main) }}" alt="Image of {{ $house->location }}">
                 @else
-                @foreach ($houses as $house)
-                <div class="house">
-                <div class="image-container">
-    @if($house->main_image)
-    <img src="{{ asset('storage/' . $house->main_image) }}" alt="Image of {{ $house->location }}">
-
-    @else
-        <p>No images available</p>
-    @endif
-</div>
-
-                    <div class="house-content">
-                        <h1>{{ $house->location }}</h1>
-                        <p>Price: {{ $house->price }}</p>
-                        <p>Availability: {{ $house->availability }}</p>
-                        <!-- <p>Contact: {{ $house->contact }}</p> -->
-                        <p>Description: {{ $house->description }}</p>
-                        <p>Amenities: {{ $house->amenities }}</p>
-                    </div>
-                </div>
-                @endforeach
+                <p>No images available</p>
                 @endif
             </div>
+            <div class="house-content">
+                <h1>{{ $house->location }}</h1>
+                <p>Price: {{ $house->price }}</p>
+                <p>Availability: {{ $house->availability }}</p>
+                <!-- <p>Contact: {{ $house->contact }}</p> -->
+                <p>Description: {{ $house->description }}</p>
+                <p>Amenities: {{ $house->amenities }}</p>
+            </div>
         </div>
+        @endforeach
+        @endif
+
+        <!-- Manually created image cards -->
+        <div class="house">
+    <div class="image-container">
+        <img src="{{ asset('image 2.jpg') }}" alt="Manual Image 1">
+    </div>
+    <div class="house-content">
+        <h1>Kitsuru</h1>
+        <p>Price: 10000</p>
+        <p>Availability: available</p>
+        <p>Description:its found in kitisuru a well suburb area.</p>
+        <p>Amenities: swimming pool.</p>
+    </div>
+</div>
+
+<div class="house">
+    <div class="image-container">
+        <img src="{{ asset('image 1.jpeg') }}" alt="Manual Image 2">
+    </div>
+    <div class="house-content">
+        <h1>kitengela</h1>
+        <p>Price: 15000</p>
+        <p>Availability: available</p>
+        <p>Description: found in suburbs of nairobi.</p>
+        <p>Amenities: hospital.</p>
+    </div>
+
+</div>
+
+        <!-- End of manually created image cards -->
+
+    </div>
+</div>
+
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const housesData = <?php echo json_encode($houses) ?>;

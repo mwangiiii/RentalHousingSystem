@@ -32,9 +32,9 @@
                 @include('layouts.navs.landlord')
             @elseif (auth()->user()->hasRole('Tenant'))
                 @include('layouts.navs.tenant')
-            @elseif (auth()->user()->hasRole('Lister'))
+            @elseif (auth()->user()->hasRole('lister'))
                 @include('layouts.navs.lister')
-            @elseif (auth()->user()->hasRole('House Hunter'))
+            @elseif (auth()->user()->hasRole('hunter'))
                 @include('layouts.navs.hunter')
             @else
                 @include('navigation-menu')

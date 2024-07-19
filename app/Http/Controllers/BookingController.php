@@ -77,7 +77,7 @@ class BookingController extends Controller
             $message->embed(public_path('makazi-hub-favicon-black.png'));
         });
     
-        return redirect()->route('dashboard')->with('success', 'Booking successful!');
+        return view('bookings\booking-confirmation')->with('success', 'Booking created successfully.');
     }
 
 
@@ -248,5 +248,24 @@ class BookingController extends Controller
         
         return redirect()->route('bookings.index')->with('success', 'Booking deleted successfully.');
     }
-    
+
+    public function isHouseBooked($houseId)
+    {
+        $house = House::findOrFail($houseId);
+        $isBooked = Booking::where('house_id', $houseId)->exists();
+
+        return response()->json([
+            'house_id' => $houseId,
+            'is_booked' => $isBooked,
+        ]);
+    }
+
+   public function showBookingStatus($houseId)
+    {
+        $house = House::findOrFail($houseId);
+        $bookings = Booking::where('house_id', $houseId)->get();
+        $isBooked = $bookings->isNotEmpty();
+
+        return view('search.booking-status', compact('house', 'isBooked', 'bookings'));
+    }
 }
